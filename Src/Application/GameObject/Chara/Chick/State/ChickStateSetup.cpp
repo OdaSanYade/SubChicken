@@ -311,7 +311,7 @@ void SetupChickStates()
 				SetMaterial(rc, "ChickDefault");
 			});
 	sys->State("Hurt").Base("HurtChick")
-		.Anim("Hurt", 1.0f, false);
+		.Anim("Damage", 1.0f, false);
 
 	sys->SetEntryState("Rest");
 

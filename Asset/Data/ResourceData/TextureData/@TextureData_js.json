@@ -32,7 +32,10 @@
     "Clear": {
         "fileName": "Clear"
     },
-    "Died": {
-        "fileName": "Died"
+    "ChickenDied": {
+        "fileName": "ChickenDied"
+    },
+    "ChickDied": {
+        "fileName": "ChickDied"
     }
 }

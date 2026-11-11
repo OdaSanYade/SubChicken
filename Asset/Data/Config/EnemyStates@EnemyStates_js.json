@@ -1,259 +1,259 @@
 {
-  "_説明": "敵のステートの params / minTime / buffer。敵の値は縮尺前のまま持ち、GameScale::ApplyToStateParams に任せている",
-  "states": {
-    "Normal": {
-      "params": {
-        "anim": "Walk",
-        "blend": 10.0,
-        "loop": 1.0
-      }
-    },
-    "Chase": {
-      "params": {
-        "anim": "Dash",
-        "blend": 10.0,
-        "loop": 1.0,
-        "attackRange": 6.0,
-        "wishRange": 18.0
-      }
-    },
-    "Alert": {
-      "params": {
-        "anim": "Threat",
-        "blend": 10.0,
-        "loop": 1.0
-      }
-    },
-    "Wander": {
-      "params": {
-        "moveSpeed": 10.0,
-        "turnRate": 3.0,
-        "restRate": 0.3
-      }
-    },
-    "Rest": {
-      "params": {
-        "anim": "Idle",
-        "blend": 10.0,
-        "loop": 1.0,
-        "restTime": 1.5
-      }
-    },
-    "Pursue": {
-      "params": {
-        "moveSpeed": 22.0,
-        "turnRate": 12.0
-      }
-    },
-    "Keep": {
-      "params": {
-        "anim": "Threat",
-        "blend": 10.0,
-        "loop": 1.0,
-        "turnRate": 12.0
-      }
-    },
-    "Call": {
-      "minTime": 0.5,
-      "params": {
-        "anim": "Threat",
-        "blend": 10.0,
-        "loop": 1.0,
-        "callTime": 0.7,
-        "turnRate": 6.0,
-        "fx.trauma": 0.12
-      }
-    },
-    "LookAround": {
-      "params": {
-        "anim": "Idle",
-        "blend": 10.0,
-        "loop": 1.0,
-        "alertTime": 3.0,
-        "turnRate": 8.0
-      }
-    },
-    "Investigate": {
-      "params": {
-        "anim": "Dash",
-        "blend": 10.0,
-        "loop": 1.0,
-        "moveSpeed": 16.0,
-        "turnRate": 8.0,
-        "arriveSlack": 2.0,
-        "giveUpTime": 6.0
-      }
-    },
-    "Attack": {
-      "params": {
-        "anim": "Threat",
-        "blend": 10.0,
-        "loop": 0.0
-      }
-    },
-    "Damage": {
-      "params": {
-        "anim": "Hit",
-        "blend": 10.0,
-        "loop": 0.0
-      }
-    },
-    "Launch": {
-      "params": {
-        "maxAirTime": 2.0,
-        "fx.landHitstop": 0.08,
-        "fx.landTrauma": 0.35
-      }
-    },
-    "Down": {
-      "params": {
-        "getUpTime": 1.0
-      }
-    },
-    "Frozen": {
-      "params": {
-        "fx.light.r": 0.0,
-        "fx.light.g": 0.3,
-        "fx.light.b": 1.0,
-        "fx.lightPower": 0.3,
-        "fx.lightLift": 1.0,
-        "fx.effectLiftRatio": 1.5
-      }
-    },
-    "Die": {
-      "params": {
-        "anim": "Die",
-        "blend": 10.0,
-        "loop": 1.0,
-        "fx.trauma": 0.4
-      }
-    },
-    "Flee": {
-      "params": {
-        "anim": "Dash",
-        "blend": 10.0,
-        "loop": 1.0,
-        "fleeTime": 2.5,
-        "fleeDistance": 23.0,
-        "moveSpeed": 20.0,
-        "turnRate": 9.0
-      }
-    },
-    "Carry": {
-      "params": {
-        "anim": "Dash",
-        "blend": 10.0,
-        "loop": 1.0,
-        "fx.trauma": 0.3
-      }
-    },
-    "CarryRun": {
-      "params": {
-        "anim": "Dash",
-        "blend": 10.0,
-        "loop": 1.0,
-        "moveSpeed": 10.0,
-        "turnRate": 7.0
-      }
-    },
-    "CarryWander": {
-      "params": {
-        "anim": "Walk",
-        "blend": 10.0,
-        "loop": 1.0,
-        "moveSpeed": 8.0,
-        "turnRate": 3.0,
-        "runDelay": 5.0
-      }
-    },
-    "Windup": {
-      "minTime": 0.05,
-      "params": {
-        "anim": "Threat",
-        "blend": 10.0,
-        "loop": 1.0,
-        "backUntil": 0.6,
-        "windupTime": 0.5,
-        "turnRate": 10.0,
-        "backSpeed": 12.0
-      }
-    },
-    "Notice": {
-      "params": {
-        "anim": "Attack",
-        "blend": 10.0,
-        "loop": 0.0,
-        "turnRate": 8.0,
-        "thrustMin": 4.0,
-        "fx.light.r": 0.8,
-        "fx.light.g": 0.1,
-        "fx.light.b": 0.2,
-        "fx.lightExtent": 8.0,
-        "fx.lightLift": 1.0,
-        "fx.flickerAmp": 5.0,
-        "fx.flickerBase": 5.0
-      }
-    },
-    "Strike": {
-      "minTime": 0.2,
-      "params": {
-        "anim": "Threat",
-        "blend": 10.0,
-        "loop": 1.0,
-        "strikeTime": 0.25,
-        "hitStart": 0.05,
-        "hitEnd": 0.18,
-        "damage": 10.0,
-        "reach": 6.0,
-        "radius": 1.2,
-        "knockback": 60.0,
-        "stepSpeed": 22.0,
-        "turnRate": 4.0
-      }
-    },
-    "Thrust": {
-      "params": {
-        "anim": "Threat",
-        "blend": 10.0,
-        "loop": 1.0,
-        "damage": 12.0,
-        "reach": 14.0,
-        "radius": 1.0,
-        "knockback": 70.0,
-        "stepSpeed": 26.0,
-        "strikeTime": 0.22,
-        "hitStart": 0.04,
-        "hitEnd": 0.16,
-        "turnRate": 4.0
-      }
-    },
-    "Sweep": {
-      "params": {
-        "anim": "Threat",
-        "blend": 10.0,
-        "loop": 1.0,
-        "damage": 14.0,
-        "reach": 4.0,
-        "radius": 5.0,
-        "knockback": 110.0,
-        "stepSpeed": 4.0,
-        "strikeTime": 0.3,
-        "hitStart": 0.08,
-        "hitEnd": 0.24,
-        "turnRate": 4.0
-      }
-    },
-    "Interval": {
-      "params": {
-        "anim": "Threat",
-        "blend": 10.0,
-        "loop": 1.0,
-        "intervalTime": 1.2,
-        "turnRate": 6.0,
-        "attackRange": 6.0,
-        "hysteresis": 1.5,
-        "beatSlack": 0.5
-      }
+    "_説明": "敵のステートの params / minTime / buffer。敵の値は縮尺前のまま持ち、GameScale::ApplyToStateParams に任せている",
+    "states": {
+        "Normal": {
+            "params": {
+                "anim": "Walk",
+                "blend": 10.0,
+                "loop": 1.0
+            }
+        },
+        "Chase": {
+            "params": {
+                "anim": "Dash",
+                "blend": 10.0,
+                "loop": 1.0,
+                "attackRange": 6.0,
+                "wishRange": 18.0
+            }
+        },
+        "Alert": {
+            "params": {
+                "anim": "Threat",
+                "blend": 10.0,
+                "loop": 1.0
+            }
+        },
+        "Wander": {
+            "params": {
+                "moveSpeed": 10.0,
+                "turnRate": 3.0,
+                "restRate": 0.3
+            }
+        },
+        "Rest": {
+            "params": {
+                "anim": "Idle",
+                "blend": 10.0,
+                "loop": 1.0,
+                "restTime": 1.5
+            }
+        },
+        "Pursue": {
+            "params": {
+                "moveSpeed": 22.0,
+                "turnRate": 12.0
+            }
+        },
+        "Keep": {
+            "params": {
+                "anim": "Threat",
+                "blend": 10.0,
+                "loop": 1.0,
+                "turnRate": 12.0
+            }
+        },
+        "Call": {
+            "minTime": 0.5,
+            "params": {
+                "anim": "Threat",
+                "blend": 10.0,
+                "loop": 1.0,
+                "callTime": 0.7,
+                "turnRate": 6.0,
+                "fx.trauma": 0.12
+            }
+        },
+        "LookAround": {
+            "params": {
+                "anim": "Idle",
+                "blend": 10.0,
+                "loop": 1.0,
+                "alertTime": 3.0,
+                "turnRate": 8.0
+            }
+        },
+        "Investigate": {
+            "params": {
+                "anim": "Dash",
+                "blend": 10.0,
+                "loop": 1.0,
+                "moveSpeed": 16.0,
+                "turnRate": 8.0,
+                "arriveSlack": 2.0,
+                "giveUpTime": 6.0
+            }
+        },
+        "Attack": {
+            "params": {
+                "anim": "Threat",
+                "blend": 10.0,
+                "loop": 0.0
+            }
+        },
+        "Damage": {
+            "params": {
+                "anim": "Hit",
+                "blend": 10.0,
+                "loop": 0.0
+            }
+        },
+        "Launch": {
+            "params": {
+                "maxAirTime": 2.0,
+                "fx.landHitstop": 0.08,
+                "fx.landTrauma": 0.35
+            }
+        },
+        "Down": {
+            "params": {
+                "getUpTime": 1.0
+            }
+        },
+        "Frozen": {
+            "params": {
+                "fx.light.r": 0.0,
+                "fx.light.g": 0.3,
+                "fx.light.b": 1.0,
+                "fx.lightPower": 0.3,
+                "fx.lightLift": 1.0,
+                "fx.effectLiftRatio": 1.5
+            }
+        },
+        "Die": {
+            "params": {
+                "anim": "Die",
+                "blend": 10.0,
+                "loop": 1.0,
+                "fx.trauma": 0.4
+            }
+        },
+        "Flee": {
+            "params": {
+                "anim": "Dash",
+                "blend": 10.0,
+                "loop": 1.0,
+                "fleeTime": 2.5,
+                "fleeDistance": 23.0,
+                "moveSpeed": 20.0,
+                "turnRate": 9.0
+            }
+        },
+        "Carry": {
+            "params": {
+                "anim": "Dash",
+                "blend": 10.0,
+                "loop": 1.0,
+                "fx.trauma": 0.3
+            }
+        },
+        "CarryRun": {
+            "params": {
+                "anim": "Dash",
+                "blend": 10.0,
+                "loop": 1.0,
+                "moveSpeed": 10.0,
+                "turnRate": 7.0
+            }
+        },
+        "CarryWander": {
+            "params": {
+                "anim": "Walk",
+                "blend": 10.0,
+                "loop": 1.0,
+                "moveSpeed": 8.0,
+                "turnRate": 3.0,
+                "runDelay": 8.0
+            }
+        },
+        "Windup": {
+            "minTime": 0.05,
+            "params": {
+                "anim": "Threat",
+                "blend": 10.0,
+                "loop": 1.0,
+                "backUntil": 0.6,
+                "windupTime": 0.5,
+                "turnRate": 10.0,
+                "backSpeed": 12.0
+            }
+        },
+        "Notice": {
+            "params": {
+                "anim": "Attack",
+                "blend": 10.0,
+                "loop": 0.0,
+                "turnRate": 8.0,
+                "thrustMin": 4.0,
+                "fx.light.r": 0.8,
+                "fx.light.g": 0.1,
+                "fx.light.b": 0.2,
+                "fx.lightExtent": 8.0,
+                "fx.lightLift": 1.0,
+                "fx.flickerAmp": 5.0,
+                "fx.flickerBase": 5.0
+            }
+        },
+        "Strike": {
+            "minTime": 0.2,
+            "params": {
+                "anim": "Threat",
+                "blend": 10.0,
+                "loop": 1.0,
+                "strikeTime": 0.25,
+                "hitStart": 0.05,
+                "hitEnd": 0.18,
+                "damage": 10.0,
+                "reach": 6.0,
+                "radius": 1.2,
+                "knockback": 60.0,
+                "stepSpeed": 22.0,
+                "turnRate": 4.0
+            }
+        },
+        "Thrust": {
+            "params": {
+                "anim": "Threat",
+                "blend": 10.0,
+                "loop": 1.0,
+                "damage": 12.0,
+                "reach": 14.0,
+                "radius": 1.0,
+                "knockback": 70.0,
+                "stepSpeed": 26.0,
+                "strikeTime": 0.22,
+                "hitStart": 0.04,
+                "hitEnd": 0.16,
+                "turnRate": 4.0
+            }
+        },
+        "Sweep": {
+            "params": {
+                "anim": "Threat",
+                "blend": 10.0,
+                "loop": 1.0,
+                "damage": 14.0,
+                "reach": 4.0,
+                "radius": 5.0,
+                "knockback": 110.0,
+                "stepSpeed": 4.0,
+                "strikeTime": 0.3,
+                "hitStart": 0.08,
+                "hitEnd": 0.24,
+                "turnRate": 4.0
+            }
+        },
+        "Interval": {
+            "params": {
+                "anim": "Threat",
+                "blend": 10.0,
+                "loop": 1.0,
+                "intervalTime": 1.2,
+                "turnRate": 6.0,
+                "attackRange": 6.0,
+                "hysteresis": 1.5,
+                "beatSlack": 0.5
+            }
+        }
     }
-  }
 }

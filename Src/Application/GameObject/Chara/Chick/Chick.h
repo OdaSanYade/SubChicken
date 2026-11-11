@@ -287,5 +287,5 @@ private:
 	// 移動制御
 	//------------------------------------------
 	Math::Vector3 m_rotateDir = Math::Vector3::Zero;
-	float         m_turnRate = 0.0f;	// SetTuning / MoveTo で入る
+	float         m_turnRate = 0.0f;	
 };

@@ -80,9 +80,28 @@ void GameScene::Update()
 		return;
 	}
 
+	//　タイトルシーン強制連行
+	if (GetAsyncKeyState(VK_F3) & 0x8000)
+	{
+		SceneManager::Instance().SetNextScene(SceneManager::SceneType::Title);
+	}
+
+	// 勝利デバッグ
+	if (GetAsyncKeyState(VK_F4) & 0x8000)
+	{
+		m_isWin = true;
+	}
+
+	// 敗北デバッグ
+	if (GetAsyncKeyState(VK_F5) & 0x8000)
+	{
+		m_isLose = true;
+	}
+
 	m_gameTime += Time::Instance().GetDeltaTime();
 	CheckBattleEnd();
 
+	// デバッグカメラ切替
 	static bool prevF1 = false;
 	bool f1 = (GetAsyncKeyState(VK_F1) & 0x8000) != 0;
 	if (f1 && !prevF1) {
@@ -556,9 +575,9 @@ void GameScene::CheckBattleEnd()
 	if (!chick || !player) return;
 
 	// 勝ちは「生き残っている子を全員巣まで運べたか」。攫われて消えた子は数に入らない。
-	const bool win = chick->IsAllRescued();
+	const bool win = chick->IsAllRescued() || m_isWin;
 	// 全員攫われたらクリアできないので負け
-	const bool lose = !player->IsActive() || chick->IsAllLost();
+	const bool lose = !player->IsActive() || chick->IsAllLost() || m_isLose;
 
 	if (!win && !lose) return;
 
@@ -577,6 +596,9 @@ void GameScene::CheckBattleEnd()
 
 	m_battleEnded = true;
 
+	m_isWin = false;
+	m_isLose = false;
+
 	//------------------------------------------
 	// 記録をまとめる
 	//------------------------------------------
@@ -590,6 +612,7 @@ void GameScene::CheckBattleEnd()
 	r.total = chick->GetTotalCount();
 
 	RESULT.Begin(r);
+	RESULT.SetDiedTex(chick->IsAllLost());
 
 	// 戦闘中の演出を止める
 	ComboTracker::Instance().Reset();

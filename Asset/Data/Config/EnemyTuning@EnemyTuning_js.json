@@ -315,10 +315,10 @@
     "EnemyManager": {
         "retargetCooldown": 1.0,
         "chickNoticeRadius": 20.0,
-        "chickRingRadius": 5.0,
+        "chickRingRadius": 10.0,
         "chickAimHeight": 0.9,
         "commitStandOff": 3.0,
-        "carryPickRadius": 30.0,
+        "carryPickRadius": 5.0,
         "maxSquads": 6,
         "squadSpread": 8.0,
         "squadSeparation": 16.0,

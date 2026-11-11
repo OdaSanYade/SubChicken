@@ -45,4 +45,8 @@ private:
 	float m_gameTime = 0.0f;
 
 	bool m_battleEnded = false;
+
+	//デバッグ用
+	bool m_isWin = false;
+	bool m_isLose = false;
 };

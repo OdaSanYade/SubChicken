@@ -763,7 +763,7 @@ void SetupEnemyStates()
 			});
 
 	// ---- 運び去る ----
-	// 入ったら抜けない。消え切ったらマネージャが片付ける。
+	// 入ったら抜けない
 	sys->State("CarryRun").Base("Carry")
 		.Anim("Dash", 10.0f, true)
 		.Param("moveSpeed", 10.0f)

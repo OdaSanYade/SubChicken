@@ -10,4 +10,5 @@ PhaseSECOND,PhaseSECOND
 PhaseFINAL,PhaseFINAL
 Transition,Transition
 Clear,Clear
-Died,Died
+ChickenDied,ChickenDied
+ChickDied,ChickDied

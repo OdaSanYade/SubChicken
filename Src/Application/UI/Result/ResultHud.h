@@ -43,10 +43,6 @@ public:
 		auto& tex = RES_MGR.GetTexList();
 		if (!tex) return;
 
-		// クリアと敗北の見出し
-		//m_headTex[0] = tex->GetTex("Clear");
-		m_headTex[1] = tex->GetTex("Died");
-
 		m_bg = nullptr;
 		m_ornament = nullptr;
 
@@ -56,6 +52,18 @@ public:
 		};
 
 		for (int i = 0; i < 5; ++i) m_rankTex[i] = tex->GetTex(kRankName[i]);
+	}
+
+	void SetDiedTex(bool _isChickDied)
+	{
+		if (_isChickDied) 
+		{
+			m_headTex[1] = RES_MGR.GetTexList()->GetTex("ChickDied");
+		}
+		else 
+		{
+			m_headTex[1] = RES_MGR.GetTexList()->GetTex("ChickenDied");
+		}
 	}
 
 	void SetDecideCallback(DecideFn _fn) { m_decide = std::move(_fn); }
@@ -112,7 +120,7 @@ private:
 
 	// 見出しをテクスチャで出すときの大きさ
 	static constexpr float kHeadTexHalfW = 520.0f;
-	static constexpr float kHeadTexAspect = 0.26f;	// 高さ / 幅
+	static constexpr float kHeadTexAspect = 0.44f;	// 高さ / 幅
 
 	float Appear(float _at) const
 	{
