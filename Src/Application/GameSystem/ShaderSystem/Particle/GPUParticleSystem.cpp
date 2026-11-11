@@ -356,7 +356,7 @@ bool GPUParticleSystem::CreateBlendState()
 	D3D11_BLEND_DESC alpha = {};
 	alpha.RenderTarget[0].BlendEnable = TRUE;
 	alpha.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
-	alpha.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;   // ★1-α
+	alpha.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;  
 	alpha.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
 	alpha.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
 	alpha.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_INV_SRC_ALPHA;
@@ -693,19 +693,19 @@ void GPUParticleSystem::Update(float dt, float time, const DirectX::XMMATRIX& vi
 {
 	ID3D11DeviceContext* context = KdDirect3D::Instance().WorkDevContext();
 
-	// 0a. エフェクト（レイヤーの位置・バースト・パス）を先に解決する
+	// エフェクト（レイヤーの位置・バースト・パス）を先に解決する
 	UpdateEffects(dt);
 
-	// 0. タイミング制御
+	// タイミング制御
 	UpdateEmitterTiming(dt);
 
-	// 0b. エミッタの移動速度（Inherit Velocity 用）
+	// エミッタの移動速度（Inherit Velocity 用）
 	UpdateEmitterVelocity(dt);
 
-	// 0c. 動かすエミッタの一覧
+	// 動かすエミッタの一覧
 	BuildActiveLists(dt);
 
-	// 1. エミッタ配列を GPU に転送（DYNAMIC + Map）
+	// エミッタ配列を GPU に転送（DYNAMIC + Map）
 	//    一覧の最大番号までだけ送る（後ろの空きは送らない）
 	if (!m_activeList.empty())
 	{
@@ -721,7 +721,7 @@ void GPUParticleSystem::Update(float dt, float time, const DirectX::XMMATRIX& vi
 		UploadList(m_trailListBuffer.Get(), m_trailList);
 	}
 
-	// 2. 共通CB
+	// 共通CB
 	GPUParticleCB cb = {};
 	cb.dt = dt;
 	cb.time = time;
@@ -752,10 +752,10 @@ void GPUParticleSystem::Update(float dt, float time, const DirectX::XMMATRIX& vi
 	m_lastNearZ = nearZ;
 	m_lastFarZ = farZ;
 
-	// 3. CS 実行（動いているエミッタだけ）
+	// CS 実行（動いているエミッタだけ）
 	DispatchSimulation(m_activeListSRV.Get(), (int)m_activeList.size(), cb, sceneWorldPos);
 
-	// 5. ワンショットの発火フラグを消費（1フレームで消す）
+	// ワンショットの発火フラグを消費（1フレームで消す）
 	for (auto& e : m_emitters)
 		e.emitTrigger = 0;
 }
@@ -806,7 +806,7 @@ void GPUParticleSystem::Render(ID3D11RenderTargetView* rtv,
 	// ---- 適用（rtv に直接描く）----
 	context->RSSetState(m_rasterState.Get());
 	context->OMSetDepthStencilState(m_depthState.Get(), 0);
-	context->OMSetRenderTargets(1, &rtv, nullptr);   // ★rtv に直接
+	context->OMSetRenderTargets(1, &rtv, nullptr); 
 	D3D11_VIEWPORT vp = { 0,0,(float)width,(float)height,0,1 };
 	context->RSSetViewports(1, &vp);
 
@@ -840,7 +840,7 @@ void GPUParticleSystem::Render(ID3D11RenderTargetView* rtv,
 	for (int s = 0; s < kMaxTextures; ++s)
 		slots[s] = m_textureSlots[s] ? m_textureSlots[s] : m_particleSRVTex.Get();
 	context->PSSetShaderResources(0, kMaxTextures, slots);
-	context->PSSetShaderResources(8, 1, &gbufferC);   // ★GBufferC を t8
+	context->PSSetShaderResources(8, 1, &gbufferC);
 	context->PSSetSamplers(0, 1, m_sampler.GetAddressOf());
 
 	context->IASetVertexBuffers(0, 0, nullptr, nullptr, nullptr);
