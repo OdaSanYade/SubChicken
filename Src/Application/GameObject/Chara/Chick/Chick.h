@@ -31,10 +31,12 @@ struct ChickTuning
 	//---- 体力 / ダウン ----
 	float maxHp = 80.0f;
 	float downSec = 8.0f;			// 倒れてから自分で起き上がるまで
+	float hurtSec = 0.5f;			// ダメージを受けてからの無敵時間
 
 	//---- ライト(足元をほのかに照らす。色はステートが変える) ----
 	float lightRange = 1.0f;
 	float lightPower = 0.01f;
+	Math::Vector3 lightOffset = { 0.0f, 0.5f, 0.0f };	// 足元に近い位置に光源を置く
 
 	template<class V> void Visit(V& v)
 	{
@@ -50,16 +52,19 @@ struct ChickTuning
 		v("groundStick", groundStick);
 		v("maxHp", maxHp);
 		v("downSec", downSec);
+		v("hurtSec", hurtSec);
 		v("lightRange", lightRange);
 		v("lightPower", lightPower);
+		v("lightOffset", lightOffset);
 	}
 };
 
 // 状態フラグ用のビット。ステートが消費して遷移の合図にする。
 namespace ChickFlag
 {
-	constexpr uint16_t kDownRequested = 1u << 0;	// HPが0になった
+	constexpr uint16_t kDownRequested  = 1u << 0;	// HPが0になった
 	constexpr uint16_t kCarryRequested = 1u << 1;	// 咥えられた
+	constexpr uint16_t kHurt           = 1u << 2;	// 攻撃を受けた
 }
 
 class Chick : public IChara
@@ -131,13 +136,19 @@ public:
 	// HPを戻して立ち上がる。判定と押し返しもここで復帰させる。
 	void Revive();
 
-	// 倒れている時間を進める。切れたら true。
-	bool TickDown(float _dt);
+	//ダメージ受けから復帰
+	void RecoverHurt();
 
+	// 倒れている時間を進める。切れたら true。
+	bool IsDown() { return m_isDowned; }
+	bool TickDown(float _dt);
 	float GetDownRatio() const;
 
-	bool ConsumeDownRequest() { return ConsumeFlag(ChickFlag::kDownRequested); }
+	bool TickHurt(float _dt);
+
+	bool ConsumeDownRequest()  { return ConsumeFlag(ChickFlag::kDownRequested); }
 	bool ConsumeCarryRequest() { return ConsumeFlag(ChickFlag::kCarryRequested); }
+	bool ConsumeHurt()         { return ConsumeFlag(ChickFlag::kHurt); }
 
 	// 敵の標的になるか。倒れている/運ばれている個体はもう狙わない。
 	bool IsEnemyTarget() const
@@ -211,6 +222,9 @@ private:
 
 	// HPが0になった時の入口。倒れるだけで消えない。
 	void BeginDown();
+	// ダメージ
+	void BeginHurt();
+
 	// 判定と押し返しの付け外し。倒れている間は的にも壁にもしない。
 	void SetVulnerable(bool _on);
 
@@ -246,6 +260,10 @@ private:
 	bool  m_isDowned = false;
 	int   m_carrierId = -1;		// 運び手のエンティティ番号
 	float m_downTimer = 0.0f;
+
+	//ダメージタイマー
+	bool  m_isHurt = false;
+	float m_hurtTimer = 0.0f;
 
 	Math::Vector3 m_baseScale = Math::Vector3::One;	// 縮みの基準
 	bool  m_carryLeaving = false;

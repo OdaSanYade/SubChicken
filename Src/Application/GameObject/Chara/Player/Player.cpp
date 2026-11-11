@@ -104,8 +104,7 @@ void Player::Init()
 		return;
 	}
 
-	// アニメーション名 → 実データ の解決関数。
-	// ※システム側に保持されるので MakeSafeCallback と同じく weak で持つ
+	// アニメーション名 → 実データ の解決関数
 	std::weak_ptr<IObject> weak = weak_from_this();
 	sys->SetAnimResolver([weak](const char* name) -> std::shared_ptr<KdAnimationData>
 		{
@@ -132,9 +131,6 @@ void Player::Init()
 // ===========================================================
 // 入力
 // ===========================================================
-// 押した瞬間にフラグを立てるだけ。消費はステート側。
-// リスナーは入力システムに残り続けるので [this] ではなく MakeSafeCallback で渡す。
-// (シーンを抜けてプレイヤーが消えた後にボタンを押しても何も起きないようにする)
 void Player::SetKeyAction()
 {
 	auto& input = KdInputActionSystem::Instance();
@@ -154,31 +150,6 @@ void Player::SetKeyAction()
 		input.AddListener(b.action, KdInputEventType::Press,
 			MakeSafeCallback<Player>([flag](Player& self) { self.SetFlag(flag); }));
 	}
-}
-
-bool Player::ConsumeDeadRequest()
-{
-	return ConsumeDeadFlag(TestEntityFlag::kDead);
-}
-
-bool Player::ConsumeDodgeRequest()
-{
-	return ConsumeFlag(TestEntityFlag::kDodgeRequested);
-}
-
-bool Player::ConsumeAttackRequest()
-{
-	return ConsumeFlag(TestEntityFlag::kAttackRequested);
-}
-
-bool Player::ConsumeCryRequest()
-{
-	return ConsumeFlag(TestEntityFlag::kCry);
-}
-
-bool Player::ConsumeHeavyRequest()
-{
-	return ConsumeFlag(TestEntityFlag::kHeavyRequested);
 }
 
 // ===========================================================
@@ -575,9 +546,6 @@ void Player::EmitCry(bool _full)
 			_full ? m_tuning.cryFullFreeze : m_tuning.cryShortFreeze,
 			!_full);
 	}
-
-	// ※元のコードでも2回呼んでいる。意図した重ね掛けか分からないので残している(要確認リスト参照)
-	CombatFx::Instance().RequestCryFx(_full);
 
 	CombatFx::Instance().RequestCryFx(_full);
 
@@ -1042,10 +1010,7 @@ void Player::SpawnAttackHitbox(float _damage, float _reach, float _radius,
 		}
 	}
 
-	// 振り抜きを進める。
-	// ※この式は「足してから割る」になっていて、毎フレーム前回の値まで割り直している。
-	//   本来の意図は m_swingPhase + dt / swingSec だと思われるが、見た目の調整がこの式で
-	//   決まっているので変えていない(要確認リスト参照)
+	// 振り抜きを進める
 	m_swingPhase = std::min(
 		(m_swingPhase + dt) / std::max(m_swing.swingSec, kMinDuration), 1.0f);
 

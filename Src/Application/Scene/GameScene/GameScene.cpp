@@ -315,31 +315,6 @@ void GameScene::Enter()
 			const auto& enemies = sp->GetEnemyies();
 			const float r2 = _radius * _radius;
 
-			// チョイ鳴きは一番近い1体だけ
-			if (_nearestOnly)
-			{
-				EnemyBase* best = nullptr;
-				float bestDist = r2;
-
-				for (const auto& e : enemies)
-				{
-					if (!e->IsTargetable()) continue;
-
-					Math::Vector3 d = e->GetPosition() - _center;
-					d.y = 0.0f;
-
-					const float sq = d.LengthSquared();
-					if (sq < bestDist) { bestDist = sq; best = e.get(); }
-				}
-
-				if (best)
-				{
-					best->Freeze(_duration);
-					sp->ForceExpose("freeze");	// 鳴いて固めるのも手出しのうち
-				}
-				return;
-			}
-
 			// 全力鳴きは範囲内の全員
 			for (const auto& e : enemies)
 			{
@@ -350,7 +325,7 @@ void GameScene::Enter()
 				if (d.LengthSquared() > r2) continue;
 
 				e->Freeze(_duration);
-				sp->ForceExpose("freeze");	// 鳴いて固めるのも手出しのうち
+				sp->ForceExpose("freeze");
 			}
 		});
 

@@ -93,6 +93,7 @@ std::vector<ChickManager::IndicatorTarget> ChickManager::GetIndicatorTargets() c
 	{
 		if (!chick->IsAlive()) continue;
 		if (chick->IsRescued())continue;
+		if (chick->IsDown()) continue;
 
 		const bool carried = chick->IsCarried();
 

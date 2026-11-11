@@ -52,6 +52,14 @@ namespace {
 		ctx.ChangeStateForced("Down"_sid);
 		return true;
 	}
+
+	bool TryHurt(StateContext& ctx, Chick* _c)
+	{
+		if (!_c->ConsumeHurt()) return false;
+
+		ctx.ChangeStateForced("Hurt"_sid);
+		return true;
+	}
 }
 
 void SetupChickStates()
@@ -72,6 +80,7 @@ void SetupChickStates()
 
 				if (TryCarried(ctx, c)) return;
 				if (TryDown(ctx, c)) return;
+				if (TryHurt(ctx, c))return;
 
 				// 巣に収まったひよこはもう動かない
 				if (c->IsRescued()) return;
@@ -119,8 +128,8 @@ void SetupChickStates()
 	sys->State("Follow").Tag(ChickTag::kFollow)
 		.Param("loseRange", 40.0_m)
 		// ついてきている間は緑、離れたら白に戻す
-		.Param("followLight.r", 0.0f).Param("followLight.g", 1.0f).Param("followLight.b", 0.0f)
-		.Param("normalLight.r", 1.0f).Param("normalLight.g", 1.0f).Param("normalLight.b", 1.0f)
+		.Param("followLight.r", 0.0f).Param("followLight.g", 0.5f).Param("followLight.b", 0.0f)
+		.Param("normalLight.r", 0.5f).Param("normalLight.g", 0.5f).Param("normalLight.b", 0.5f)
 		.OnEnter([](StateContext& ctx)
 			{
 				auto* c = ctx.As<Chick>();
@@ -133,6 +142,7 @@ void SetupChickStates()
 
 				if (TryCarried(ctx, c)) return;
 				if (TryDown(ctx, c)) return;
+				if (TryHurt(ctx, c)) return;
 
 				// 巣に入って持ち場をもらった → 位置取りへ
 				if (c->HasSlot()) { ctx.ChangeState("Settle"_sid, Priority::kSettle); return; }
@@ -194,7 +204,6 @@ void SetupChickStates()
 	// ダウン
 	// =======================================================
 	sys->State("DownChick").Tag(ChickTag::kDown)
-		.Anim("LookAround", 3.0f, true)
 		.OnEnter([](StateContext& ctx) 
 			{
 				auto* c = ctx.As<Chick>();
@@ -222,11 +231,13 @@ void SetupChickStates()
 		.OnExit([](StateContext& ctx)
 		{
 			auto* c = ctx.As<Chick>();
+
 			auto& rc = c->GetComponentManager().get<RenderComponent>(c->GetEntity());
 			SetMaterial(rc, "ChickDefault");
 		});
 	
-	sys->State("Down").Base("DownChick");
+	sys->State("Down").Base("DownChick")
+		.Anim("Down", 1.0f, false);
 
 	// =======================================================
 	// 連れ去られ
@@ -235,8 +246,8 @@ void SetupChickStates()
 		.Anim("Struggle", 5.0f, true)
 		.Param("sound", "carry")
 		// 咥えられている間は赤、離されたら白に戻す
-		.Param("carryLight.r", 1.0f).Param("carryLight.g", 0.0f).Param("carryLight.b", 0.0f)
-		.Param("normalLight.r", 1.0f).Param("normalLight.g", 1.0f).Param("normalLight.b", 1.0f)
+		.Param("carryLight.r", 0.5f).Param("carryLight.g", 0.0f).Param("carryLight.b", 0.0f)
+		.Param("normalLight.r", 0.5f).Param("normalLight.g", 0.5f).Param("normalLight.b", 0.5f)
 		.OnEnter([](StateContext& ctx)
 			{
 				auto* c = ctx.As<Chick>();
@@ -263,14 +274,51 @@ void SetupChickStates()
 
 				GPUParticleSystem::Instance().PlayEffect("Release", c->GetPosition());
 			});
-
 	sys->State("Carried").Base("Carry");
+
+	// =======================================================
+	// ダメージ
+	// =======================================================
+	sys->State("HurtChick").Tag(ChickTag::kHurt)
+		.Anim("Damage", 1.0f, false)
+		.Param("sound", "chickHurt")
+		.OnEnter([](StateContext& ctx)
+			{
+				auto* c = ctx.As<Chick>();
+				AudioManager::Instance().Play(ctx.ParamStr("sound"_sid));
+				c->StopMotion();
+
+				// ダメージマテリアル
+				auto& rc = c->GetComponentManager().get<RenderComponent>(c->GetEntity());
+				SetMaterial(rc, "Damage");
+			})
+		.OnUpdate([](StateContext& ctx)
+			{
+				auto* c = ctx.As<Chick>();
+				const float dt = static_cast<float>(Time::Instance().GetDeltaTime());
+				c->ApplyMotion(dt, 0.0f);
+
+				if (!c->TickHurt(dt)) return;
+				ctx.ChangeStateForced("Rest"_sid);
+			})
+		.OnExit([](StateContext& ctx)
+			{
+				auto* c = ctx.As<Chick>();
+
+				c->RecoverHurt();
+
+				auto& rc = c->GetComponentManager().get<RenderComponent>(c->GetEntity());
+				SetMaterial(rc, "ChickDefault");
+			});
+	sys->State("Hurt").Base("HurtChick")
+		.Anim("Hurt", 1.0f, false);
 
 	sys->SetEntryState("Rest");
 
 	// ベースが直接指定されたときの飛び先
 	sys->SetDefaultChild("Carry", "Carried");
 	sys->SetDefaultChild("DownChick", "Down");
+	sys->SetDefaultChild("HurtChick", "Hurt");
 	sys->SetDefaultChild("Idle", "Rest");
 	sys->SetDefaultChild("Follow", "Walk");
 

@@ -72,6 +72,7 @@ void Chick::Init()
 	auto& lc = m_cm.add<LightComponent>(m_entity);
 	lc.range = t.lightRange;
 	lc.power = t.lightPower;
+	lc.offset = t.lightOffset;
 	lc.enabled = true;
 
 	// 配置前に呼ばれた場合の保険
@@ -161,9 +162,18 @@ void Chick::PostUpdate()
 	{
 		auto& hc = m_cm.get<Game::Health>(m_entity);
 
+
+		//　デバッグ強制ダウン状態
+		if(GetAsyncKeyState('C') & 0x8000)
+		{
+			hc.hp = 0.0f;
+			BeginDown();
+		}
+
 		for (auto& hit : combat->received)
 		{
 			hc.hp -= hit.damage;
+			BeginHurt();
 
 			if (hc.hp > 0.0f) continue;
 
@@ -214,6 +224,15 @@ void Chick::BeginDown()
 
 	// 絵と遷移はステート側に任せる。ここは事実だけを立てる。
 	SetFlag(ChickFlag::kDownRequested);
+}
+
+void Chick::BeginHurt()
+{
+	if (m_isHurt)return;
+	m_isHurt = true;
+	m_hurtTimer = m_tuning.hurtSec;
+
+	SetFlag(ChickFlag::kHurt);
 }
 
 void Chick::BeginCarried(int _carrierId)
@@ -313,6 +332,14 @@ void Chick::Revive()
 	// 倒れた/咥えられたの予約が残っていると、起きた直後に戻されてしまう
 	ClearFlag(ChickFlag::kDownRequested);
 	ClearFlag(ChickFlag::kCarryRequested);
+	ClearFlag(ChickFlag::kHurt);
+}
+
+void Chick::RecoverHurt()
+{
+	m_isHurt = false;
+	m_hurtTimer = 0.0f;
+	ClearFlag(ChickFlag::kHurt);
 }
 
 bool Chick::TickDown(float _dt)
@@ -328,6 +355,15 @@ float Chick::GetDownRatio() const
 {
 	if (m_tuning.downSec <= 0.0f) return 1.0f;
 	return std::clamp(1.0f - (m_downTimer / m_tuning.downSec), 0.0f, 1.0f);
+}
+
+bool Chick::TickHurt(float _dt)
+{
+	if (!m_isHurt) return false;
+	if (m_hurtTimer <= 0.0f) return true;
+
+	m_hurtTimer -= _dt;
+	return (m_hurtTimer <= 0.0f);
 }
 
 float Chick::GetHealthRatio() const

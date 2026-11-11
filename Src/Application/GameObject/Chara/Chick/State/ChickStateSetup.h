@@ -10,4 +10,5 @@ namespace ChickTag
 	constexpr unsigned int kEscape = 1u << 2;	// 元の位置へ帰る
 	constexpr unsigned int kDown = 1u << 3;	// 倒れている(復帰する)
 	constexpr unsigned int kCarried = 1u << 4;	// 咥えられて運ばれている
+	constexpr unsigned int kHurt = 1u << 5;	// 攻撃を受けた
 }

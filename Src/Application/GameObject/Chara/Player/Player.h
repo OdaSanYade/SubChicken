@@ -58,11 +58,15 @@ public:
 	bool IsGrounded() const { return m_isGrounded; }
 
 	// Press系リスナーが立てたフラグを消費する
-	bool ConsumeDeadRequest();
-	bool ConsumeDodgeRequest();
-	bool ConsumeAttackRequest();
-	bool ConsumeCryRequest();
-	bool ConsumeHeavyRequest();
+	bool ConsumeDeadRequest()  { return ConsumeDeadFlag(TestEntityFlag::kDead); }
+	bool ConsumeDodgeRequest() { return ConsumeFlag(TestEntityFlag::kDodgeRequested); }
+	bool ConsumeAttackRequest(){ return ConsumeFlag(TestEntityFlag::kAttackRequested); }
+	bool ConsumeCryRequest()   { return ConsumeFlag(TestEntityFlag::kCry); }
+	bool ConsumeHeavyRequest() { return ConsumeFlag(TestEntityFlag::kHeavyRequested); }
+	bool ConsumeHurtRequest()  { return ConsumeFlag(TestEntityFlag::kHurt); }
+	bool ConsumeHardLanding()  { return ConsumeFlag(TestEntityFlag::kHardLanding); }
+	bool ConsumeComboQueue()   { return ConsumeFlag(TestEntityFlag::kComboQueued); }
+	bool ConsumeCounterHit()   { return ConsumeFlag(TestEntityFlag::kCounterHit); }
 
 	// ---- 移動 ----
 	void ApplyGroundedMotion(float deltaTime, float speed);
@@ -85,8 +89,6 @@ public:
 	// 今出している攻撃が当たったか。当たっていればリカバリを短縮する。
 	bool DidAttackLand() const { return m_attackLanded; }
 
-	// ---- 被弾のよろけ ---
-	bool  ConsumeHurtRequest() { return ConsumeFlag(TestEntityFlag::kHurt); }
 
 	// よろけの強さ
 	int   GetHurtLevel() const { return m_hurtLevel; }
@@ -101,7 +103,6 @@ public:
 	// ---- 着地 ----
 	// 落下速度に応じた潰し
 	void ApplyLandingPose();
-	bool ConsumeHardLanding() { return ConsumeFlag(TestEntityFlag::kHardLanding); }
 
 	// ---- 被弾 ----
 	bool IsHitInvincible() const { return m_hitInvincibleTime > 0.0f; }
@@ -127,7 +128,6 @@ public:
 
 	// コンボの先行入力
 	void QueueComboInput() { SetFlag(TestEntityFlag::kComboQueued); }
-	bool ConsumeComboQueue() { return ConsumeFlag(TestEntityFlag::kComboQueued); }
 	void ClearComboQueue() { ClearFlag(TestEntityFlag::kComboQueued); }
 	
 	// 攻撃の振り
@@ -160,7 +160,6 @@ public:
 		float _launch = 1.0f);
 
 	// 自分のカウンターが当たったか(CombatFx経由なので1フレーム遅れ)
-	bool ConsumeCounterHit() { return ConsumeFlag(TestEntityFlag::kCounterHit); }
 
 	// 視野角の一時変更。締めの一撃などで画面を寄せる。Push/Popは必ず対で。
 	void PushCameraFocus(float _fovDeg, float _lambda = 14.0f);
