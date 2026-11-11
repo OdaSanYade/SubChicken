@@ -1,0 +1,34 @@
+{
+    "name": "MushroomDefault",
+    "params": [],
+    "ps": "Texture2D g_modelBaseColor : register(t6);\nTexture2D g_modelMetalRough : register(t7);\nSamplerState g_sampler : register(s0);\n\ncbuffer cbEffect : register(b0)\n{\n    float g_time;\n    float g_audioBass;\n    float g_audioMid;\n    float g_audioTreble;\n    float4 g_params[16];\n};\n\ncbuffer cbRaymarchCamera : register(b3)\n{\n    float3 g_camPos;\n    float  _camPad;\n    row_major float4x4 g_invViewProj; \n    row_major float4x4 g_viewProj;\n};\n\n\ncbuffer cbMaterial : register(b5)\n{\n    float4 g_baseColorRate;\n    float  g_metallicRate;\n    float  g_roughnessRate;\n\tfloat  g_hasNormalMap;   \n    float _matPad;\n};\n\n\nstruct PS_IN {\n    float4 pos : SV_Position;\n    float2 uv : TEXCOORD0;\n    float3 normal : NORMAL;\n    float3 viewNormal : NORMAL1;\n    float3 worldNormal : NORMAL2;\n    float3 worldPos : POSITION1;\n    float3 worldTangent : TANGENT;\n    nointerpolation uint instID : INSTANCEID;\n};\n\nstruct PS_OUT {\n    float4 target0 : SV_Target0;\n    float4 target1 : SV_Target1;\n    float4 target2 : SV_Target2;\n    float4 target3 : SV_Target3;\n    float4 target4 : SV_Target4;\n};\n\nPS_OUT main(PS_IN In)\n{\n    float4 node7_out = float4(0.762500f, 0.866406f, 1.000000f, 1.000000f);\n    float4 node5_out = (g_modelBaseColor.Sample(g_sampler, In.uv) * g_baseColorRate);\n    float4 node6_out = node5_out * node7_out;\n    float4 node4_out = float4(0.141953f, 0.309057f, 0.493750f, 1.000000f);\n    float node9_out = 1.000000f;\n    PS_OUT o;\n    o.target0 = float4((node6_out).xyz, (g_modelMetalRough.Sample(g_sampler, In.uv).b * g_metallicRate));\n    o.target1 = float4((normalize(In.worldNormal)) * 0.5 + 0.5, (g_modelMetalRough.Sample(g_sampler, In.uv).g * g_roughnessRate));\n    o.target2 = float4(In.worldPos, 1.0);\n    o.target3 = float4((node4_out).xyz, node9_out);\n    o.target4 = float4(0,0,0,0);\n    return o;\n}\n",
+    "skinned": false,
+    "targetCount": 4,
+    "targetNames": [
+        "GBufferA",
+        "GBufferB",
+        "GBufferC",
+        "GBufferD",
+        "GBufferE"
+    ],
+    "type": "material",
+    "vertexLayout": [
+        {
+            "format": "float3",
+            "index": 0,
+            "semantic": "POSITION"
+        },
+        {
+            "format": "float2",
+            "index": 0,
+            "semantic": "TEXCOORD"
+        },
+        {
+            "format": "float3",
+            "index": 0,
+            "semantic": "NORMAL"
+        }
+    ],
+    "vs": "Texture2D g_input0 : register(t0);\nTexture2D g_input1 : register(t1);\nTexture2D g_input2 : register(t2);\nTexture2D g_input3 : register(t3);\nTexture2D g_input4 : register(t4);\nSamplerState g_sampler : register(s0);\n\ncbuffer cbEffect : register(b0)\n{\n    float g_time;\n    float g_audioBass;\n    float g_audioMid;\n    float g_audioTreble;\n    float4 g_params[16];\n};\n\ncbuffer cbTransform : register(b1)\n{\n    row_major float4x4 g_mWVP;\n    row_major float4x4 g_mWorldView;\n    row_major float4x4 g_mWorld;\n};\n\ncbuffer cbRaymarchCamera : register(b3)\n{\n    float3 g_camPos;\n    float  _camPad;\n    row_major float4x4 g_invViewProj; \n    row_major float4x4 g_viewProj;\n};\n\n\nstruct VS_IN {\n    float3 pos : POSITION;\n    float2 uv : TEXCOORD0;\n    float3 normal : NORMAL;\n    float3 tangent : TANGENT;\n};\n\nstruct PS_IN {\n    float4 pos : SV_Position;\n    float2 uv : TEXCOORD0;\n    float3 normal : NORMAL;\n    float3 viewNormal : NORMAL1;\n    float3 worldNormal : NORMAL2;\n    float3 worldPos : POSITION1;\n    float3 worldTangent : TANGENT;\n    nointerpolation uint instID : INSTANCEID;\n};\n\nPS_IN main(VS_IN In)\n{\n    PS_IN Out;\n    float3 vtxOffset = float3(0.0f, 0.0f, 0.0f);\n    float3 localPos = In.pos + vtxOffset;\n    Out.pos = mul(float4(localPos, 1.0f), g_mWVP);\n    Out.uv = In.uv;\n    Out.normal = In.normal;\n    Out.viewNormal = normalize(mul(In.normal, (float3x3)g_mWorldView));\n    Out.worldNormal = normalize(mul(In.normal, (float3x3)g_mWorld));\n    Out.worldPos = mul(float4(localPos, 1.0f), g_mWorld).xyz;\n    Out.worldTangent = normalize(mul(In.tangent, (float3x3)g_mWorld));\n    Out.instID = 0;\n    return Out;\n}\n",
+    "writeMask": 13
+}

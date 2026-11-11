@@ -1,0 +1,32 @@
+{
+  "_説明": "ひよこの調整値。ステートごとの値は ChickStates",
+  "Chick": {
+    "modelName": "Chick",
+    "materialName": "ChickDefault",
+    "bodyScale": 0.3,
+    "capsuleRadius": 0.8,
+    "capsuleHeight": 1.4,
+    "inverseMass": 2.0,
+    "brakeDistance": 2.5,
+    "turnRate": 8.0,
+    "groundStick": 0.1,
+    "maxHp": 80.0,
+    "downSec": 8.0,
+    "lightRange": 1.0,
+    "lightPower": 0.01
+  },
+  "ChickManager": {
+    "chickCount": 5,
+    "nestRadius": 30.0,
+    "slotRadius": 5.0,
+    "groundRayUp": 30.0,
+    "groundRayLength": 100.0,
+    "spawnPoints": [
+      [ 8.0, 0.0, -115.0 ],
+      [ 10.0, 0.0, -114.0 ],
+      [ 6.0, 0.0, -114.0 ],
+      [ 10.2, 0.0, -113.5 ],
+      [ 9.2, 0.0, -113.5 ]
+    ]
+  }
+}

@@ -1,0 +1,38 @@
+{
+    "TitleLogo": {
+        "fileName": "TitleLogo"
+    },
+    "RankD": {
+        "fileName": "RankD"
+    },
+    "RankC": {
+        "fileName": "RankC"
+    },
+    "RankB": {
+        "fileName": "RankB"
+    },
+    "RankA": {
+        "fileName": "RankA"
+    },
+    "RankS": {
+        "fileName": "RankS"
+    },
+    "PhaseFIRST": {
+        "fileName": "PhaseFIRST"
+    },
+    "PhaseSECOND": {
+        "fileName": "PhaseSECOND"
+    },
+    "PhaseFINAL": {
+        "fileName": "PhaseFINAL"
+    },
+    "Transition": {
+        "fileName": "Transition"
+    },
+    "Clear": {
+        "fileName": "Clear"
+    },
+    "Died": {
+        "fileName": "Died"
+    }
+}

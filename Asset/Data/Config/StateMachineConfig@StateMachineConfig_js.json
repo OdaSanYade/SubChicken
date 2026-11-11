@@ -1,0 +1,29 @@
+{
+  "_説明": "ステートマシンの調整値。アドレサブル名は StateMachineConfig_js。保存するとホットリロードで反映される(メインループ側でConsumeDirtyを見ている場合)",
+
+  "transition": {
+    "_maxPerFrame": "1回の遷移処理で続けて遷移してよい回数。Enterの中でChangeStateを呼び合う定義ミスの暴走止め(1〜64)",
+    "maxPerFrame": 8
+  },
+
+  "animation": {
+    "_説明": "ステートのparamsにblend/speed/loopが書かれていないときの値",
+    "defaultBlendFrame": 10.0,
+    "defaultSpeed": 1.0,
+    "defaultLoop": true
+  },
+
+  "debug": {
+    "_historyMax": "ImGuiに残す遷移履歴の件数(0〜256)",
+    "historyMax": 16,
+
+    "colors": {
+      "_説明": "ImGuiの文字色 [R, G, B, A] 0〜1。Aを省略すると今の値のまま",
+      "base":  [ 0.55, 0.80, 1.00, 1.0 ],
+      "state": [ 0.60, 1.00, 0.60, 1.0 ],
+      "dim":   [ 0.60, 0.60, 0.60, 1.0 ],
+      "event": [ 1.00, 0.85, 0.40, 1.0 ],
+      "warn":  [ 1.00, 0.55, 0.45, 1.0 ]
+    }
+  }
+}

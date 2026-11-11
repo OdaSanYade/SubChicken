@@ -1,0 +1,270 @@
+{
+    "_comment": "HUDの調整値。書いた項目だけが上書きされ、書かない項目は既定値のまま。座標とサイズは baseWidth/baseHeight での基準ピクセル値で、実解像度に応じて自動でスケールする。色は [r, g, b, a] で、a は省略可。",
+    "baseWidth": 1080.0,
+    "baseHeight": 720.0,
+    "safeAreaPercent": 0.035,
+    "fade": {
+        "idleAlphaHp": 0.58,
+        "idleAlphaOther": 0.4,
+        "holdHp": 2.4,
+        "holdBreath": 1.1,
+        "holdCount": 0.9
+    },
+    "health": {
+        "widthRatio": 0.2,
+        "halfHeight": 34.0,
+        "marginX": 0.009999999776482582,
+        "marginY": 50.0,
+        "dangerLine": 0.35,
+        "lastStandLine": 0.2,
+        "shockScale": 0.6491666547954082,
+        "numShowSec": 1.5783333335071803
+    },
+    "enemyBar": {
+        "halfW": 26.0,
+        "halfH": 11.0,
+        "offsetY": 10.0,
+        "range": 45.0,
+        "minAlpha": 0.55,
+        "minSpacing": 46.0,
+        "maxVisible": 8,
+        "lockedScale": 1.45,
+        "offCenterFade": 0.45,
+        "lockedGap": 6.0
+    },
+    "lock": {
+        "refDistance": 8.0,
+        "refSize": 22.0,
+        "minRadius": 10.0,
+        "maxRadius": 30.0
+    },
+    "warn": {
+        "radius": 16.0,
+        "offsetY": 30.0,
+        "quadScale": 3.2,
+        "edgeMargin": 48.0
+    },
+    "compass": {
+        "radius": 145.0,
+        "range": 60.0,
+        "maxMarkers": 5
+    },
+    "count": {
+        "posY": 14.0,
+        "dotWidth": 13.0,
+        "maxWidthRatio": 0.34,
+        "halfH": 8.0,
+        "maxDots": 20,
+        "urgentCount": 3
+    },
+    "score": {
+        "halfW": 138.0,
+        "halfH": 54.0,
+        "marginX": 8.0,
+        "marginY": 8.0,
+        "idleAlpha": 0.95
+    },
+    "combo": {
+        "posXRatio": 0.78,
+        "posYRatio": 0.28,
+        "halfW": 150.0,
+        "halfH": 52.0,
+        "popSec": 0.3
+    },
+    "damage": {
+        "halfW": 40.0,
+        "halfH": 44.0,
+        "lifeSec": 0.9,
+        "maxCount": 24
+    },
+    "pips": {
+        "halfW": 34.0,
+        "halfH": 9.0,
+        "offsetY": 108.0
+    },
+    "guide": {
+        "cardW": 88.0,
+        "cardH": 98.0,
+        "gap": 8.0,
+        "cols": 2,
+        "rippleSec": 0.32
+    },
+    "fx": {
+        "breakFlashSec": 0.55,
+        "deathBurstSec": 0.7,
+        "counterFlashSec": 0.65,
+        "victoryDipSec": 1.2,
+        "victoryDipAmount": 0.75,
+        "comboDropSec": 1.1,
+        "comboWarnLine": 0.35,
+        "healFlashSec": 0.7,
+        "idleSleepSec": 8.0,
+        "idleSleepAlpha": 0.35,
+        "deathCollapseSec": 1.4,
+        "desatOnCounter": 0.55,
+        "mergeRadius": 42.0,
+        "mergeSec": 0.28
+    },
+    "visible": {
+        "health": true,
+        "enemyBar": true,
+        "warn": true,
+        "lock": true,
+        "counterRing": true,
+        "focus": true,
+        "compass": true,
+        "count": false,
+        "combo": true,
+        "damage": true,
+        "guide": true,
+        "wave": true,
+        "pips": true,
+        "score": true
+    },
+    "color": {
+        "life": [
+            0.4,
+            0.8,
+            0.46,
+            1.0
+        ],
+        "lifeDark": [
+            0.05,
+            0.07,
+            0.06,
+            0.86
+        ],
+        "beak": [
+            0.92,
+            0.76,
+            0.32,
+            1.0
+        ],
+        "plume": [
+            0.93,
+            0.9,
+            0.82,
+            0.95
+        ],
+        "plumeDark": [
+            0.62,
+            0.58,
+            0.52,
+            0.7
+        ],
+        "enemyHp": [
+            1.0,
+            0.2,
+            0.18,
+            1.0
+        ],
+        "enemyBg": [
+            0.02,
+            0.02,
+            0.03,
+            0.96
+        ],
+        "alert": [
+            0.94,
+            0.4,
+            0.28,
+            0.95
+        ],
+        "alertHi": [
+            1.0,
+            0.96,
+            0.86,
+            1.0
+        ],
+        "counter": [
+            0.58,
+            0.86,
+            0.96,
+            1.0
+        ],
+        "counterBg": [
+            0.46,
+            0.8,
+            0.94,
+            0.26
+        ],
+        "compass": [
+            0.62,
+            0.26,
+            0.24,
+            0.7
+        ],
+        "compassHi": [
+            0.82,
+            0.38,
+            0.3,
+            0.85
+        ],
+        "comboHot": [
+            0.96,
+            0.58,
+            0.26,
+            1.0
+        ],
+        "score": [
+            1.0,
+            0.86,
+            0.42,
+            1.0
+        ],
+        "scoreSub": [
+            0.72,
+            0.82,
+            0.92,
+            1.0
+        ],
+        "damage": [
+            0.96,
+            0.93,
+            0.86,
+            1.0
+        ],
+        "damageHot": [
+            1.0,
+            0.66,
+            0.24,
+            1.0
+        ],
+        "padA": [
+            0.42,
+            0.72,
+            0.3,
+            1.0
+        ],
+        "padB": [
+            0.84,
+            0.24,
+            0.22,
+            1.0
+        ],
+        "padX": [
+            0.2,
+            0.46,
+            0.82,
+            1.0
+        ],
+        "padY": [
+            0.92,
+            0.72,
+            0.18,
+            1.0
+        ],
+        "padNeutral": [
+            0.3,
+            0.32,
+            0.36,
+            1.0
+        ],
+        "keycap": [
+            0.26,
+            0.27,
+            0.31,
+            1.0
+        ]
+    }
+}

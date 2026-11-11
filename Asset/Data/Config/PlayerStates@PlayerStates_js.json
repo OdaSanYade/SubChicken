@@ -1,0 +1,330 @@
+{
+  "_説明": "プレイヤーのステートの params / minTime / buffer。reach, radius, keepDist, maxStep, swing.top, swing.bottom, fx.lift は縮尺前のメートル、knockback は縮尺前のメートル毎秒。anim/blend/loop/speed/onEnd はアニメ連携の予約キー",
+  "states": {
+    "Action": {
+      "params": {
+        "trailAsset": "Dodge",
+        "fx.aberration": 0.2
+      }
+    },
+    "Idle": {
+      "params": {
+        "anim": "Idle",
+        "blend": 10.0,
+        "loop": 1.0,
+        "fx.landTrauma": 0.25
+      }
+    },
+    "Walk": {
+      "params": {
+        "anim": "Walk",
+        "blend": 10.0,
+        "loop": 1.0,
+        "moveSpeed": 5.0
+      }
+    },
+    "Run": {
+      "params": {
+        "anim": "Dash",
+        "blend": 8.0,
+        "loop": 1.0,
+        "moveSpeed": 30.0
+      }
+    },
+    "CryFull": {
+      "minTime": 0.3,
+      "buffer": 0.3,
+      "params": {
+        "anim": "Say",
+        "effect": "explosion",
+        "blend": 2.2,
+        "loop": 0.0,
+        "chargeTime": 0.65,
+        "cancelFrom": 1.1,
+        "endTime": 1.35,
+        "fx.lift": 1.0,
+        "fx.radialBlur": 2.0,
+        "fx.aberration": 0.5,
+        "fx.lightExtent": 20.0,
+        "fx.lightPower": 1.0,
+        "fx.light.r": 0.0,
+        "fx.light.g": 0.5,
+        "fx.light.b": 1.0
+      }
+    },
+    "Dodge": {
+      "minTime": 0.15,
+      "buffer": 0.25,
+      "params": {
+        "anim": "Rolling",
+        "effect": "Dodge",
+        "sound": "dodge",
+        "ghostMaterial": "TestEmissive",
+        "trailEffect": "Dash",
+        "blend": 2.0,
+        "loop": 0.0,
+        "dodgeSpeed": 80.0,
+        "duration": 0.15,
+        "fx.ghostParam": -0.4,
+        "fx.ghostLife": 1.0,
+        "fx.radialBlur": 0.3,
+        "fx.aberration": 0.3,
+        "fx.lift": 1.5
+      }
+    },
+    "Attack1": {
+      "minTime": 0.12,
+      "buffer": 0.3,
+      "params": {
+        "anim": "ClawAttack",
+        "swing.asset": "Slash1",
+        "blend": 4.0,
+        "loop": 0.0,
+        "damage": 15.0,
+        "reach": 15.0,
+        "radius": 2.6,
+        "knockback": 100.0,
+        "keepDist": 4.0,
+        "maxStep": 125.0,
+        "stepTime": 0.05,
+        "hitStart": 0.04,
+        "hitEnd": 0.18,
+        "chainStart": 0.1,
+        "endTime": 0.3,
+        "cancelFrom": 0.18,
+        "confirmScale": 0.6,
+        "hitstop": 5.0,
+        "swing.life": 0.2,
+        "swing.width": 1.0,
+        "swing.top": 4.0,
+        "swing.bottom": -1.5,
+        "swing.yaw": 85.0,
+        "swing.sec": 0.14,
+        "swing.inner": 0.65,
+        "swing.outer": 1.45
+      }
+    },
+    "Attack2": {
+      "minTime": 0.12,
+      "params": {
+        "anim": "ClawAttack_Combo2",
+        "swing.asset": "Slash2",
+        "blend": 4.5,
+        "loop": 0.0,
+        "damage": 22.0,
+        "reach": 19.0,
+        "radius": 3.2,
+        "knockback": 130.0,
+        "hitstop": 7.0,
+        "keepDist": 4.0,
+        "maxStep": 100.0,
+        "stepTime": 0.05,
+        "hitStart": 0.05,
+        "hitEnd": 0.2,
+        "chainStart": 0.12,
+        "endTime": 0.35,
+        "cancelFrom": 0.2,
+        "confirmScale": 0.6,
+        "swing.life": 0.22,
+        "swing.width": 1.0,
+        "swing.top": 4.0,
+        "swing.bottom": -1.5,
+        "swing.yaw": -85.0,
+        "swing.sec": 0.15,
+        "swing.inner": 0.65,
+        "swing.outer": 1.45
+      }
+    },
+    "Attack3": {
+      "minTime": 0.65,
+      "params": {
+        "anim": "ClawAttack_Combo3",
+        "swing.asset": "Slash3",
+        "blend": 3.0,
+        "loop": 0.0,
+        "damage": 34.0,
+        "reach": 26.0,
+        "radius": 4.2,
+        "knockback": 260.0,
+        "hitstop": 14.0,
+        "launch": 1.4,
+        "keepDist": 4.5,
+        "maxStep": 100.0,
+        "stepTime": 0.05,
+        "hitStart": 0.15,
+        "hitEnd": 0.3,
+        "endTime": 0.65,
+        "focusFov": 52.0,
+        "fx.focusLambda": 14.0,
+        "cancelFrom": 0.6,
+        "confirmScale": 1.0,
+        "swing.life": 0.35,
+        "swing.width": 1.0,
+        "swing.top": 7.0,
+        "swing.bottom": -2.0,
+        "swing.yaw": 110.0,
+        "swing.sec": 0.15,
+        "swing.inner": 0.6,
+        "swing.outer": 1.55
+      }
+    },
+    "Heavy1": {
+      "minTime": 0.18,
+      "buffer": 0.3,
+      "params": {
+        "anim": "ClawAttack_Heavy",
+        "swing.asset": "Heavy",
+        "blend": 2.6,
+        "loop": 0.0,
+        "damage": 56.0,
+        "reach": 22.0,
+        "radius": 3.8,
+        "knockback": 190.0,
+        "hitstop": 12.0,
+        "launch": 0.9,
+        "keepDist": 4.5,
+        "maxStep": 70.0,
+        "stepTime": 0.05,
+        "hitStart": 0.22,
+        "hitEnd": 0.38,
+        "chainStart": 0.26,
+        "cancelFrom": 0.4,
+        "confirmScale": 0.45,
+        "endTime": 0.9,
+        "swing.life": 0.35,
+        "swing.width": 1.2,
+        "swing.top": 6.5,
+        "swing.bottom": -2.0,
+        "swing.yaw": 110.0,
+        "swing.sec": 0.15,
+        "swing.inner": 0.6,
+        "swing.outer": 1.55
+      }
+    },
+    "Heavy2": {
+      "minTime": 0.2,
+      "params": {
+        "anim": "ClawAttack_Heavy",
+        "swing.asset": "Heavy",
+        "blend": 2.2,
+        "loop": 0.0,
+        "damage": 60.0,
+        "reach": 28.0,
+        "radius": 4.6,
+        "knockback": 280.0,
+        "hitstop": 18.0,
+        "launch": 1.6,
+        "keepDist": 5.0,
+        "maxStep": 50.0,
+        "stepTime": 0.05,
+        "hitStart": 0.26,
+        "hitEnd": 0.44,
+        "cancelFrom": 0.48,
+        "confirmScale": 0.45,
+        "endTime": 0.9,
+        "focusFov": 50.0,
+        "fx.focusLambda": 14.0,
+        "swing.life": 0.35,
+        "swing.width": 1.2,
+        "swing.top": 6.5,
+        "swing.bottom": -2.0,
+        "swing.yaw": 110.0,
+        "swing.sec": 0.15,
+        "swing.inner": 0.6,
+        "swing.outer": 1.55
+      }
+    },
+    "Counter": {
+      "minTime": 0.15,
+      "params": {
+        "anim": "Counter",
+        "swing.asset": "Counter",
+        "blend": 3.0,
+        "loop": 0.0,
+        "damage": 60.0,
+        "reach": 28.0,
+        "radius": 4.2,
+        "knockback": 240.0,
+        "hitstop": 12.0,
+        "keepDist": 4.0,
+        "maxStep": 180.0,
+        "stepTime": 0.04,
+        "hitStart": 0.04,
+        "hitEnd": 0.24,
+        "chainStart": 0.12,
+        "endTime": 0.55,
+        "confirmScale": 0.7,
+        "cancelFrom": 0.24,
+        "swing.life": 0.35,
+        "swing.width": 1.0,
+        "swing.top": 1.0,
+        "swing.bottom": -0.5,
+        "swing.yaw": 0.0,
+        "swing.sec": 0.1,
+        "swing.inner": 0.6,
+        "swing.outer": 1.5
+      }
+    },
+    "Finisher": {
+      "minTime": 0.2,
+      "params": {
+        "anim": "Counter_Finish",
+        "swing.asset": "Counter",
+        "blend": 2.5,
+        "loop": 0.0,
+        "damage": 80.0,
+        "reach": 30.0,
+        "radius": 4.8,
+        "knockback": 300.0,
+        "hitstop": 20.0,
+        "launch": 2.2,
+        "keepDist": 3.5,
+        "maxStep": 200.0,
+        "stepTime": 0.04,
+        "hitStart": 0.1,
+        "hitEnd": 0.3,
+        "endTime": 0.75,
+        "focusFov": 46.0,
+        "fx.focusLambda": 16.0,
+        "fx.trauma": 0.5,
+        "confirmScale": 0.7,
+        "cancelFrom": 0.3,
+        "swing.life": 0.35,
+        "swing.width": 1.0,
+        "swing.top": 1.0,
+        "swing.bottom": -0.5,
+        "swing.yaw": 0.0,
+        "swing.sec": 0.1,
+        "swing.inner": 0.6,
+        "swing.outer": 1.5
+      }
+    },
+    "Hurt": {
+      "minTime": 0.1,
+      "params": {
+        "anim": "Idle",
+        "sound": "hit",
+        "effect": "TakeDamage",
+        "damageMaterial": "Damage",
+        "blend": 2.0,
+        "loop": 0.0,
+        "recoverFrom": 0.72,
+        "fx.vignetteEase": 0.15,
+        "fx.vignetteStrength": 0.4,
+        "fx.vignette.r": 0.5,
+        "fx.vignette.g": 0.1,
+        "fx.vignette.b": 0.05
+      }
+    },
+    "Dead": {
+      "buffer": 0.3,
+      "params": {
+        "anim": "Dying",
+        "blend": 4.0,
+        "loop": 0.0,
+        "endDelay": 1.0,
+        "fx.saturation": 0.1
+      }
+    }
+  }
+}

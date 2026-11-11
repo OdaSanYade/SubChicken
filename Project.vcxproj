@@ -1,0 +1,985 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{0F06FE08-688B-490A-AB0E-7A85CF6B8649}</ProjectGuid>
+    <RootNamespace>BaseFramework</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v145</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v145</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v145</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v145</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <AdditionalIncludeDirectories>.\;src;..\Library;..\Library\DirectXTK\Inc;..\Library\DirectXTex\DirectXTex;..\Library\tinygltf;..\Library\imgui;..\Library\Effekseer\Inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Pch.h</PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <ForcedIncludeFiles>Pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <DisableSpecificWarnings>4819;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <AdditionalOptions>/nodefaultlib:"LIBCMT"
+
+ %(AdditionalOptions)</AdditionalOptions>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <SubSystem>Windows</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <TargetMachine>MachineX86</TargetMachine>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+      <AdditionalLibraryDirectories>..\Library\DirectXTK\Lib\$(Platform)\$(Configuration)\Audio;..\Library\DirectXTK\Lib\$(Platform)\$(Configuration);..\Library\DirectXTex\Lib\$(Platform)\$(Configuration);..\Library\Effekseer\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+    <FxCompile>
+      <ShaderType>
+      </ShaderType>
+    </FxCompile>
+    <FxCompile>
+      <ShaderModel>5.0</ShaderModel>
+      <ObjectFileOutput>
+      </ObjectFileOutput>
+      <HeaderFileOutput>%(RelativeDir)\%(Filename).shaderInc</HeaderFileOutput>
+      <VariableName>compiledBuffer</VariableName>
+      <EnableDebuggingInformation>true</EnableDebuggingInformation>
+    </FxCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <AdditionalIncludeDirectories>.\;src;..\Library;..\Library\DirectXTK\Inc;..\Library\DirectXTex\DirectXTex;..\Library\tinygltf;..\Library\imgui;..\Library\Effekseer\Inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Pch.h</PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ForcedIncludeFiles>Pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <DisableSpecificWarnings>4819;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <AdditionalOptions>/nodefaultlib:"LIBCMT"
+
+ %(AdditionalOptions)</AdditionalOptions>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <SubSystem>Windows</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+      <AdditionalLibraryDirectories>..\Library\DirectXTK\Lib\$(Platform)\$(Configuration)\Audio;..\Library\DirectXTK\Lib\$(Platform)\$(Configuration);..\Library\DirectXTex\Lib\$(Platform)\$(Configuration);..\Library\Effekseer\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+    <FxCompile>
+      <ShaderType>
+      </ShaderType>
+    </FxCompile>
+    <FxCompile>
+      <ShaderModel>5.0</ShaderModel>
+      <ObjectFileOutput>
+      </ObjectFileOutput>
+      <HeaderFileOutput>%(RelativeDir)\%(Filename).shaderInc</HeaderFileOutput>
+      <VariableName>compiledBuffer</VariableName>
+      <EnableDebuggingInformation>true</EnableDebuggingInformation>
+    </FxCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <AdditionalIncludeDirectories>.\;src;..\Library;..\Library\DirectXTK\Inc;..\Library\DirectXTex\DirectXTex;..\Library\tinygltf;..\Library\imgui;..\Library\Effekseer\Inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Pch.h</PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
+      <ForcedIncludeFiles>Pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <DisableSpecificWarnings>4819;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalLibraryDirectories>..\Library\DirectXTK\Lib\$(Platform)\$(Configuration)\Audio;..\Library\DirectXTK\Lib\$(Platform)\$(Configuration);..\Library\DirectXTex\Lib\$(Platform)\$(Configuration);..\Library\Effekseer\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+    <FxCompile>
+      <ShaderType>
+      </ShaderType>
+    </FxCompile>
+    <FxCompile>
+      <ShaderModel>5.0</ShaderModel>
+      <ObjectFileOutput>
+      </ObjectFileOutput>
+      <HeaderFileOutput>%(RelativeDir)\%(Filename).shaderInc</HeaderFileOutput>
+      <VariableName>compiledBuffer</VariableName>
+    </FxCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <AdditionalIncludeDirectories>.\;src;..\Library;..\Library\DirectXTK\Inc;..\Library\DirectXTex\DirectXTex;..\Library\tinygltf;..\Library\imgui;..\Library\Effekseer\Inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Pch.h</PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
+      <ForcedIncludeFiles>Pch.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <DisableSpecificWarnings>4819;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <AdditionalLibraryDirectories>..\Library\DirectXTK\Lib\$(Platform)\$(Configuration)\Audio;..\Library\DirectXTK\Lib\$(Platform)\$(Configuration);..\Library\DirectXTex\Lib\$(Platform)\$(Configuration);..\Library\Effekseer\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+    <FxCompile>
+      <ShaderType>
+      </ShaderType>
+    </FxCompile>
+    <FxCompile>
+      <ShaderModel>5.0</ShaderModel>
+      <ObjectFileOutput>
+      </ObjectFileOutput>
+      <HeaderFileOutput>%(RelativeDir)\%(Filename).shaderInc</HeaderFileOutput>
+      <VariableName>compiledBuffer</VariableName>
+    </FxCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Library\imgui\imconfig.h" />
+    <ClInclude Include="..\Library\imgui\imgui.h" />
+    <ClInclude Include="..\Library\imgui\imgui_impl_dx11.h" />
+    <ClInclude Include="..\Library\imgui\imgui_impl_win32.h" />
+    <ClInclude Include="..\Library\imgui\imgui_internal.h" />
+    <ClInclude Include="..\Library\imgui\imgui_stdlib.h" />
+    <ClInclude Include="..\Library\imgui\imstb_rectpack.h" />
+    <ClInclude Include="..\Library\imgui\imstb_textedit.h" />
+    <ClInclude Include="..\Library\imgui\imstb_truetype.h" />
+    <ClInclude Include="..\Library\imgui\ja_glyph_ranges.h" />
+    <ClInclude Include="..\Library\strconv.h" />
+    <ClInclude Include="..\Library\tinygltf\json.hpp" />
+    <ClInclude Include="..\Library\tinygltf\stb_image.h" />
+    <ClInclude Include="..\Library\tinygltf\stb_image_write.h" />
+    <ClInclude Include="..\Library\tinygltf\tiny_gltf.h" />
+    <ClInclude Include="Src\Application\GameObject\Camera\CameraBase.h" />
+    <ClInclude Include="Src\Application\GameObject\Camera\CameraManager.h" />
+    <ClInclude Include="Src\Application\GameObject\Camera\CameraTuning.h" />
+    <ClInclude Include="Src\Application\GameObject\Camera\DebugCamera\DebugCamera.h" />
+    <ClInclude Include="Src\Application\GameObject\Camera\EntityCamera\EntityCamera.h" />
+    <ClInclude Include="Src\Application\GameObject\Camera\ObjectCamera\ObjectCamera.h" />
+    <ClInclude Include="Src\Application\GameObject\Camera\TitleCamera\TitleCamera.h" />
+    <ClInclude Include="Src\Application\GameObject\Chara\Chick\Chick.h" />
+    <ClInclude Include="Src\Application\GameObject\Chara\Chick\ChickManager.h" />
+    <ClInclude Include="Src\Application\GameObject\Chara\Chick\State\ChickStateSetup.h" />
+    <ClInclude Include="Src\Application\GameObject\Chara\Enemies\Core\EnemyBase.h" />
+    <ClInclude Include="Src\Application\GameObject\Chara\Enemies\Core\EnemyManager.h" />
+    <ClInclude Include="Src\Application\GameObject\Chara\Enemies\Core\EnemyTuning.h" />
+    <ClInclude Include="Src\Application\GameObject\Chara\Enemies\State\EnemyStateSetup.h" />
+    <ClInclude Include="Src\Application\GameObject\Chara\Enemies\Type\Heavy\Heavy.h" />
+    <ClInclude Include="Src\Application\GameObject\Chara\Enemies\Type\Normal\Normal.h" />
+    <ClInclude Include="Src\Application\GameObject\Chara\Enemies\Type\Rusher\Rusher.h" />
+    <ClInclude Include="Src\Application\GameObject\Chara\IChara.h" />
+    <ClInclude Include="Src\Application\GameObject\Chara\Player\PlayerTuning.h" />
+    <ClInclude Include="Src\Application\GameObject\Chara\Player\State\PlayerStateSetup.h" />
+    <ClInclude Include="Src\Application\GameObject\Chara\Player\Player.h" />
+    <ClInclude Include="Src\Application\GameObject\Config\StateTuning.h" />
+    <ClInclude Include="Src\Application\GameObject\Config\Tuning.h" />
+    <ClInclude Include="Src\Application\GameObject\Stage\Ornament\Mushroom\Mushroom.h" />
+    <ClInclude Include="Src\Application\GameObject\Stage\Ornament\Mushroom\MushroomManager.h" />
+    <ClInclude Include="Src\Application\GameObject\Stage\Stage.h" />
+    <ClInclude Include="Src\Application\GameSystem\Combat\AttackTag.h" />
+    <ClInclude Include="Src\Application\GameSystem\Combat\BreathGauge.h" />
+    <ClInclude Include="Src\Application\GameSystem\Combat\CombatFx.h" />
+    <ClInclude Include="Src\Application\GameSystem\InputSystem\Inputs\KdInputMouseLock.h" />
+    <ClInclude Include="Src\Application\GameSystem\ShaderSystem\X-RayRender\X-RayRender.h" />
+    <ClInclude Include="Src\Application\Resource\Resources\DataList\JsonUtil.h" />
+    <ClInclude Include="Src\Application\Resource\Resources\ResourceListLoader.h" />
+    <ClInclude Include="Src\Application\UI\Game\CombatHud.h" />
+    <ClInclude Include="Src\Application\UI\Game\CombatHudConfig.h" />
+    <ClInclude Include="Src\Application\GameSystem\Combat\ComboTracker.h" />
+    <ClInclude Include="Src\Application\GameSystem\Collision\Debug\CollisionDebug.h" />
+    <ClInclude Include="Src\Application\GameSystem\Collision\Debug\DebugLine.h" />
+    <ClInclude Include="Src\Application\GameSystem\ComponentSystem\Components\Camera\CameraComponent.h" />
+    <ClInclude Include="Src\Application\GameSystem\ComponentSystem\Components\Camera\CameraComponentReflect.h" />
+    <ClInclude Include="Src\Application\GameSystem\ComponentSystem\Components\ComponentSummary.h" />
+    <ClInclude Include="Src\Application\GameSystem\ComponentSystem\Components\DefaultComponent.h" />
+    <ClInclude Include="Src\Application\GameSystem\ComponentSystem\Components\EntityName.h" />
+    <ClInclude Include="Src\Application\GameSystem\ComponentSystem\Components\GostTrail\GhostTrailComponent.h" />
+    <ClInclude Include="Src\Application\GameSystem\ComponentSystem\Components\GostTrail\GostTrailComponentReflect.h" />
+    <ClInclude Include="Src\Application\GameSystem\ComponentSystem\Components\Light\LightComponent.h" />
+    <ClInclude Include="Src\Application\GameSystem\ComponentSystem\Components\Light\LightComponentReflect.h" />
+    <ClInclude Include="Src\Application\GameSystem\ComponentSystem\Components\PostEffectComponent\PostEffectComponent.h" />
+    <ClInclude Include="Src\Application\GameSystem\ComponentSystem\Components\PostEffectComponent\PostEffectComponentReflect.h" />
+    <ClInclude Include="Src\Application\GameSystem\ComponentSystem\Components\Render\RenderComponentReflect.h" />
+    <ClInclude Include="Src\Application\GameSystem\ComponentSystem\Components\Render\Utility\MaterialNameTable.h" />
+    <ClInclude Include="Src\Application\GameSystem\ComponentSystem\Components\State\StateMachineComponentReflect.h" />
+    <ClInclude Include="Src\Application\GameSystem\ComponentSystem\Components\Trail\TrailComponent.h" />
+    <ClInclude Include="Src\Application\GameSystem\ComponentSystem\Components\Trail\TrailComponentReflect.h" />
+    <ClInclude Include="Src\Application\GameSystem\ComponentSystem\EcsConfig.h" />
+    <ClInclude Include="Src\Application\GameSystem\ComponentSystem\Components\Render\RenderComponent.h" />
+    <ClInclude Include="Src\Application\GameSystem\ComponentSystem\Components\State\StateMachineComponent.h" />
+    <ClInclude Include="Src\Application\GameSystem\ComponentSystem\Components\Transform\TransformComponent.h" />
+    <ClInclude Include="Src\Application\GameObject\IObject.h" />
+    <ClInclude Include="Src\Application\GameObject\ObjectManager.h" />
+    <ClInclude Include="Src\Application\GameSystem\Audio\AudioManager.h" />
+    <ClInclude Include="Src\Application\GameSystem\Collision\Component\CollisionComponent.h" />
+    <ClInclude Include="Src\Application\GameSystem\Collision\Const\CollisionTypes.h" />
+    <ClInclude Include="Src\Application\GameSystem\Collision\CollisionWorld.h" />
+    <ClInclude Include="Src\Application\GameSystem\Collision\Component\CombatComponent.h" />
+    <ClInclude Include="Src\Application\GameSystem\Collision\Const\CompPool.h" />
+    <ClInclude Include="Src\Application\GameSystem\Collision\Stage\StageMesh.h" />
+    <ClInclude Include="Src\Application\GameSystem\ComponentSystem\ComponentManager.h" />
+    <ClInclude Include="Src\Application\GameSystem\ComponentSystem\Debug\InspectorPanel.h" />
+    <ClInclude Include="Src\Application\GameSystem\ComponentSystem\Debug\KdEcsTests.h" />
+    <ClInclude Include="Src\Application\GameSystem\ComponentSystem\IComponent.h" />
+    <ClInclude Include="Src\Application\GameSystem\ComponentSystem\KdComponentManager.h" />
+    <ClInclude Include="Src\Application\GameSystem\ComponentSystem\KdComponentReflect.h" />
+    <ClInclude Include="Src\Application\GameSystem\ComponentSystem\Reflect\KdMathReflect.h" />
+    <ClInclude Include="Src\Application\GameSystem\ComponentSystem\Reflect\KdReflect.h" />
+    <ClInclude Include="Src\Application\GameSystem\ComponentSystem\Components\Transform\TransformComponentReflect.h" />
+    <ClInclude Include="Src\Application\GameSystem\InputSystem\Debug\KdInputDebugUI.h" />
+    <ClInclude Include="Src\Application\GameSystem\InputSystem\Inputs\KdInputGamepad.h" />
+    <ClInclude Include="Src\Application\GameSystem\InputSystem\Inputs\KdInputKeyNames.h" />
+    <ClInclude Include="Src\Application\GameSystem\InputSystem\KdInputAction.h" />
+    <ClInclude Include="Src\Application\GameSystem\LoadingScreen\LoadingScreen.h" />
+    <ClInclude Include="Src\Application\GameSystem\LoadingScreen\LoadScheduler.h" />
+    <ClInclude Include="Src\Application\GameSystem\LoadingScreen\Task\BootTaskTable.h" />
+    <ClInclude Include="Src\Application\GameSystem\LoadingScreen\Task\LoadTask.h" />
+    <ClInclude Include="Src\Application\GameSystem\PhaseSystem\PhaseSystem.h" />
+    <ClInclude Include="Src\Application\GameSystem\PhaseSystem\Shader\PhaseShader.h" />
+    <ClInclude Include="Src\Application\GameSystem\ShaderSystem\GhostRender\GhostRenderer.h" />
+    <ClInclude Include="Src\Application\GameSystem\ShaderSystem\Instance\InstancedSceneRenderer.h" />
+    <ClInclude Include="Src\Application\GameSystem\ShaderSystem\Instance\Lod\LodBuilder.h" />
+    <ClInclude Include="Src\Application\GameSystem\ShaderSystem\Particle\Assets\ParticleAssetApply.h" />
+    <ClInclude Include="Src\Application\GameSystem\ShaderSystem\Particle\Assets\ParticleEffect.h" />
+    <ClInclude Include="Src\Application\GameSystem\ShaderSystem\Pipelines\Assets\LightData.h" />
+    <ClInclude Include="Src\Application\GameSystem\ShaderSystem\RenderHelper.h" />
+    <ClInclude Include="Src\Application\GameSystem\ShaderSystem\ShaderRender.h" />
+    <ClInclude Include="Src\Application\GameSystem\ShaderSystem\Material\MaterialLibrary.h" />
+    <ClInclude Include="Src\Application\GameSystem\ShaderSystem\Shaders\ShaderCodes.h" />
+    <ClInclude Include="Src\Application\GameSystem\ShaderSystem\Shaders\ShaderSystemHelper.h" />
+    <ClInclude Include="Src\Application\GameSystem\ShaderSystem\TrailRender\Assets\TrailAsset.h" />
+    <ClInclude Include="Src\Application\GameSystem\ShaderSystem\TrailRender\TrailRenderer.h" />
+    <ClInclude Include="Src\Application\GameSystem\StateMachine\StateMachineManager.h" />
+    <ClInclude Include="Src\Application\GameSystem\StateMachine\StateMachineSystem.h" />
+    <ClInclude Include="Src\Application\GameSystem\Time\TimeSystem.h" />
+    <ClInclude Include="Src\Application\GameSystem\Transition\Render\TransitionShader.h" />
+    <ClInclude Include="Src\Application\GameSystem\Transition\Transition.h" />
+    <ClInclude Include="Src\Application\Inc\Math\Damp.h" />
+    <ClInclude Include="Src\Application\Inc\Setting\Scale\GameScale.h" />
+    <ClInclude Include="Src\Application\Inc\Setting\Scale\GameScaleStates.h" />
+    <ClInclude Include="Src\Application\Inc\Setting\SettingSummary.h" />
+    <ClInclude Include="Src\Application\main.h" />
+    <ClInclude Include="Src\Application\Resource\ResourceManager.h" />
+    <ClInclude Include="Src\Application\Resource\Resources\DataList\JsonResource.h" />
+    <ClInclude Include="Src\Application\Resource\Resources\DataList\JsonResourceManager.h" />
+    <ClInclude Include="Src\Application\Resource\Resources\LessPath\AssetManager.h" />
+    <ClInclude Include="Src\Application\Resource\Resources\Model\ModelManager.h" />
+    <ClInclude Include="Src\Application\Resource\Resources\Model\WorkPool.h" />
+    <ClInclude Include="Src\Application\Resource\Resources\Texture\TextureManager.h" />
+    <ClInclude Include="Src\Application\Scene\BaseScene\BaseScene.h" />
+    <ClInclude Include="Src\Application\Scene\GameScene\GameScene.h" />
+    <ClInclude Include="Src\Application\Scene\SceneManager.h" />
+    <ClInclude Include="Src\Application\Scene\TitleScene\TitleScene.h" />
+    <ClInclude Include="Src\Application\GameSystem\ShaderSystem\Particle\Assets\ParticleAsset.h" />
+    <ClInclude Include="Src\Application\GameSystem\ShaderSystem\Particle\GPUParticleSystem.h" />
+    <ClInclude Include="Src\Application\GameSystem\ShaderSystem\Pipelines\Assets\MultiPassRuntime.h" />
+    <ClInclude Include="Src\Application\GameSystem\ShaderSystem\Pipelines\PipelineSystem.h" />
+    <ClInclude Include="Src\Application\GameSystem\ShaderSystem\Shaders\Assets\ShaderAsset.h" />
+    <ClInclude Include="Src\Application\GameSystem\ShaderSystem\Shaders\ShaderRuntime.h" />
+    <ClInclude Include="Src\Application\UI\Result\BattleResult.h" />
+    <ClInclude Include="Src\Application\UI\Result\ResultHud.h" />
+    <ClInclude Include="Src\Application\UI\Title\CreditHud.h" />
+    <ClInclude Include="Src\Application\UI\Title\Credit\CreditData.h" />
+    <ClInclude Include="Src\Application\UI\Title\Credit\CreditLayout.h" />
+    <ClInclude Include="Src\Application\UI\Title\TitleHud.h" />
+    <ClInclude Include="Src\Framework\Direct3D\KdBinaryCacheUtil.h" />
+    <ClInclude Include="Src\Framework\Direct3D\KdMaterial.h" />
+    <ClInclude Include="Src\Framework\Direct3D\Polygon\KdPolygon.h" />
+    <ClInclude Include="Src\Framework\Direct3D\Polygon\KdSquarePolygon.h" />
+    <ClInclude Include="Src\Framework\Direct3D\Polygon\KdTrailPolygon.h" />
+    <ClInclude Include="Src\Framework\Effekseer\KdEffekseerManager.h" />
+    <ClInclude Include="Src\Framework\Font\KdFont.h" />
+    <ClInclude Include="Src\Framework\Font\KdSdfFont.h" />
+    <ClInclude Include="Src\Framework\Font\KdSdfFontGen.h" />
+    <ClInclude Include="Src\Framework\Font\KdTextEncode.h" />
+    <ClInclude Include="Src\Framework\GameObject\KdGameObject.h" />
+    <ClInclude Include="Src\Framework\GameObject\KdGameObjectFactory.h" />
+    <ClInclude Include="Src\Framework\Input\KdInput.h" />
+    <ClInclude Include="Src\Framework\Math\KdCollider.h" />
+    <ClInclude Include="Src\Framework\Math\KdEasing.h" />
+    <ClInclude Include="Src\Framework\KdFramework.h" />
+    <ClInclude Include="Src\Framework\Audio\KdAudio.h" />
+    <ClInclude Include="Src\Framework\Direct3D\KdCamera.h" />
+    <ClInclude Include="src\Framework\Direct3D\KdDirect3D.h" />
+    <ClInclude Include="Src\Framework\Direct3D\KdGLTFLoader.h" />
+    <ClInclude Include="src\Framework\Direct3D\KdBuffer.h" />
+    <ClInclude Include="src\Framework\Direct3D\KdMesh.h" />
+    <ClInclude Include="Src\Framework\Direct3D\KdModel.h" />
+    <ClInclude Include="src\Framework\Direct3D\KdTexture.h" />
+    <ClInclude Include="Src\Framework\Math\KdUVAnimation.h" />
+    <ClInclude Include="Src\Framework\Shader\CreditShader\KdCreditShader.h" />
+    <ClInclude Include="Src\Framework\Shader\HudShader\KdHudShader.h" />
+    <ClInclude Include="Src\Framework\Shader\KdAmbientController.h" />
+    <ClInclude Include="Src\Framework\Shader\KdRenderTargetChange.h" />
+    <ClInclude Include="Src\Framework\Shader\ResultShader\KdResultShader.h" />
+    <ClInclude Include="Src\Framework\Shader\ResultShader\RankShader\KdRankShader.h" />
+    <ClInclude Include="Src\Framework\Shader\StandardShader\KdStandardShader.h" />
+    <ClInclude Include="Src\Framework\Shader\TitleShader\KdTitleShader.h" />
+    <ClInclude Include="Src\Framework\Shader\UiShader\KdUiInputHint.h" />
+    <ClInclude Include="Src\Framework\Shader\UiShader\KdUiShader.h" />
+    <ClInclude Include="Src\Framework\Utility\KdDataStorage.h" />
+    <ClInclude Include="Src\Framework\Utility\KdCSVData.h" />
+    <ClInclude Include="Src\Framework\Utility\KdDebug\KdDebugGUI.h" />
+    <ClInclude Include="Src\Framework\Utility\KdDebug\KdDebugWireFrame.h" />
+    <ClInclude Include="Src\Framework\Utility\KdFPSController.h" />
+    <ClInclude Include="Src\Framework\Utility\KdRandom.h" />
+    <ClInclude Include="src\Pch.h" />
+    <ClInclude Include="Src\Framework\Math\KdAnimation.h" />
+    <ClInclude Include="Src\Framework\Math\KdCollision.h" />
+    <ClInclude Include="Src\Framework\Shader\KdShaderManager.h" />
+    <ClInclude Include="Src\Framework\Shader\PostProcessShader\KdPostProcessShader.h" />
+    <ClInclude Include="Src\Framework\Shader\SpriteShader\KdSpriteShader.h" />
+    <ClInclude Include="src\Framework\Utility\KdUtility.h" />
+    <ClInclude Include="src\Framework\Window\KdWindow.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Library\imgui\imgui.cpp" />
+    <ClCompile Include="..\Library\imgui\imgui_demo.cpp" />
+    <ClCompile Include="..\Library\imgui\imgui_draw.cpp" />
+    <ClCompile Include="..\Library\imgui\imgui_impl_dx11.cpp" />
+    <ClCompile Include="..\Library\imgui\imgui_impl_win32.cpp" />
+    <ClCompile Include="..\Library\imgui\imgui_stdlib.cpp" />
+    <ClCompile Include="..\Library\imgui\imgui_tables.cpp" />
+    <ClCompile Include="..\Library\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="Src\Application\GameObject\Camera\CameraBase.cpp" />
+    <ClCompile Include="Src\Application\GameObject\Camera\DebugCamera\DebugCamera.cpp" />
+    <ClCompile Include="Src\Application\GameObject\Camera\EntityCamera\EntityCamera.cpp" />
+    <ClCompile Include="Src\Application\GameObject\Camera\TitleCamera\TitleCamera.cpp" />
+    <ClCompile Include="Src\Application\GameObject\Chara\Chick\Chick.cpp" />
+    <ClCompile Include="Src\Application\GameObject\Chara\Chick\ChickManager.cpp" />
+    <ClCompile Include="Src\Application\GameObject\Chara\Chick\State\ChickStateSetup.cpp" />
+    <ClCompile Include="Src\Application\GameObject\Chara\Enemies\Core\EnemyBase.cpp" />
+    <ClCompile Include="Src\Application\GameObject\Chara\Enemies\Core\EnemyManager.cpp" />
+    <ClCompile Include="Src\Application\GameObject\Chara\Enemies\State\EnemyStateSetup.cpp" />
+    <ClCompile Include="Src\Application\GameObject\Chara\Player\State\PlayerStateSetup.cpp" />
+    <ClCompile Include="Src\Application\GameObject\Chara\Player\Player.cpp" />
+    <ClCompile Include="Src\Application\GameObject\Stage\Ornament\Mushroom\Mushroom.cpp" />
+    <ClCompile Include="Src\Application\GameObject\Stage\Ornament\Mushroom\MushroomManager.cpp" />
+    <ClCompile Include="Src\Application\GameObject\Stage\Stage.cpp" />
+    <ClCompile Include="Src\Application\GameSystem\Collision\Debug\CollisionDebug.cpp" />
+    <ClCompile Include="Src\Application\GameSystem\Collision\Debug\DebugLine.cpp" />
+    <ClCompile Include="Src\Application\GameSystem\ComponentSystem\Components\Camera\CameraComponent.cpp" />
+    <ClCompile Include="Src\Application\GameSystem\ComponentSystem\Components\Render\Utility\MaterialNameTable.cpp" />
+    <ClCompile Include="Src\Application\GameSystem\ComponentSystem\Components\Transform\TransformComponent.cpp" />
+    <ClCompile Include="Src\Application\GameSystem\Audio\AudioManager.cpp" />
+    <ClCompile Include="Src\Application\GameSystem\Collision\CollisionWorld.cpp" />
+    <ClCompile Include="Src\Application\GameSystem\Collision\Stage\StageMesh.cpp" />
+    <ClCompile Include="Src\Application\GameSystem\InputSystem\Debug\KdInputDebugUI.cpp" />
+    <ClCompile Include="Src\Application\GameSystem\InputSystem\Inputs\KdInputGamepad.cpp" />
+    <ClCompile Include="Src\Application\GameSystem\InputSystem\Inputs\KdInputKeyNames.cpp" />
+    <ClCompile Include="Src\Application\GameSystem\InputSystem\Inputs\KdInputMouseLock.cpp" />
+    <ClCompile Include="Src\Application\GameSystem\InputSystem\KdInputAction.cpp" />
+    <ClCompile Include="Src\Application\GameSystem\LoadingScreen\LoadingScreen.cpp" />
+    <ClCompile Include="Src\Application\GameSystem\LoadingScreen\LoadScheduler.cpp" />
+    <ClCompile Include="Src\Application\GameSystem\LoadingScreen\Task\BootTaskTable.cpp" />
+    <ClCompile Include="Src\Application\GameSystem\PhaseSystem\PhaseSystem.cpp" />
+    <ClCompile Include="Src\Application\GameSystem\PhaseSystem\Shader\PhaseShader.cpp" />
+    <ClCompile Include="Src\Application\GameSystem\ShaderSystem\GhostRender\GhostRenderer.cpp" />
+    <ClCompile Include="Src\Application\GameSystem\ShaderSystem\Instance\InstancedSceneRenderer.cpp" />
+    <ClCompile Include="Src\Application\GameSystem\ShaderSystem\Instance\Lod\LodBuilder.cpp" />
+    <ClCompile Include="Src\Application\GameSystem\ShaderSystem\Particle\Assets\ParticleEffect.cpp" />
+    <ClCompile Include="Src\Application\GameSystem\ShaderSystem\RenderHelper.cpp" />
+    <ClCompile Include="Src\Application\GameSystem\ShaderSystem\ShaderRender.cpp" />
+    <ClCompile Include="Src\Application\GameSystem\ShaderSystem\Material\MaterialLibrary.cpp" />
+    <ClCompile Include="Src\Application\GameSystem\ShaderSystem\Shaders\ShaderSystemHelper.cpp" />
+    <ClCompile Include="Src\Application\GameSystem\ShaderSystem\TrailRender\Assets\TrailAsset.cpp" />
+    <ClCompile Include="Src\Application\GameSystem\ShaderSystem\TrailRender\TrailRenderer.cpp" />
+    <ClCompile Include="Src\Application\GameSystem\ShaderSystem\X-RayRender\X-RayRender.cpp" />
+    <ClCompile Include="Src\Application\GameSystem\StateMachine\StateMachineManager.cpp" />
+    <ClCompile Include="Src\Application\GameSystem\StateMachine\StateMachineSystem.cpp" />
+    <ClCompile Include="Src\Application\GameSystem\Time\TimeSystem.cpp" />
+    <ClCompile Include="Src\Application\GameSystem\Transition\render\TransitionShader.cpp" />
+    <ClCompile Include="Src\Application\GameSystem\Transition\Transition.cpp" />
+    <ClCompile Include="Src\Application\Inc\Setting\Scale\GameScaleStates.cpp" />
+    <ClCompile Include="Src\Application\main.cpp" />
+    <ClCompile Include="Src\Application\Resource\ResourceManager.cpp" />
+    <ClCompile Include="Src\Application\Resource\Resources\LessPath\AssetManager.cpp" />
+    <ClCompile Include="Src\Application\Resource\Resources\Model\ModelManager.cpp" />
+    <ClCompile Include="Src\Application\Resource\Resources\Texture\TextureManager.cpp" />
+    <ClCompile Include="Src\Application\Scene\BaseScene\BaseScene.cpp" />
+    <ClCompile Include="Src\Application\Scene\GameScene\GameScene.cpp" />
+    <ClCompile Include="Src\Application\Scene\SceneManager.cpp" />
+    <ClCompile Include="Src\Application\Scene\TitleScene\TitleScene.cpp" />
+    <ClCompile Include="Src\Application\GameSystem\ShaderSystem\Particle\Assets\ParticleAsset.cpp" />
+    <ClCompile Include="Src\Application\GameSystem\ShaderSystem\Particle\GPUParticleSystem.cpp" />
+    <ClCompile Include="Src\Application\GameSystem\ShaderSystem\Pipelines\Assets\MultiPassRuntime.cpp" />
+    <ClCompile Include="Src\Application\GameSystem\ShaderSystem\Pipelines\PipelineSystem.cpp" />
+    <ClCompile Include="Src\Application\GameSystem\ShaderSystem\Shaders\Assets\ShaderAsset.cpp" />
+    <ClCompile Include="Src\Application\GameSystem\ShaderSystem\Shaders\ShaderRuntime.cpp" />
+    <ClCompile Include="Src\Framework\Direct3D\KdBinaryCacheUtil.cpp" />
+    <ClCompile Include="Src\Framework\Direct3D\KdMaterial.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Src\Framework\Direct3D\Polygon\KdPolygon.cpp" />
+    <ClCompile Include="Src\Framework\Direct3D\Polygon\KdSquarePolygon.cpp" />
+    <ClCompile Include="Src\Framework\Direct3D\Polygon\KdTrailPolygon.cpp" />
+    <ClCompile Include="Src\Framework\Effekseer\KdEffekseerManager.cpp" />
+    <ClCompile Include="Src\Framework\Font\KdFont.cpp" />
+    <ClCompile Include="Src\Framework\Font\KdSdfFont.cpp" />
+    <ClCompile Include="Src\Framework\Font\KdTextEncode.cpp" />
+    <ClCompile Include="Src\Framework\GameObject\KdGameObject.cpp" />
+    <ClCompile Include="Src\Framework\GameObject\KdGameObjectFactory.cpp" />
+    <ClCompile Include="Src\Framework\Input\KdInput.cpp" />
+    <ClCompile Include="Src\Framework\Math\KdCollider.cpp" />
+    <ClCompile Include="Src\Framework\Math\KdEasing.cpp" />
+    <ClCompile Include="Src\Framework\Audio\KdAudio.cpp" />
+    <ClCompile Include="Src\Framework\Direct3D\KdCamera.cpp" />
+    <ClCompile Include="src\Framework\Direct3D\KdDirect3D.cpp" />
+    <ClCompile Include="Src\Framework\Direct3D\KdGLTFLoader.cpp" />
+    <ClCompile Include="src\Framework\Direct3D\KdBuffer.cpp" />
+    <ClCompile Include="src\Framework\Direct3D\KdMesh.cpp" />
+    <ClCompile Include="Src\Framework\Direct3D\KdModel.cpp" />
+    <ClCompile Include="src\Framework\Direct3D\KdTexture.cpp" />
+    <ClCompile Include="Src\Framework\Math\KdUVAnimation.cpp" />
+    <ClCompile Include="Src\Framework\Shader\CreditShader\KdCreditShader.cpp" />
+    <ClCompile Include="Src\Framework\Shader\HudShader\KdHudShader.cpp" />
+    <ClCompile Include="Src\Framework\Shader\KdAmbientController.cpp" />
+    <ClCompile Include="Src\Framework\Shader\KdRenderTargetChange.cpp" />
+    <ClCompile Include="Src\Framework\Shader\ResultShader\KdResultShader.cpp" />
+    <ClCompile Include="Src\Framework\Shader\ResultShader\RankShader\KdRankShader.cpp" />
+    <ClCompile Include="Src\Framework\Shader\StandardShader\KdStandardShader.cpp" />
+    <ClCompile Include="Src\Framework\Shader\TitleShader\KdTitleShader.cpp" />
+    <ClCompile Include="Src\Framework\Shader\UiShader\KdUiShader.cpp" />
+    <ClCompile Include="Src\Framework\Utility\KdCSVData.cpp" />
+    <ClCompile Include="Src\Framework\Utility\KdDebug\KdDebugGUI.cpp" />
+    <ClCompile Include="Src\Framework\Utility\KdDebug\KdDebugWireFrame.cpp" />
+    <ClCompile Include="Src\Framework\Utility\KdFPSController.cpp" />
+    <ClCompile Include="src\Pch.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Src\Framework\Math\KdAnimation.cpp" />
+    <ClCompile Include="Src\Framework\Math\KdCollision.cpp" />
+    <ClCompile Include="Src\Framework\Shader\KdShaderManager.cpp" />
+    <ClCompile Include="Src\Framework\Shader\PostProcessShader\KdPostProcessShader.cpp" />
+    <ClCompile Include="Src\Framework\Shader\SpriteShader\KdSpriteShader.cpp" />
+    <ClCompile Include="Src\Framework\Utility\KdUtility.cpp" />
+    <ClCompile Include="src\Framework\Window\KdWindow.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Src\Application\GameSystem\PhaseSystem\Shader\inc_PhaseShader.hlsli" />
+    <None Include="Src\Application\GameSystem\ShaderSystem\Instance\Shader\inc_Instance.hlsli" />
+    <None Include="Src\Application\GameSystem\ShaderSystem\X-RayRender\Shader\inc_XRay.hlsli" />
+    <None Include="Src\Application\GameSystem\Transition\Render\Shader\inc_Transition.hlsli" />
+    <None Include="Src\Framework\Shader\CreditShader\inc_KdCreditShader.hlsli" />
+    <None Include="Src\Framework\Shader\HudShader\inc_KdHudBreath.hlsli" />
+    <None Include="Src\Framework\Shader\HudShader\inc_KdHudFont.hlsli" />
+    <None Include="Src\Framework\Shader\HudShader\inc_KdHudSdf.hlsli" />
+    <None Include="Src\Framework\Shader\HudShader\inc_KdHudShader.hlsli" />
+    <None Include="Src\Framework\Shader\inc_KdCommon.hlsli" />
+    <None Include="Src\Framework\Shader\PostProcessShader\inc_KdPostProcessShader.hlsli" />
+    <None Include="Src\Framework\Shader\ResultShader\inc_KdResultShader.hlsli" />
+    <None Include="Src\Framework\Shader\ResultShader\RankShader\inc_KdRankShader.hlsli" />
+    <None Include="Src\Framework\Shader\SpriteShader\inc_KdSpriteShader.hlsli" />
+    <None Include="Src\Framework\Shader\StandardShader\inc_KdStandardShader.hlsli" />
+    <None Include="Src\Framework\Shader\TitleShader\inc_KdTitleShader.hlsli" />
+    <None Include="Src\Framework\Shader\UiShader\inc_KdHudCommon.hlsli" />
+    <None Include="Src\Framework\Shader\UiShader\inc_KdUiShader.hlsli" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Src\Application\GameSystem\Collision\Debug\Shader\DebugCol_PS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">debugCol_PS</VariableName>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">debugCol_PS</VariableName>
+    </FxCompile>
+    <FxCompile Include="Src\Application\GameSystem\Collision\Debug\Shader\DebugCol_VS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">debugCol_VS</VariableName>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">debugCol_VS</VariableName>
+    </FxCompile>
+    <FxCompile Include="Src\Application\GameSystem\PhaseSystem\Shader\PhasePS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">PSMain</EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">PSMain</EntryPointName>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">PhasePS</VariableName>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">PhasePS</VariableName>
+    </FxCompile>
+    <FxCompile Include="Src\Application\GameSystem\PhaseSystem\Shader\PhaseVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VSMain</EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">VSMain</EntryPointName>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">PhaseVS</VariableName>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">PhaseVS</VariableName>
+    </FxCompile>
+    <FxCompile Include="Src\Application\GameSystem\ShaderSystem\GhostRender\Shader\GostPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">GostPS</VariableName>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">GostPS</VariableName>
+    </FxCompile>
+    <FxCompile Include="Src\Application\GameSystem\ShaderSystem\GhostRender\Shader\GostVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">GostVS</VariableName>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">GostVS</VariableName>
+    </FxCompile>
+    <FxCompile Include="Src\Application\GameSystem\ShaderSystem\Instance\Shader\ClearCS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">ClearCS</VariableName>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">ClearCS</VariableName>
+    </FxCompile>
+    <FxCompile Include="Src\Application\GameSystem\ShaderSystem\Instance\Shader\CountCS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CountCS</VariableName>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CountCS</VariableName>
+    </FxCompile>
+    <FxCompile Include="Src\Application\GameSystem\ShaderSystem\Instance\Shader\InstanceVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">InstanceVS</VariableName>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">InstanceVS</VariableName>
+    </FxCompile>
+    <FxCompile Include="Src\Application\GameSystem\ShaderSystem\Instance\Shader\OffsetCS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">OffsetCS</VariableName>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">OffsetCS</VariableName>
+    </FxCompile>
+    <FxCompile Include="Src\Application\GameSystem\ShaderSystem\Instance\Shader\ScatterCS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">ScatterCS</VariableName>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">ScatterCS</VariableName>
+    </FxCompile>
+    <FxCompile Include="Src\Application\GameSystem\ShaderSystem\Instance\Shader\ShadowVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">ShadowVS</VariableName>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">ShadowVS</VariableName>
+    </FxCompile>
+    <FxCompile Include="Src\Application\GameSystem\ShaderSystem\Particle\Shader\CompositePS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompositePS</VariableName>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompositePS</VariableName>
+    </FxCompile>
+    <FxCompile Include="Src\Application\GameSystem\ShaderSystem\Particle\Shader\CompositeVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompositeVS</VariableName>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompositeVS</VariableName>
+    </FxCompile>
+    <FxCompile Include="Src\Application\GameSystem\ShaderSystem\Particle\Shader\ParticleCS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">ParticleCS</VariableName>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">ParticleCS</VariableName>
+    </FxCompile>
+    <FxCompile Include="Src\Application\GameSystem\ShaderSystem\Particle\Shader\ParticlePS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">ParticlePS</VariableName>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">ParticlePS</VariableName>
+    </FxCompile>
+    <FxCompile Include="Src\Application\GameSystem\ShaderSystem\Particle\Shader\ParticleVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">ParticleVS</VariableName>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">ParticleVS</VariableName>
+    </FxCompile>
+    <FxCompile Include="Src\Application\GameSystem\ShaderSystem\Particle\Shader\TonePS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">TonePS</VariableName>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">TonePS</VariableName>
+    </FxCompile>
+    <FxCompile Include="Src\Application\GameSystem\ShaderSystem\Particle\Shader\ToneVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">ToneVS</VariableName>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">ToneVS</VariableName>
+    </FxCompile>
+    <FxCompile Include="Src\Application\GameSystem\ShaderSystem\Particle\Shader\TrailParticleVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">TrailVS</VariableName>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">TrailVS</VariableName>
+    </FxCompile>
+    <FxCompile Include="Src\Application\GameSystem\ShaderSystem\TrailRender\Shader\TrailPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">TrailPS</VariableName>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">TrailPS</VariableName>
+    </FxCompile>
+    <FxCompile Include="Src\Application\GameSystem\ShaderSystem\TrailRender\Shader\TrailVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">TrailVS</VariableName>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">TrailVS</VariableName>
+    </FxCompile>
+    <FxCompile Include="Src\Application\GameSystem\ShaderSystem\X-RayRender\Shader\XRayPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">XRayPS</VariableName>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">XRayPS</VariableName>
+    </FxCompile>
+    <FxCompile Include="Src\Application\GameSystem\ShaderSystem\X-RayRender\Shader\XRayVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">XRayVS</VariableName>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">XRayVS</VariableName>
+    </FxCompile>
+    <FxCompile Include="Src\Application\GameSystem\Transition\Render\Shader\Transition_PS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">PSMain</EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">PSMain</EntryPointName>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Transition_PS</VariableName>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Transition_PS</VariableName>
+    </FxCompile>
+    <FxCompile Include="Src\Application\GameSystem\Transition\Render\Shader\Transition_VS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VSMain</EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">VSMain</EntryPointName>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Transition_VS</VariableName>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Transition_VS</VariableName>
+    </FxCompile>
+    <FxCompile Include="Src\Framework\Shader\CreditShader\KdCreditBg_PS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Src\Framework\Shader\CreditShader\KdCreditShader_VS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Src\Framework\Shader\CreditShader\KdCreditText_PS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Src\Framework\Shader\CreditShader\KdCreditText_VS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Src\Framework\Shader\HudShader\KdHudShader_PS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Src\Framework\Shader\HudShader\KdHudShader_VS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Src\Framework\Shader\PostProcessShader\KdPostProcessShader_PS_Blur.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Src\Framework\Shader\PostProcessShader\KdPostProcessShader_PS_Bright.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Src\Framework\Shader\PostProcessShader\KdPostProcessShader_PS_DoF.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Src\Framework\Shader\PostProcessShader\KdPostProcessShader_VS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Src\Framework\Shader\ResultShader\KdResultShader_PS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Src\Framework\Shader\ResultShader\RankShader\KdRankShader_PS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Src\Framework\Shader\ResultShader\RankShader\KdRankShader_VS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Src\Framework\Shader\SpriteShader\KdSpriteShader_PS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Src\Framework\Shader\SpriteShader\KdSpriteShader_VS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Src\Framework\Shader\StandardShader\KdStandardShader_PS_GenDepthMapFromLight.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Src\Framework\Shader\StandardShader\KdStandardShader_PS_Lit.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Src\Framework\Shader\StandardShader\KdStandardShader_PS_UnLit.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Src\Framework\Shader\StandardShader\KdStandardShader_VS_GenDepthMapFromLight.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Src\Framework\Shader\StandardShader\KdStandardShader_VS_Lit.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Src\Framework\Shader\StandardShader\KdStandardShader_VS_UnLit.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Src\Framework\Shader\TitleShader\KdTitleShader_PS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Src\Framework\Shader\TitleShader\KdTitleShader_VS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Src\Framework\Shader\UiShader\KdUiShader_PS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+    </FxCompile>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets" />
+</Project>

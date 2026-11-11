@@ -1,0 +1,38 @@
+{
+  "_説明": "ステージ・光るキノコの調整値。メートルの項目は縮尺前の値",
+  "Stage": {
+    "modelName": "Stage",
+    "scale": [ 5.0, 5.0, 5.0 ],
+    "position": [ 10.0, -6.0, 5.0 ],
+    "lightColor": [ 0.3, 0.2, 0.0 ],
+    "lightPower": 200.0,
+    "lightOffset": [ 3.0, 2.0, -3.5 ]
+  },
+  "Mushroom": {
+    "modelName": "Mushroom",
+    "materialName": "MushroomDefault",
+    "bodyScale": 2.5,
+    "groundOffset": -0.05,
+    "groundRayUp": 30.0,
+    "groundRayLength": 100.0,
+    "lightColor": [ 0.05, 0.1, 0.3 ],
+    "lightRange": 0.1,
+    "lightPower": 0.01,
+    "lightOffset": [ 0.0, 2.0, 0.0 ],
+    "defaultGlowPower": 1.6,
+    "pulseSpeedA": 1.7,
+    "pulseSpeedB": 0.9,
+    "pulseDepth": 0.18
+  },
+  "MushroomManager": {
+    "defaultRange": 6.0,
+    "defaultCount": 12,
+    "maxCount": 64,
+    "defaultLightPower": 1.0,
+    "defaultLightRange": 6.0,
+    "defaultGroundOffset": -0.05,
+    "scaleJitterMin": 0.75,
+    "scaleJitterMax": 1.35,
+    "spawnFile": "Asset/Data/MushroomSpawns.json"
+  }
+}

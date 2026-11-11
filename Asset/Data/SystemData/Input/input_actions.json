@@ -1,0 +1,114 @@
+{
+    "actions": [
+        {
+            "name": "Dicede",
+            "type": "button",
+            "keyboard": [
+                "Enter",
+                "Space"
+            ],
+            "gamepad": [
+                "A"
+            ],
+            "player": 0
+        },
+        {
+            "name": "Attack",
+            "type": "button",
+            "keyboard": [
+                "LeftMouse"
+            ],
+            "gamepad": [
+                "X"
+            ],
+            "player": 0
+        },
+        {
+            "name": "Dash",
+            "type": "button",
+            "player": 0,
+            "gamepad": [
+                "LeftThumb"
+            ],
+            "keyboard": [
+                "Z"
+            ]
+        },
+        {
+            "name": "Move",
+            "type": "axis",
+            "keyboard": {
+                "up": "W",
+                "right": "D",
+                "down": "S",
+                "left": "A"
+            },
+            "gamepadStick": "LeftStick",
+            "player": 0,
+            "deadzone": {
+                "inner": 0.2,
+                "outer": 0.98
+            },
+            "invertY": false
+        },
+        {
+            "name": "Look",
+            "type": "mouseAxis"
+        },
+        {
+            "name": "Cry",
+            "type": "button",
+            "player": 0,
+            "gamepad": [
+                "B"
+            ],
+            "keyboard": [
+                "Space"
+            ]
+        },
+        {
+            "name": "Look",
+            "type": "axis",
+            "player": 0,
+            "gamepadStick": "RightStick"
+        },
+        {
+            "name": "Menue",
+            "type": "button",
+            "player": 0,
+            "gamepad": [
+                "Start"
+            ],
+            "keyboard": [
+                "Escape"
+            ]
+        },
+        {
+            "name": "Dodge",
+            "type": "button",
+            "player": 0,
+            "gamepad": [
+                "A"
+            ],
+            "keyboard": [
+                "LeftShift"
+            ]
+        },
+		{
+			"name": "HeavyAttack",
+			"type": "button",
+			"player": 0,
+			"gamepad": [
+				"Y"
+			],
+			"keyboard": [
+				"RightMouse"
+			]
+		},
+		{
+			"name": "MouseLockToggle",
+			"type": "button",
+			"keyboard": [ "F2" ]
+		}
+    ]
+}

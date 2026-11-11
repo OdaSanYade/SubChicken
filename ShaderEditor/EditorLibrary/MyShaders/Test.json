@@ -1,0 +1,1691 @@
+{
+    "exportDir": "C:\\3DGameProject\\3DGameChicken\\Asset\\Data\\Shader\\Material",
+    "passes": [
+        {
+            "graph": {
+                "comments": [],
+                "groups": [
+                    {
+                        "color": [
+                            0.39215683937072754,
+                            0.6960785388946533,
+                            1.0
+                        ],
+                        "h": 276.1474609375,
+                        "id": 1,
+                        "label": "IceBase",
+                        "members": [
+                            48
+                        ],
+                        "w": 378.0,
+                        "x": 97.0,
+                        "y": 840.0
+                    },
+                    {
+                        "color": [
+                            0.779411792755127,
+                            1.0,
+                            0.987024188041687
+                        ],
+                        "h": 343.4927978515625,
+                        "id": 2,
+                        "label": "IceFog",
+                        "members": [
+                            75,
+                            51,
+                            53,
+                            81,
+                            82,
+                            83
+                        ],
+                        "w": 1085.522216796875,
+                        "x": -403.224365234375,
+                        "y": 86.42405700683594
+                    }
+                ],
+                "links": [
+                    {
+                        "endPinId": 900157,
+                        "id": 100130,
+                        "startPinId": 900156
+                    },
+                    {
+                        "endPinId": 900158,
+                        "id": 100131,
+                        "startPinId": 900145
+                    },
+                    {
+                        "endPinId": 900160,
+                        "id": 100132,
+                        "startPinId": 900159
+                    },
+                    {
+                        "endPinId": 900092,
+                        "id": 100133,
+                        "startPinId": 900161
+                    },
+                    {
+                        "endPinId": 900191,
+                        "id": 100154,
+                        "startPinId": 900096
+                    },
+                    {
+                        "endPinId": 900206,
+                        "id": 100167,
+                        "startPinId": 900196
+                    },
+                    {
+                        "endPinId": 900220,
+                        "id": 100194,
+                        "startPinId": 900219
+                    },
+                    {
+                        "endPinId": 900221,
+                        "id": 100195,
+                        "startPinId": 900094
+                    },
+                    {
+                        "endPinId": 900144,
+                        "id": 100197,
+                        "startPinId": 900192
+                    },
+                    {
+                        "endPinId": 900235,
+                        "id": 100198,
+                        "startPinId": 900234
+                    },
+                    {
+                        "endPinId": 900236,
+                        "id": 100199,
+                        "startPinId": 900230
+                    },
+                    {
+                        "endPinId": 900238,
+                        "id": 100200,
+                        "startPinId": 900237
+                    },
+                    {
+                        "endPinId": 900225,
+                        "id": 100201,
+                        "startPinId": 900239
+                    },
+                    {
+                        "endPinId": 900246,
+                        "id": 100203,
+                        "startPinId": 900245
+                    },
+                    {
+                        "endPinId": 900247,
+                        "id": 100204,
+                        "startPinId": 900227
+                    },
+                    {
+                        "endPinId": 900249,
+                        "id": 100206,
+                        "startPinId": 900228
+                    },
+                    {
+                        "endPinId": 900229,
+                        "id": 100207,
+                        "startPinId": 900250
+                    },
+                    {
+                        "endPinId": 900251,
+                        "id": 100208,
+                        "startPinId": 900248
+                    },
+                    {
+                        "endPinId": 900252,
+                        "id": 100209,
+                        "startPinId": 900222
+                    },
+                    {
+                        "endPinId": 900198,
+                        "id": 100215,
+                        "startPinId": 900085
+                    },
+                    {
+                        "endPinId": 900197,
+                        "id": 100216,
+                        "startPinId": 900255
+                    },
+                    {
+                        "endPinId": 900254,
+                        "id": 100218,
+                        "startPinId": 900207
+                    },
+                    {
+                        "endPinId": 900263,
+                        "id": 100219,
+                        "startPinId": 900262
+                    },
+                    {
+                        "endPinId": 900265,
+                        "id": 100220,
+                        "startPinId": 900264
+                    },
+                    {
+                        "endPinId": 900273,
+                        "id": 100221,
+                        "startPinId": 900266
+                    },
+                    {
+                        "endPinId": 900276,
+                        "id": 100222,
+                        "startPinId": 900199
+                    },
+                    {
+                        "endPinId": 900277,
+                        "id": 100223,
+                        "startPinId": 900275
+                    },
+                    {
+                        "endPinId": 10026,
+                        "id": 100254,
+                        "startPinId": 900308
+                    },
+                    {
+                        "endPinId": 900314,
+                        "id": 100256,
+                        "startPinId": 900298
+                    },
+                    {
+                        "endPinId": 900306,
+                        "id": 100257,
+                        "startPinId": 900315
+                    },
+                    {
+                        "endPinId": 900313,
+                        "id": 100258,
+                        "startPinId": 900253
+                    },
+                    {
+                        "endPinId": 10030,
+                        "id": 100261,
+                        "startPinId": 900337
+                    },
+                    {
+                        "endPinId": 900336,
+                        "id": 100262,
+                        "startPinId": 900278
+                    }
+                ],
+                "nodes": [
+                    {
+                        "bufferName": "",
+                        "customCode": "",
+                        "customInputs": [],
+                        "customOutputName": "Result",
+                        "customOutputType": 3,
+                        "id": 1,
+                        "inputPins": [
+                            {
+                                "defaultValue": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "id": 10000
+                            }
+                        ],
+                        "outputPins": [],
+                        "paramMax": 1.0,
+                        "paramMin": 0.0,
+                        "paramName": "",
+                        "posX": 1350.236572265625,
+                        "posY": 477.53167724609375,
+                        "texturePath": "",
+                        "type": 26,
+                        "values": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "videoPath": ""
+                    },
+                    {
+                        "bufferName": "",
+                        "customCode": "",
+                        "customInputs": [],
+                        "customOutputName": "Result",
+                        "customOutputType": 3,
+                        "id": 3,
+                        "inputPins": [
+                            {
+                                "defaultValue": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "id": 10002
+                            }
+                        ],
+                        "outputPins": [],
+                        "paramMax": 1.0,
+                        "paramMin": 0.0,
+                        "paramName": "",
+                        "posX": 1074.0283203125,
+                        "posY": 18.454788208007813,
+                        "texturePath": "",
+                        "type": 33,
+                        "values": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "videoPath": ""
+                    },
+                    {
+                        "bufferName": "",
+                        "customCode": "",
+                        "customInputs": [],
+                        "customOutputName": "Result",
+                        "customOutputType": 3,
+                        "id": 13,
+                        "inputPins": [
+                            {
+                                "defaultValue": [
+                                    0.800000011920929,
+                                    0.800000011920929,
+                                    0.800000011920929,
+                                    0.0
+                                ],
+                                "id": 10026
+                            },
+                            {
+                                "defaultValue": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "id": 10027
+                            },
+                            {
+                                "defaultValue": [
+                                    0.0,
+                                    1.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "id": 10028
+                            },
+                            {
+                                "defaultValue": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "id": 10029
+                            },
+                            {
+                                "defaultValue": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "id": 10030
+                            },
+                            {
+                                "defaultValue": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "id": 900000
+                            },
+                            {
+                                "defaultValue": [
+                                    1.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "id": 900001
+                            }
+                        ],
+                        "outputPins": [],
+                        "paramMax": 1.0,
+                        "paramMin": 0.0,
+                        "paramName": "",
+                        "posX": 1561.48486328125,
+                        "posY": 679.2440185546875,
+                        "texturePath": "",
+                        "type": 88,
+                        "values": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "videoPath": ""
+                    },
+                    {
+                        "bufferName": "",
+                        "customCode": "",
+                        "customInputs": [],
+                        "customOutputName": "Result",
+                        "customOutputType": 3,
+                        "id": 48,
+                        "inputPins": [],
+                        "outputPins": [
+                            900085
+                        ],
+                        "paramMax": 1.0,
+                        "paramMin": 0.0,
+                        "paramName": "",
+                        "posX": 142.7548828125,
+                        "posY": 951.1474609375,
+                        "texturePath": "",
+                        "type": 4,
+                        "values": [
+                            0.14164061844348907,
+                            0.18084470927715302,
+                            0.23124998807907104,
+                            1.0
+                        ],
+                        "videoPath": ""
+                    },
+                    {
+                        "bufferName": "",
+                        "customCode": "",
+                        "customInputs": [],
+                        "customOutputName": "Result",
+                        "customOutputType": 3,
+                        "id": 51,
+                        "inputPins": [
+                            {
+                                "defaultValue": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "id": 900090
+                            },
+                            {
+                                "defaultValue": [
+                                    0.10000000149011612,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "id": 900091
+                            },
+                            {
+                                "defaultValue": [
+                                    4.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "id": 900092
+                            },
+                            {
+                                "defaultValue": [
+                                    1.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "id": 900093
+                            }
+                        ],
+                        "outputPins": [
+                            900094
+                        ],
+                        "paramMax": 1.0,
+                        "paramMin": 0.0,
+                        "paramName": "",
+                        "posX": 502.2978515625,
+                        "posY": 179.7125244140625,
+                        "texturePath": "",
+                        "type": 118,
+                        "values": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "videoPath": ""
+                    },
+                    {
+                        "bufferName": "",
+                        "customCode": "",
+                        "customInputs": [],
+                        "customOutputName": "Result",
+                        "customOutputType": 3,
+                        "id": 53,
+                        "inputPins": [],
+                        "outputPins": [
+                            900096
+                        ],
+                        "paramMax": 1.0,
+                        "paramMin": 0.0,
+                        "paramName": "",
+                        "posX": -326.224365234375,
+                        "posY": 231.91683959960938,
+                        "texturePath": "",
+                        "type": 1,
+                        "values": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "videoPath": ""
+                    },
+                    {
+                        "bufferName": "",
+                        "customCode": "",
+                        "customInputs": [],
+                        "customOutputName": "Result",
+                        "customOutputType": 3,
+                        "id": 75,
+                        "inputPins": [
+                            {
+                                "defaultValue": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "id": 900144
+                            }
+                        ],
+                        "outputPins": [
+                            900145,
+                            900146,
+                            900147,
+                            900148
+                        ],
+                        "paramMax": 1.0,
+                        "paramMin": 0.0,
+                        "paramName": "",
+                        "posX": 61.574951171875,
+                        "posY": 225.02633666992188,
+                        "texturePath": "",
+                        "type": 23,
+                        "values": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "videoPath": ""
+                    },
+                    {
+                        "bufferName": "",
+                        "customCode": "",
+                        "customInputs": [],
+                        "customOutputName": "Result",
+                        "customOutputType": 3,
+                        "id": 81,
+                        "inputPins": [],
+                        "outputPins": [
+                            900156
+                        ],
+                        "paramMax": 1.0,
+                        "paramMin": 0.0,
+                        "paramName": "",
+                        "posX": 58.52703857421875,
+                        "posY": 141.42405700683594,
+                        "texturePath": "",
+                        "type": 2,
+                        "values": [
+                            4.0,
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "videoPath": ""
+                    },
+                    {
+                        "bufferName": "",
+                        "customCode": "",
+                        "customInputs": [],
+                        "customOutputName": "Result",
+                        "customOutputType": 3,
+                        "id": 82,
+                        "inputPins": [
+                            {
+                                "defaultValue": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "id": 900157
+                            },
+                            {
+                                "defaultValue": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "id": 900158
+                            }
+                        ],
+                        "outputPins": [
+                            900159
+                        ],
+                        "paramMax": 1.0,
+                        "paramMin": 0.0,
+                        "paramName": "",
+                        "posX": 208.52703857421875,
+                        "posY": 181.424072265625,
+                        "texturePath": "",
+                        "type": 7,
+                        "values": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "videoPath": ""
+                    },
+                    {
+                        "bufferName": "",
+                        "customCode": "",
+                        "customInputs": [],
+                        "customOutputName": "Result",
+                        "customOutputType": 3,
+                        "id": 83,
+                        "inputPins": [
+                            {
+                                "defaultValue": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "id": 900160
+                            }
+                        ],
+                        "outputPins": [
+                            900161,
+                            900162,
+                            900163,
+                            900164
+                        ],
+                        "paramMax": 1.0,
+                        "paramMin": 0.0,
+                        "paramName": "",
+                        "posX": 351.52703857421875,
+                        "posY": 181.424072265625,
+                        "texturePath": "",
+                        "type": 23,
+                        "values": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "videoPath": ""
+                    },
+                    {
+                        "bufferName": "",
+                        "customCode": "",
+                        "customInputs": [],
+                        "customOutputName": "Result",
+                        "customOutputType": 3,
+                        "id": 95,
+                        "inputPins": [
+                            {
+                                "defaultValue": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "id": 900191
+                            }
+                        ],
+                        "outputPins": [
+                            900192
+                        ],
+                        "paramMax": 1.0,
+                        "paramMin": 0.0,
+                        "paramName": "",
+                        "posX": -137.81915283203125,
+                        "posY": 232.66033935546875,
+                        "texturePath": "",
+                        "type": 15,
+                        "values": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "videoPath": ""
+                    },
+                    {
+                        "bufferName": "",
+                        "customCode": "",
+                        "customInputs": [],
+                        "customOutputName": "Result",
+                        "customOutputType": 3,
+                        "id": 96,
+                        "inputPins": [
+                            {
+                                "defaultValue": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "id": 900193
+                            },
+                            {
+                                "defaultValue": [
+                                    8.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "id": 900194
+                            },
+                            {
+                                "defaultValue": [
+                                    95.80000305175781,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "id": 900195
+                            }
+                        ],
+                        "outputPins": [
+                            900196
+                        ],
+                        "paramMax": 1.0,
+                        "paramMin": 0.0,
+                        "paramName": "",
+                        "posX": -38.61383056640625,
+                        "posY": 498.3240966796875,
+                        "texturePath": "",
+                        "type": 119,
+                        "values": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "videoPath": ""
+                    },
+                    {
+                        "bufferName": "",
+                        "customCode": "",
+                        "customInputs": [],
+                        "customOutputName": "Result",
+                        "customOutputType": 3,
+                        "id": 97,
+                        "inputPins": [
+                            {
+                                "defaultValue": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "id": 900197
+                            },
+                            {
+                                "defaultValue": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "id": 900198
+                            }
+                        ],
+                        "outputPins": [
+                            900199
+                        ],
+                        "paramMax": 1.0,
+                        "paramMin": 0.0,
+                        "paramName": "",
+                        "posX": 544.38623046875,
+                        "posY": 532.3240966796875,
+                        "texturePath": "",
+                        "type": 9,
+                        "values": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "videoPath": ""
+                    },
+                    {
+                        "bufferName": "",
+                        "customCode": "",
+                        "customInputs": [],
+                        "customOutputName": "Result",
+                        "customOutputType": 3,
+                        "id": 101,
+                        "inputPins": [
+                            {
+                                "defaultValue": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "id": 900206
+                            }
+                        ],
+                        "outputPins": [
+                            900207
+                        ],
+                        "paramMax": 1.0,
+                        "paramMin": 0.0,
+                        "paramName": "",
+                        "posX": 138.38616943359375,
+                        "posY": 525.3240966796875,
+                        "texturePath": "",
+                        "type": 54,
+                        "values": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "videoPath": ""
+                    },
+                    {
+                        "bufferName": "",
+                        "customCode": "",
+                        "customInputs": [],
+                        "customOutputName": "Result",
+                        "customOutputType": 3,
+                        "id": 106,
+                        "inputPins": [],
+                        "outputPins": [
+                            900219
+                        ],
+                        "paramMax": 1.0,
+                        "paramMin": 0.0,
+                        "paramName": "",
+                        "posX": 513.3525390625,
+                        "posY": 97.673095703125,
+                        "texturePath": "",
+                        "type": 2,
+                        "values": [
+                            1.5,
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "videoPath": ""
+                    },
+                    {
+                        "bufferName": "",
+                        "customCode": "",
+                        "customInputs": [],
+                        "customOutputName": "Result",
+                        "customOutputType": 3,
+                        "id": 107,
+                        "inputPins": [
+                            {
+                                "defaultValue": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "id": 900220
+                            },
+                            {
+                                "defaultValue": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "id": 900221
+                            }
+                        ],
+                        "outputPins": [
+                            900222
+                        ],
+                        "paramMax": 1.0,
+                        "paramMin": 0.0,
+                        "paramName": "",
+                        "posX": 681.3525390625,
+                        "posY": 126.673095703125,
+                        "texturePath": "",
+                        "type": 9,
+                        "values": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "videoPath": ""
+                    },
+                    {
+                        "bufferName": "",
+                        "customCode": "",
+                        "customInputs": [],
+                        "customOutputName": "Result",
+                        "customOutputType": 3,
+                        "id": 108,
+                        "inputPins": [
+                            {
+                                "defaultValue": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "id": 900223
+                            },
+                            {
+                                "defaultValue": [
+                                    0.10000000149011612,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "id": 900224
+                            },
+                            {
+                                "defaultValue": [
+                                    4.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "id": 900225
+                            },
+                            {
+                                "defaultValue": [
+                                    1.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "id": 900226
+                            }
+                        ],
+                        "outputPins": [
+                            900227
+                        ],
+                        "paramMax": 1.0,
+                        "paramMin": 0.0,
+                        "paramName": "",
+                        "posX": 297.2978515625,
+                        "posY": 32.7125244140625,
+                        "texturePath": "",
+                        "type": 118,
+                        "values": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "videoPath": ""
+                    },
+                    {
+                        "bufferName": "",
+                        "customCode": "",
+                        "customInputs": [],
+                        "customOutputName": "Result",
+                        "customOutputType": 3,
+                        "id": 109,
+                        "inputPins": [],
+                        "outputPins": [
+                            900228
+                        ],
+                        "paramMax": 1.0,
+                        "paramMin": 0.0,
+                        "paramName": "",
+                        "posX": -470.224365234375,
+                        "posY": 68.91683959960938,
+                        "texturePath": "",
+                        "type": 1,
+                        "values": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "videoPath": ""
+                    },
+                    {
+                        "bufferName": "",
+                        "customCode": "",
+                        "customInputs": [],
+                        "customOutputName": "Result",
+                        "customOutputType": 3,
+                        "id": 110,
+                        "inputPins": [
+                            {
+                                "defaultValue": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "id": 900229
+                            }
+                        ],
+                        "outputPins": [
+                            900230,
+                            900231,
+                            900232,
+                            900233
+                        ],
+                        "paramMax": 1.0,
+                        "paramMin": 0.0,
+                        "paramName": "",
+                        "posX": -143.425048828125,
+                        "posY": 78.02633666992188,
+                        "texturePath": "",
+                        "type": 23,
+                        "values": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "videoPath": ""
+                    },
+                    {
+                        "bufferName": "",
+                        "customCode": "",
+                        "customInputs": [],
+                        "customOutputName": "Result",
+                        "customOutputType": 3,
+                        "id": 111,
+                        "inputPins": [],
+                        "outputPins": [
+                            900234
+                        ],
+                        "paramMax": 1.0,
+                        "paramMin": 0.0,
+                        "paramName": "",
+                        "posX": -146.47296142578125,
+                        "posY": -5.5759429931640625,
+                        "texturePath": "",
+                        "type": 2,
+                        "values": [
+                            4.0,
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "videoPath": ""
+                    },
+                    {
+                        "bufferName": "",
+                        "customCode": "",
+                        "customInputs": [],
+                        "customOutputName": "Result",
+                        "customOutputType": 3,
+                        "id": 112,
+                        "inputPins": [
+                            {
+                                "defaultValue": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "id": 900235
+                            },
+                            {
+                                "defaultValue": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "id": 900236
+                            }
+                        ],
+                        "outputPins": [
+                            900237
+                        ],
+                        "paramMax": 1.0,
+                        "paramMin": 0.0,
+                        "paramName": "",
+                        "posX": 3.52703857421875,
+                        "posY": 34.424072265625,
+                        "texturePath": "",
+                        "type": 7,
+                        "values": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "videoPath": ""
+                    },
+                    {
+                        "bufferName": "",
+                        "customCode": "",
+                        "customInputs": [],
+                        "customOutputName": "Result",
+                        "customOutputType": 3,
+                        "id": 113,
+                        "inputPins": [
+                            {
+                                "defaultValue": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "id": 900238
+                            }
+                        ],
+                        "outputPins": [
+                            900239,
+                            900240,
+                            900241,
+                            900242
+                        ],
+                        "paramMax": 1.0,
+                        "paramMin": 0.0,
+                        "paramName": "",
+                        "posX": 146.52703857421875,
+                        "posY": 34.424072265625,
+                        "texturePath": "",
+                        "type": 23,
+                        "values": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "videoPath": ""
+                    },
+                    {
+                        "bufferName": "",
+                        "customCode": "",
+                        "customInputs": [],
+                        "customOutputName": "Result",
+                        "customOutputType": 3,
+                        "id": 115,
+                        "inputPins": [],
+                        "outputPins": [
+                            900245
+                        ],
+                        "paramMax": 1.0,
+                        "paramMin": 0.0,
+                        "paramName": "",
+                        "posX": 304.3525390625,
+                        "posY": -50.326904296875,
+                        "texturePath": "",
+                        "type": 2,
+                        "values": [
+                            1.5,
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "videoPath": ""
+                    },
+                    {
+                        "bufferName": "",
+                        "customCode": "",
+                        "customInputs": [],
+                        "customOutputName": "Result",
+                        "customOutputType": 3,
+                        "id": 116,
+                        "inputPins": [
+                            {
+                                "defaultValue": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "id": 900246
+                            },
+                            {
+                                "defaultValue": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "id": 900247
+                            }
+                        ],
+                        "outputPins": [
+                            900248
+                        ],
+                        "paramMax": 1.0,
+                        "paramMin": 0.0,
+                        "paramName": "",
+                        "posX": 465.3525390625,
+                        "posY": -20.326904296875,
+                        "texturePath": "",
+                        "type": 9,
+                        "values": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "videoPath": ""
+                    },
+                    {
+                        "bufferName": "",
+                        "customCode": "",
+                        "customInputs": [],
+                        "customOutputName": "Result",
+                        "customOutputType": 3,
+                        "id": 117,
+                        "inputPins": [
+                            {
+                                "defaultValue": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "id": 900249
+                            }
+                        ],
+                        "outputPins": [
+                            900250
+                        ],
+                        "paramMax": 1.0,
+                        "paramMin": 0.0,
+                        "paramName": "",
+                        "posX": -308.770263671875,
+                        "posY": 69.36373901367188,
+                        "texturePath": "",
+                        "type": 16,
+                        "values": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "videoPath": ""
+                    },
+                    {
+                        "bufferName": "",
+                        "customCode": "",
+                        "customInputs": [],
+                        "customOutputName": "Result",
+                        "customOutputType": 3,
+                        "id": 118,
+                        "inputPins": [
+                            {
+                                "defaultValue": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "id": 900251
+                            },
+                            {
+                                "defaultValue": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "id": 900252
+                            }
+                        ],
+                        "outputPins": [
+                            900253
+                        ],
+                        "paramMax": 1.0,
+                        "paramMin": 0.0,
+                        "paramName": "",
+                        "posX": 826.229736328125,
+                        "posY": 19.363739013671875,
+                        "texturePath": "",
+                        "type": 9,
+                        "values": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "videoPath": ""
+                    },
+                    {
+                        "bufferName": "",
+                        "customCode": "",
+                        "customInputs": [],
+                        "customOutputName": "Result",
+                        "customOutputType": 3,
+                        "id": 119,
+                        "inputPins": [
+                            {
+                                "defaultValue": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "id": 900254
+                            }
+                        ],
+                        "outputPins": [
+                            900255,
+                            900256,
+                            900257,
+                            900258
+                        ],
+                        "paramMax": 1.0,
+                        "paramMin": 0.0,
+                        "paramName": "",
+                        "posX": 311.79217529296875,
+                        "posY": 488.3995361328125,
+                        "texturePath": "",
+                        "type": 23,
+                        "values": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "videoPath": ""
+                    },
+                    {
+                        "bufferName": "",
+                        "customCode": "",
+                        "customInputs": [],
+                        "customOutputName": "Result",
+                        "customOutputType": 3,
+                        "id": 120,
+                        "inputPins": [
+                            {
+                                "defaultValue": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "id": 900259
+                            },
+                            {
+                                "defaultValue": [
+                                    8.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "id": 900260
+                            },
+                            {
+                                "defaultValue": [
+                                    10.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "id": 900261
+                            }
+                        ],
+                        "outputPins": [
+                            900262
+                        ],
+                        "paramMax": 1.0,
+                        "paramMin": 0.0,
+                        "paramName": "",
+                        "posX": 11.4002685546875,
+                        "posY": 645.2186889648438,
+                        "texturePath": "",
+                        "type": 119,
+                        "values": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "videoPath": ""
+                    },
+                    {
+                        "bufferName": "",
+                        "customCode": "",
+                        "customInputs": [],
+                        "customOutputName": "Result",
+                        "customOutputType": 3,
+                        "id": 121,
+                        "inputPins": [
+                            {
+                                "defaultValue": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "id": 900263
+                            }
+                        ],
+                        "outputPins": [
+                            900264
+                        ],
+                        "paramMax": 1.0,
+                        "paramMin": 0.0,
+                        "paramName": "",
+                        "posX": 188.4002685546875,
+                        "posY": 672.2186889648438,
+                        "texturePath": "",
+                        "type": 54,
+                        "values": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "videoPath": ""
+                    },
+                    {
+                        "bufferName": "",
+                        "customCode": "",
+                        "customInputs": [],
+                        "customOutputName": "Result",
+                        "customOutputType": 3,
+                        "id": 122,
+                        "inputPins": [
+                            {
+                                "defaultValue": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "id": 900265
+                            }
+                        ],
+                        "outputPins": [
+                            900266,
+                            900267,
+                            900268,
+                            900269
+                        ],
+                        "paramMax": 1.0,
+                        "paramMin": 0.0,
+                        "paramName": "",
+                        "posX": 361.8062744140625,
+                        "posY": 635.2941284179688,
+                        "texturePath": "",
+                        "type": 23,
+                        "values": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "videoPath": ""
+                    },
+                    {
+                        "bufferName": "",
+                        "customCode": "",
+                        "customInputs": [],
+                        "customOutputName": "Result",
+                        "customOutputType": 3,
+                        "id": 124,
+                        "inputPins": [
+                            {
+                                "defaultValue": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "id": 900273
+                            },
+                            {
+                                "defaultValue": [
+                                    1.0099999904632568,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "id": 900274
+                            }
+                        ],
+                        "outputPins": [
+                            900275
+                        ],
+                        "paramMax": 1.0,
+                        "paramMin": 0.0,
+                        "paramName": "",
+                        "posX": 536.0428466796875,
+                        "posY": 661.8258056640625,
+                        "texturePath": "",
+                        "type": 14,
+                        "values": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "videoPath": ""
+                    },
+                    {
+                        "bufferName": "",
+                        "customCode": "",
+                        "customInputs": [],
+                        "customOutputName": "Result",
+                        "customOutputType": 3,
+                        "id": 125,
+                        "inputPins": [
+                            {
+                                "defaultValue": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "id": 900276
+                            },
+                            {
+                                "defaultValue": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "id": 900277
+                            }
+                        ],
+                        "outputPins": [
+                            900278
+                        ],
+                        "paramMax": 1.0,
+                        "paramMin": 0.0,
+                        "paramName": "",
+                        "posX": 727.4772338867188,
+                        "posY": 596.1685791015625,
+                        "texturePath": "",
+                        "type": 9,
+                        "values": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "videoPath": ""
+                    },
+                    {
+                        "bufferName": "",
+                        "customCode": "",
+                        "customInputs": [],
+                        "customOutputName": "Result",
+                        "customOutputType": 3,
+                        "id": 134,
+                        "inputPins": [],
+                        "outputPins": [
+                            900298
+                        ],
+                        "paramMax": 1.0,
+                        "paramMin": 0.0,
+                        "paramName": "",
+                        "posX": 1083.202880859375,
+                        "posY": 590.2042846679688,
+                        "texturePath": "",
+                        "type": 4,
+                        "values": [
+                            0.0,
+                            0.07812505960464478,
+                            0.125,
+                            1.0
+                        ],
+                        "videoPath": ""
+                    },
+                    {
+                        "bufferName": "",
+                        "customCode": "",
+                        "customInputs": [],
+                        "customOutputName": "Result",
+                        "customOutputType": 3,
+                        "id": 137,
+                        "inputPins": [
+                            {
+                                "defaultValue": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "id": 900306
+                            },
+                            {
+                                "defaultValue": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "id": 900307
+                            }
+                        ],
+                        "outputPins": [
+                            900308
+                        ],
+                        "paramMax": 1.0,
+                        "paramMin": 0.0,
+                        "paramName": "",
+                        "posX": 1396.5828857421875,
+                        "posY": 624.1011962890625,
+                        "texturePath": "",
+                        "type": 7,
+                        "values": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "videoPath": ""
+                    },
+                    {
+                        "bufferName": "",
+                        "customCode": "",
+                        "customInputs": [],
+                        "customOutputName": "Result",
+                        "customOutputType": 3,
+                        "id": 140,
+                        "inputPins": [
+                            {
+                                "defaultValue": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "id": 900313
+                            },
+                            {
+                                "defaultValue": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "id": 900314
+                            }
+                        ],
+                        "outputPins": [
+                            900315
+                        ],
+                        "paramMax": 1.0,
+                        "paramMin": 0.0,
+                        "paramName": "",
+                        "posX": 1246.5828857421875,
+                        "posY": 561.1011962890625,
+                        "texturePath": "",
+                        "type": 7,
+                        "values": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "videoPath": ""
+                    },
+                    {
+                        "bufferName": "",
+                        "customCode": "float3 x = max(color.rgb, 0.0f);\n\n    x = x / (1.0f + x);\n\n    return float4(x, color.a);",
+                        "customInputs": [
+                            {
+                                "name": "color",
+                                "type": 3
+                            }
+                        ],
+                        "customOutputName": "Result",
+                        "customOutputType": 3,
+                        "id": 141,
+                        "inputPins": [
+                            {
+                                "defaultValue": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "id": 900336
+                            }
+                        ],
+                        "outputPins": [
+                            900337
+                        ],
+                        "paramMax": 1.0,
+                        "paramMin": 0.0,
+                        "paramName": "",
+                        "posX": 1202.0,
+                        "posY": 793.0,
+                        "texturePath": "",
+                        "type": 25,
+                        "values": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "videoPath": ""
+                    }
+                ]
+            },
+            "id": 1,
+            "name": "Scene",
+            "outputName": "Scene",
+            "scaleFactor": 1.0,
+            "type": 0
+        }
+    ],
+    "version": 2
+}

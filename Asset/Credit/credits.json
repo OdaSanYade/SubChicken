@@ -1,0 +1,191 @@
+{
+    "version": 1,
+    "scrollSpeed": 90.0,
+    "loop": false,
+    "startDelay": 0.5,
+    "endHold": 2.5,
+    "title": {
+        "text": "BreaveChicken",
+        "sub": "CREDITS"
+    },
+    "sections": [
+        {
+            "heading": "企画・プログラム・デザイン",
+            "entries": [
+                {
+                    "type": "name",
+                    "text": "小田川 莞大"
+                }
+            ]
+        },
+        {
+            "heading": "3Dモデル",
+            "entries": [
+                {
+                    "type": "asset",
+                    "title": "Chicken (animated)",
+                    "author": "Čestmír Dammer",
+                    "license": "CC0 1.0",
+                    "note": "テクスチャは Rick Hoppmann の写真をもとに作成"
+                },
+                {
+                    "type": "asset",
+                    "title": "Animated Chick",
+                    "author": "FourthGreen",
+                    "license": "CC BY 4.0"
+                },
+                {
+                    "type": "asset",
+                    "title": "Fox",
+                    "author": "Alexei Ostapenko",
+                    "license": "CC BY 4.0"
+                },
+                {
+                    "type": "asset",
+                    "title": "Farm (low poly)",
+                    "author": "Avmifi",
+                    "license": "CC BY 4.0"
+                },
+                {
+                    "type": "asset",
+                    "title": "Fence pack - (low poly, game ready)",
+                    "author": "TampaJoey",
+                    "license": "CC BY 4.0"
+                },
+                {
+                    "type": "asset",
+                    "title": "Copper Kerosene Lamp",
+                    "author": "SilverSister",
+                    "license": "CC BY 4.0"
+                },
+                {
+                    "type": "asset",
+                    "title": "Pine Trees Pack | PS1 Low Poly",
+                    "author": "Vova Truestory",
+                    "license": "CC BY 4.0"
+                },
+                {
+                    "type": "asset",
+                    "title": "low poly forest pack, low poly environment pack",
+                    "author": "Ragat Vdoo Kaf",
+                    "license": "CC BY 4.0"
+                },
+                {
+                    "type": "asset",
+                    "title": "Low Poly Shrub - Small Texture",
+                    "author": "Natural_Disbuster",
+                    "license": "CC BY 4.0"
+                },
+                {
+                    "type": "asset",
+                    "title": "Foliage",
+                    "author": "Daemon",
+                    "license": "CC BY 4.0"
+                },
+                {
+                    "type": "asset",
+                    "title": "Aerial Grassy and Rocky Mountain 1",
+                    "author": "Mike.xx",
+                    "license": "CC BY 4.0"
+                },
+                {
+                    "type": "asset",
+                    "title": "Free Rock Assets Pack",
+                    "author": "JonhGillessen",
+                    "license": "CC BY 4.0"
+                },
+                {
+                    "type": "asset",
+                    "title": "Gravel Ground Module Scan Dry 2",
+                    "author": "Per's Scan Collection",
+                    "license": "CC BY 4.0"
+                },
+                {
+                    "type": "asset",
+                    "title": "Large tree log",
+                    "author": "Julian Malik",
+                    "license": "CC BY 4.0"
+                },
+                {
+                    "type": "asset",
+                    "title": "Log",
+                    "author": "Arkikon",
+                    "license": "CC BY 4.0"
+                },
+                {
+                    "type": "asset",
+                    "title": "看板・キノコなど",
+                    "author": "Tripo AI で生成",
+                    "license": "CC BY 4.0",
+                    "note": "無料プランで生成。ツールの規約により非商用での利用に限る"
+                }
+            ]
+        },
+        {
+            "heading": "効果音・BGM",
+            "entries": [
+                {
+                    "type": "pair",
+                    "name": "効果音",
+                    "credit": "効果音ラボ"
+                },
+                {
+                    "type": "pair",
+                    "name": "BGM",
+                    "credit": "BGMer"
+                }
+            ]
+        },
+        {
+            "heading": "フォント",
+            "entries": [
+                {
+                    "type": "asset",
+                    "title": "(使用フォント名)",
+                    "author": "(作者)",
+                    "license": "(例: SIL OFL 1.1)"
+                }
+            ]
+        },
+        {
+            "heading": "使用ライブラリ",
+            "entries": [
+                {
+                    "type": "pair",
+                    "name": "KdFramework",
+                    "credit": "神戸電子専門学校"
+                },
+                {
+                    "type": "pair",
+                    "name": "nlohmann/json",
+                    "credit": "Niels Lohmann / MIT License"
+                }
+            ]
+        },
+        {
+            "heading": "ライセンスについて",
+            "entries": [
+                {
+                    "type": "name",
+                    "text": "素材の配布元 URL・改変の有無・ライセンス全文は"
+                },
+                {
+                    "type": "name",
+                    "text": "同梱の CREDITS.md に記載しています"
+                }
+            ]
+        },
+        {
+            "heading": "Special Thanks",
+            "entries": [
+                {
+                    "type": "name",
+                    "text": "(先生・友人など)"
+                }
+            ]
+        }
+    ],
+    "footer": {
+        "text": "Thank you for playing!"
+    }
+}

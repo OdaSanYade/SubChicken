@@ -1,0 +1,47 @@
+{
+    "name": "ChickDefault",
+    "params": [
+        {
+            "default": [
+                0.19642573595046997,
+                0.706250011920929,
+                0.1235937625169754,
+                1.0
+            ],
+            "max": 1.0,
+            "min": 0.0,
+            "name": "LightColor",
+            "type": "float4"
+        }
+    ],
+    "ps": "Texture2D g_modelBaseColor : register(t6);\nTexture2D g_modelMetalRough : register(t7);\nSamplerState g_sampler : register(s0);\n\ncbuffer cbEffect : register(b0)\n{\n    float g_time;\n    float g_audioBass;\n    float g_audioMid;\n    float g_audioTreble;\n    float4 g_params[16];\n};\n\ncbuffer cbRaymarchCamera : register(b3)\n{\n    float3 g_camPos;\n    float  _camPad;\n    row_major float4x4 g_invViewProj; \n    row_major float4x4 g_viewProj;\n};\n\n\ncbuffer cbMaterial : register(b5)\n{\n    float4 g_baseColorRate;\n    float  g_metallicRate;\n    float  g_roughnessRate;\n\tfloat  g_hasNormalMap;   \n    float _matPad;\n};\n\nfloat4 node6_func(float4 color, float saturation)\n{\nstatic const float3 LumCoeff = float3(0.2126, 0.7152, 0.0722);\n\nfloat luminance = dot(color.rgb, LumCoeff);\nfloat3 grayColor = float3(luminance, luminance, luminance);\n\nfloat3 result = lerp(grayColor, color.rgb, saturation);\nreturn float4(result, color.a);\n}\n\n\nstruct PS_IN {\n    float4 pos : SV_Position;\n    float2 uv : TEXCOORD0;\n    float3 normal : NORMAL;\n    float3 viewNormal : NORMAL1;\n    float3 worldNormal : NORMAL2;\n    float3 worldPos : POSITION1;\n    float3 worldTangent : TANGENT;\n    nointerpolation uint instID : INSTANCEID;\n};\n\nstruct PS_OUT {\n    float4 target0 : SV_Target0;\n    float4 target1 : SV_Target1;\n    float4 target2 : SV_Target2;\n    float4 target3 : SV_Target3;\n    float4 target4 : SV_Target4;\n};\n\nPS_OUT main(PS_IN In)\n{\n    float4 node8_out = (g_modelBaseColor.Sample(g_sampler, In.uv) * g_baseColorRate);\n    float node7_out = 1.030000f;\n    float4 node6_out = node6_func(node8_out, node7_out);\n    float4 node10_out = g_params[0];\n    float node11_out = 1.000000f;\n    float node12_out = 0.210000f;\n    float3 ssh9_N = normalize(In.worldNormal);\n    float3 ssh9_T = normalize(In.worldTangent - dot(In.worldTangent, ssh9_N) * ssh9_N);\n    float3 ssh9_B = cross(ssh9_N, ssh9_T);\n    float3x3 ssh9_TBN = float3x3(ssh9_T, ssh9_B, ssh9_N);\n    float3 ssh9_Lw = normalize(((node10_out).xyz));\n    float3 ssh9_Lt = mul(ssh9_TBN, ssh9_Lw);\n    float ssh9_h0 = dot(g_modelBaseColor.Sample(g_sampler, In.uv).rgb, float3(0.299,0.587,0.114));\n    float ssh9_shadow = 1.0;\n    float2 ssh9_uvStep = ssh9_Lt.xy * (node12_out) * 0.01;\n    [unroll] for (int ssh9_i = 1; ssh9_i <= 8; ++ssh9_i)\n    {\n        float2 ssh9_suv = In.uv + ssh9_uvStep * ssh9_i;\n        float ssh9_hs = dot(g_modelBaseColor.Sample(g_sampler, ssh9_suv).rgb, float3(0.299,0.587,0.114));\n        float ssh9_expected = ssh9_h0 + ssh9_Lt.z * ssh9_i * 0.05;\n        if (ssh9_hs > ssh9_expected)\n            ssh9_shadow = min(ssh9_shadow, 1.0 - (ssh9_hs - ssh9_expected) * 5.0);\n    }\n    ssh9_shadow = saturate(lerp(1.0, ssh9_shadow, (node11_out)));\n    float3 ssh9_result = (node6_out).rgb * ssh9_shadow;\n    float4 node9_out = float4(ssh9_result, (node6_out).a);\n    float node14_out = 0.020000f;\n    float nfh13_str = node14_out;\n    float3 nfh13_rawN = In.worldNormal;\n    float  nfh13_lenN = length(nfh13_rawN);\n    float3 nfh13_N = (nfh13_lenN > 1e-5) ? (nfh13_rawN / nfh13_lenN) : float3(0.0, 1.0, 0.0);\n    float3 nfh13_rawT = In.worldTangent - dot(In.worldTangent, nfh13_N) * nfh13_N;\n    float  nfh13_lenT = length(nfh13_rawT);\n    float3 nfh13_fb = (abs(nfh13_N.y) < 0.99) ? float3(0.0, 1.0, 0.0) : float3(1.0, 0.0, 0.0);\n    float3 nfh13_T = (nfh13_lenT > 1e-5) ? (nfh13_rawT / nfh13_lenT) : normalize(cross(nfh13_fb, nfh13_N));\n    float3 nfh13_B = cross(nfh13_N, nfh13_T);\n    float4 nfh13_col = node9_out;\n    float nfh13_h = dot(nfh13_col.rgb, float3(0.2126, 0.7152, 0.0722)) * nfh13_str;\n    float3 nfh13_dpdx = ddx(In.worldPos);\n    float3 nfh13_dpdy = ddy(In.worldPos);\n    float3 nfh13_R1 = cross(nfh13_dpdy, nfh13_N);\n    float3 nfh13_R2 = cross(nfh13_N, nfh13_dpdx);\n    float  nfh13_det = dot(nfh13_dpdx, nfh13_R1);\n    float3 nfh13_grad = sign(nfh13_det) * (ddx(nfh13_h) * nfh13_R1 + ddy(nfh13_h) * nfh13_R2);\n    float3 nfh13_result = normalize(abs(nfh13_det) * nfh13_N - nfh13_grad);\n    float3 nfh13_texN = float3(dot(nfh13_result, nfh13_T), dot(nfh13_result, nfh13_B), dot(nfh13_result, nfh13_N));\n    float3 node13_out = nfh13_result;\n    float4 node15_out = float4(0.042520f, 0.062500f, 0.010938f, 1.000000f);\n    float4 node17_out = float4(0.000000f, 0.000000f, 0.000000f, 1.000000f);\n    float node19_out = 1.000000f;\n    PS_OUT o;\n    o.target0 = float4((node9_out).xyz, (g_modelMetalRough.Sample(g_sampler, In.uv).b * g_metallicRate));\n    o.target1 = float4((nfh13_result) * 0.5 + 0.5, (g_modelMetalRough.Sample(g_sampler, In.uv).g * g_roughnessRate));\n    o.target2 = float4(In.worldPos, 1.0);\n    o.target3 = float4((node15_out).xyz, node19_out);\n    o.target4 = node17_out;\n    return o;\n}\n",
+    "skinned": false,
+    "targetCount": 4,
+    "targetNames": [
+        "GBufferA",
+        "GBufferB",
+        "GBufferC",
+        "GBufferD",
+        "GBufferE"
+    ],
+    "type": "material",
+    "vertexLayout": [
+        {
+            "format": "float3",
+            "index": 0,
+            "semantic": "POSITION"
+        },
+        {
+            "format": "float2",
+            "index": 0,
+            "semantic": "TEXCOORD"
+        },
+        {
+            "format": "float3",
+            "index": 0,
+            "semantic": "NORMAL"
+        }
+    ],
+    "vs": "Texture2D g_input0 : register(t0);\nTexture2D g_input1 : register(t1);\nTexture2D g_input2 : register(t2);\nTexture2D g_input3 : register(t3);\nTexture2D g_input4 : register(t4);\nSamplerState g_sampler : register(s0);\n\ncbuffer cbEffect : register(b0)\n{\n    float g_time;\n    float g_audioBass;\n    float g_audioMid;\n    float g_audioTreble;\n    float4 g_params[16];\n};\n\ncbuffer cbTransform : register(b1)\n{\n    row_major float4x4 g_mWVP;\n    row_major float4x4 g_mWorldView;\n    row_major float4x4 g_mWorld;\n};\n\ncbuffer cbRaymarchCamera : register(b3)\n{\n    float3 g_camPos;\n    float  _camPad;\n    row_major float4x4 g_invViewProj; \n    row_major float4x4 g_viewProj;\n};\n\n\nstruct VS_IN {\n    float3 pos : POSITION;\n    float2 uv : TEXCOORD0;\n    float3 normal : NORMAL;\n    float3 tangent : TANGENT;\n};\n\nstruct PS_IN {\n    float4 pos : SV_Position;\n    float2 uv : TEXCOORD0;\n    float3 normal : NORMAL;\n    float3 viewNormal : NORMAL1;\n    float3 worldNormal : NORMAL2;\n    float3 worldPos : POSITION1;\n    float3 worldTangent : TANGENT;\n    nointerpolation uint instID : INSTANCEID;\n};\n\nPS_IN main(VS_IN In)\n{\n    PS_IN Out;\n    float3 vtxOffset = float3(0.0f, 0.0f, 0.0f);\n    float3 localPos = In.pos + vtxOffset;\n    Out.pos = mul(float4(localPos, 1.0f), g_mWVP);\n    Out.uv = In.uv;\n    Out.normal = In.normal;\n    Out.viewNormal = normalize(mul(In.normal, (float3x3)g_mWorldView));\n    Out.worldNormal = normalize(mul(In.normal, (float3x3)g_mWorld));\n    Out.worldPos = mul(float4(localPos, 1.0f), g_mWorld).xyz;\n    Out.worldTangent = normalize(mul(In.tangent, (float3x3)g_mWorld));\n    Out.instID = 0;\n    return Out;\n}\n",
+    "writeMask": 31
+}

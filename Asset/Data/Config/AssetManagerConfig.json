@@ -1,0 +1,16 @@
+{
+  "_説明": "AssetManagerの設定。起動の一番最初に読むのでファイル名・場所は固定(./Asset/Data/Config/AssetManagerConfig.json)。項目を消すとコード側の既定値になる",
+
+  "assetRoot": "./Asset",
+  "metaExtension": ".kdfwmeta",
+  "logFile": "./Asset/AssetManager.log",
+
+  "_fontDirectory": "FontManagerに任せるので除外するフォルダ。空文字にすると除外しない",
+  "fontDirectory": "./Asset/Texture/Fonts",
+
+  "_supportedExtensions": "メタファイルを作る拡張子。大文字小文字は区別する",
+  "supportedExtensions": [ ".json", ".TTF", ".png", ".gltf", ".wav", ".mp3" ],
+
+  "_regenerateMetaFiles": "trueだと起動のたびにメタファイルを全部消して作り直す。アセットが固まったらfalseにする",
+  "regenerateMetaFiles": true
+}

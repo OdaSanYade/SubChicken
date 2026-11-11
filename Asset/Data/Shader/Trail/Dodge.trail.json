@@ -1,0 +1,58 @@
+{
+  "version": 1,
+  "name": "Dodge",
+  "params": {
+    "lifetime": 0.26,
+    "minDistance": 0.0,
+    "maxNodes": 128,
+    "smoothing": 2,
+    "widthScale": 1.0,
+    "intensity": 1.4,
+    "additive": 1,
+    "textureIndex": -1,
+    "edgeSoft": 0.55,
+    "edgeCore": 0.15,
+    "uvMode": 0,
+    "uvTiling": 1.0,
+    "uvScroll": 0.0,
+    "colorKeyCount": 2,
+    "widthCurve": [
+      1.0,
+      1.0,
+      0.98,
+      0.94,
+      0.86,
+      0.7,
+      0.44,
+      0.0
+    ],
+    "alphaCurve": [
+      0.7,
+      0.68,
+      0.62,
+      0.54,
+      0.42,
+      0.28,
+      0.14,
+      0.0
+    ],
+    "colorKeys": [
+      0.92,
+      0.98,
+      1.0,
+      0.0,
+      0.4,
+      0.66,
+      1.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  }
+}

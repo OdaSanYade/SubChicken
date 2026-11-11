@@ -1,0 +1,13 @@
+{
+  "ids": {
+    "Carry": 1,
+    "ChickDefault": 2,
+    "ChickenDefault": 3,
+    "Damage": 4,
+    "EnemyDefault": 5,
+    "MushroomDefault": 6,
+    "Test": 7,
+    "TestEmissive": 8,
+    "shader": 9
+  }
+}

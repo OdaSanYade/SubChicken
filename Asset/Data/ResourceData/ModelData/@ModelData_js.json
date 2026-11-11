@@ -1,0 +1,17 @@
+{
+    "Player": {
+        "fileName": "Player"
+    },
+    "Stage": {
+        "fileName": "Stage"
+    },
+    "Enemy": {
+        "fileName": "Enemy"
+    },
+    "Chick": {
+        "fileName": "Chick"
+    },
+    "Mushroom": {
+        "fileName": "Mushroom"
+    }
+}

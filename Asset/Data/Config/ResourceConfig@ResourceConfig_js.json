@@ -1,0 +1,24 @@
+{
+  "_説明": "ResourceManagerの設定。アドレサブル名は ResourceConfig_js",
+  "jsonWatcher": {
+    "_pollIntervalMs": "JSONの更新を見に行く間隔(ミリ秒)。16〜10000に丸められる",
+    "pollIntervalMs": 300
+  },
+  "resourceLists": {
+    "_説明": "モデル・テクスチャの一覧ファイルのアドレサブル名",
+    "model": "ModelData_js",
+    "texture": "TextureData_js"
+  },
+  "configFiles": {
+    "_説明": "起動時にまとめて登録する設定ファイル。左がキー(GetDataList()->Get で使う名前)、右がアドレサブル名",
+    "StateMachineConfig": "StateMachineConfig_js",
+    "CameraTuning": "CameraTuning_js",
+    "StageTuning": "StageTuning_js",
+    "ChickTuning": "ChickTuning_js",
+    "ChickStates": "ChickStates_js",
+    "PlayerTuning": "PlayerTuning_js",
+    "PlayerStates": "PlayerStates_js",
+    "EnemyTuning": "EnemyTuning_js",
+    "EnemyStates": "EnemyStates_js"
+  }
+}

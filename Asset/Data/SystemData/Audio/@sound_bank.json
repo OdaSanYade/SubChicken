@@ -1,0 +1,187 @@
+{
+    "hit": {
+        "path": "Hit",
+        "category": "SE",
+        "volume": 1.0,
+        "pitchMin": 0.9700000286102295,
+        "pitchMax": 1.0499999523162842,
+        "cooldown": 0.14250000306405128,
+        "maxInstances": 6
+    },
+    "attack": {
+        "path": "Attack",
+        "category": "SE",
+        "volume": 1.0,
+        "pitchMin": 0.8799999952316284,
+        "pitchMax": 1.100000023841858,
+        "cooldown": 0.04,
+        "maxInstances": 2
+    },
+    "counter": {
+        "path": "Counter",
+        "category": "SE",
+        "volume": 1.1000000014901161,
+        "cooldown": 0.04,
+        "maxInstances": 1
+    },
+    "fullCrySE": {
+        "path": "FullCrySE",
+        "category": "SE",
+        "volume": 1.0,
+        "cooldown": -0.16000000298023223,
+        "maxInstances": 6
+    },
+    "unFrozen": {
+        "path": "UnFrozen",
+        "category": "SE",
+        "volume": 1.0,
+        "pitchMin": 0.9007999897003174,
+        "pitchMax": 1.229200005531311,
+        "cooldown": -0.06000000149011612,
+        "maxInstances": 6
+    },
+    "fullCryLow": {
+        "path": "FullCryLow",
+        "category": "SE",
+        "volume": 1.0,
+        "cooldown": 0.04,
+        "maxInstances": 6
+    },
+    "fullCryMid": {
+        "path": "FullCryMid",
+        "category": "SE",
+        "volume": 1.0,
+        "cooldown": 0.10999999940395355,
+        "maxInstances": 6
+    },
+    "fullCryHigh": {
+        "path": "FullCryHigh",
+        "category": "SE",
+        "volume": 1.0,
+        "cooldown": 0.04,
+        "maxInstances": 6
+    },
+    "dash": {
+        "path": "Dash",
+        "category": "SE",
+        "volume": 0.8999999985098839,
+        "pitchMin": 0.8700000047683716,
+        "pitchMax": 1.1299999952316284,
+        "cooldown": 0.04,
+        "maxInstances": 6
+    },
+    "die": {
+        "path": "Die",
+        "category": "SE",
+        "volume": 1.0,
+        "pitchMin": 0.8399999737739563,
+        "pitchMax": 1.2400000095367432,
+        "cooldown": 0.30000001192092896,
+        "maxInstances": 6
+    },
+    "frozen": {
+        "path": "Frozen",
+        "category": "SE",
+        "volume": 1.0,
+        "pitchMin": 0.6800000071525574,
+        "pitchMax": 1.059999942779541,
+        "cooldown": 0.04,
+        "maxInstances": 6
+    },
+    "cry": {
+        "path": "Cry",
+        "category": "SE",
+        "volume": 0.8999999985098839,
+        "pitchMin": 0.8799999952316284,
+        "pitchMax": 1.3300000429153442,
+        "cooldown": 0.10000000149011612,
+        "maxInstances": 3
+    },
+    "Title": {
+        "path": "Title",
+        "category": "BGM",
+        "volume": 0.009999999776482582,
+        "loop": true
+    },
+    "Fight": {
+        "path": "Fight",
+        "category": "BGM",
+        "volume": 0.009999999776482582,
+        "loop": true
+    },
+    "Lose": {
+        "path": "Lose",
+        "category": "BGM",
+        "volume": 0.009999999776482582,
+        "loop": true
+    },
+    "Win": {
+        "path": "Win",
+        "category": "BGM",
+        "volume": 0.009999999776482582,
+        "loop": true
+    },
+    "heavy": {
+        "path": "Heavy",
+        "category": "SE",
+        "volume": 1.0,
+        "cooldown": -0.06000000149011612,
+        "maxInstances": 2
+    },
+    "carry": {
+        "path": "Carry",
+        "category": "SE",
+        "volume": 1.0,
+        "cooldown": -0.36000000596046444,
+        "maxInstances": 2,
+        "heavy": {
+            "path": "Heavy",
+            "category": "SE",
+            "volume": 1.0,
+            "cooldown": -0.06000000149011612,
+            "maxInstances": 2
+        }
+    },
+    "button": {
+        "path": "Button",
+        "category": "SE",
+        "volume": 1.0,
+        "cooldown": -0.16000000298023223,
+        "maxInstances": 2
+    },
+    "dodge": {
+        "path": "Dodge",
+        "category": "SE",
+        "volume": 0.8999999985098839,
+        "cooldown": -0.06000000149011612,
+        "maxInstances": 1
+    },
+    "just": {
+        "path": "Just",
+        "category": "SE",
+        "volume": 1.0,
+        "cooldown": 0.019999999552965164,
+        "maxInstances": 2
+    },
+    "enemyAttack": {
+        "path": "EnemyAttack",
+        "category": "SE",
+        "volume": 1.0,
+        "cooldown": -0.16000000298023223,
+        "maxInstances": 2
+    },
+    "notice": {
+        "path": "Notice",
+        "category": "SE",
+        "volume": 1.0,
+        "cooldown": -0.16000000298023223,
+        "maxInstances": 2
+    },
+    "death": {
+        "path": "Death",
+        "category": "SE",
+        "volume": 0.8999999985098839,
+        "cooldown": 0.07000000029802322,
+        "maxInstances": 5
+    }
+}

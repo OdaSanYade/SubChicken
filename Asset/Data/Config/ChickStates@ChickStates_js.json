@@ -1,0 +1,81 @@
+{
+  "_説明": "ひよこのステートの params / minTime / buffer。距離の項目(followRange, loseRange, keepDistance, dashRange, walkRange)は縮尺前のメートル",
+  "states": {
+    "Idle": {
+      "params": {
+        "followRange": 12.0
+      }
+    },
+    "Rest": {
+      "params": {
+        "anim": "LookAround",
+        "blend": 10.0,
+        "loop": 1.0
+      }
+    },
+    "Settle": {
+      "params": {
+        "anim": "Walk",
+        "blend": 10.0,
+        "loop": 1.0,
+        "moveSpeed": 9.0,
+        "turnRate": 10.0,
+        "arriveSlack": 0.8
+      }
+    },
+    "Follow": {
+      "params": {
+        "loseRange": 40.0,
+        "followLight.r": 0.0,
+        "followLight.g": 1.0,
+        "followLight.b": 0.0,
+        "normalLight.r": 1.0,
+        "normalLight.g": 1.0,
+        "normalLight.b": 1.0
+      }
+    },
+    "Walk": {
+      "params": {
+        "anim": "Walk",
+        "blend": 10.0,
+        "loop": 1.0,
+        "moveSpeed": 10.0,
+        "turnRate": 9.0,
+        "keepDistance": 3.0,
+        "dashRange": 14.0
+      }
+    },
+    "Dash": {
+      "params": {
+        "anim": "Dash",
+        "blend": 10.0,
+        "loop": 1.0,
+        "moveSpeed": 17.0,
+        "turnRate": 12.0,
+        "keepDistance": 3.0,
+        "walkRange": 9.0
+      }
+    },
+    "DownChick": {
+      "params": {
+        "anim": "LookAround",
+        "blend": 3.0,
+        "loop": 1.0
+      }
+    },
+    "Carry": {
+      "params": {
+        "anim": "Struggle",
+        "sound": "carry",
+        "blend": 5.0,
+        "loop": 1.0,
+        "carryLight.r": 1.0,
+        "carryLight.g": 0.0,
+        "carryLight.b": 0.0,
+        "normalLight.r": 1.0,
+        "normalLight.g": 1.0,
+        "normalLight.b": 1.0
+      }
+    }
+  }
+}
