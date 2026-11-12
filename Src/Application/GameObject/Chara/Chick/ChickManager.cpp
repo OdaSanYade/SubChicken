@@ -93,7 +93,6 @@ std::vector<ChickManager::IndicatorTarget> ChickManager::GetIndicatorTargets() c
 	{
 		if (!chick->IsAlive()) continue;
 		if (chick->IsRescued())continue;
-		if (chick->IsDown()) continue;
 
 		const bool carried = chick->IsCarried();
 
@@ -106,7 +105,7 @@ std::vector<ChickManager::IndicatorTarget> ChickManager::GetIndicatorTargets() c
 		IndicatorTarget t;
 		t.id = static_cast<int>(chick->GetEntity().index);
 		t.position = chick->GetPosition();
-		t.carried = carried;
+		t.carried = carried || chick->IsDown();
 		out.push_back(t);
 	}
 	return out;

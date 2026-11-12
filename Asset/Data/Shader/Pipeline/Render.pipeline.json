@@ -191,127 +191,6 @@
         {
             "inputs": [
                 {
-                    "key": "GBufferC",
-                    "kind": "namedbuffer"
-                },
-                {
-                    "key": "GBufferB",
-                    "kind": "namedbuffer"
-                }
-            ],
-            "isMaterial": false,
-            "name": "Volumetric",
-            "namedBufferRefs": [
-                "GBufferC",
-                "GBufferB"
-            ],
-            "outputName": "Volumetric",
-            "params": [
-                {
-                    "default": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "max": 1.0,
-                    "min": 0.0,
-                    "name": "LightDir",
-                    "type": "float4"
-                },
-                {
-                    "default": 6.0,
-                    "max": 10.0,
-                    "min": 0.0,
-                    "name": "VolIntensity",
-                    "type": "float"
-                },
-                {
-                    "default": 0.5,
-                    "max": 1.0,
-                    "min": -1.0,
-                    "name": "Decay",
-                    "type": "float"
-                },
-                {
-                    "default": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "max": 1.0,
-                    "min": 0.0,
-                    "name": "LightColor",
-                    "type": "float4"
-                },
-                {
-                    "default": 0.10000000149011612,
-                    "max": 2.0,
-                    "min": 0.0,
-                    "name": "SSAOScale",
-                    "type": "float"
-                },
-                {
-                    "default": 0.05000000074505806,
-                    "max": 2.0,
-                    "min": 0.0,
-                    "name": "SSAOScaleMin",
-                    "type": "float"
-                },
-                {
-                    "default": 1.5,
-                    "max": 2.0,
-                    "min": 0.0,
-                    "name": "SSAOScaleMax",
-                    "type": "float"
-                },
-                {
-                    "default": 0.5,
-                    "max": 1.0,
-                    "min": -1.0,
-                    "name": "AnisotropyVol",
-                    "type": "float"
-                },
-                {
-                    "default": 2.0,
-                    "max": 10.0,
-                    "min": 0.0,
-                    "name": "ShadowStride",
-                    "type": "float"
-                },
-                {
-                    "default": 1.0,
-                    "max": 1.0,
-                    "min": 0.0,
-                    "name": "NoiseAmount",
-                    "type": "float"
-                },
-                {
-                    "default": 24.0,
-                    "max": 50.0,
-                    "min": 0.0,
-                    "name": "Steps",
-                    "type": "float"
-                },
-                {
-                    "default": 30.0,
-                    "max": 50.0,
-                    "min": 0.0,
-                    "name": "MaxRayLen",
-                    "type": "float"
-                }
-            ],
-            "passType": 1,
-            "ps": "Texture2D g_input0 : register(t0);\nTexture2D g_input1 : register(t1);\nSamplerState g_sampler : register(s0);\n\ncbuffer cbEffect : register(b0)\n{\n    float g_time;\n    float g_audioBass;\n    float g_audioMid;\n    float g_audioTreble;\n    float4 g_params[16];\n};\n\ncbuffer cbRaymarchCamera : register(b3)\n{\n    float3 g_camPos;\n    float  _camPad;\n    row_major float4x4 g_invViewProj; \n    row_major float4x4 g_viewProj;\n};\n\n\nTexture2D g_shadowMapVol : register(t23);\ncbuffer cbShadowLightingVol : register(b6)\n{\n    row_major float4x4 g_lightViewProjVol;\n};\n\nfloat HGPhase(float cosTheta, float g)\n{\n    float g2 = g * g;\n    float denom = 1.0 + g2 - 2.0 * g * cosTheta;\n    return (1.0 - g2) / (4.0 * 3.14159265 * pow(max(denom, 0.0001), 1.5));\n}\n\n// Slope-scaled bias: increase bias with travel distance to reduce acne\nfloat CalcShadowVol(float3 worldPos, float travelDist)\n{\n    float4 lightSpace = mul(float4(worldPos, 1.0), g_lightViewProjVol);\n    lightSpace.xyz /= lightSpace.w;\n    float2 uv = lightSpace.xy * float2(0.5, -0.5) + 0.5;\n    float currentDepth = lightSpace.z;\n\n    float2 edge = min(uv, 1.0 - uv);\n    float fadeUV = smoothstep(0.0, 0.1, min(edge.x, edge.y));\n    float fadeZ  = 1.0 - smoothstep(0.95, 1.0, currentDepth);\n    float fade   = fadeUV * fadeZ;\n    if (fade <= 0.0 || currentDepth < 0.0) return 1.0;\n\n    float bias = 0.003 + 0.0008 * saturate(travelDist / 50.0);\n    float shadowDepth = g_shadowMapVol.SampleLevel(g_sampler, saturate(uv), 0).r;\n    float lit = (currentDepth - bias > shadowDepth) ? 0.0 : 1.0;\n\n    return lerp(1.0, lit, fade);\n}\n\nfloat volHash(float3 p)\n{\n    p = frac(p * 0.3183099 + 0.1);\n    p *= 17.0;\n    return frac(p.x * p.y * p.z * (p.x + p.y + p.z));\n}\n\nfloat volNoise(float3 x)\n{\n    float3 i = floor(x);\n    float3 f = frac(x);\n    f = f * f * (3.0 - 2.0 * f);\n    return lerp(lerp(lerp(volHash(i + float3(0,0,0)), volHash(i + float3(1,0,0)), f.x),\n                     lerp(volHash(i + float3(0,1,0)), volHash(i + float3(1,1,0)), f.x), f.y),\n                lerp(lerp(volHash(i + float3(0,0,1)), volHash(i + float3(1,0,1)), f.x),\n                     lerp(volHash(i + float3(0,1,1)), volHash(i + float3(1,1,1)), f.x), f.y), f.z);\n}\n\n// IGN dither: less banding than a simple sin-hash\nfloat InterleavedGradientNoiseVol(float2 pixelCoord)\n{\n    const float3 magic = float3(0.06711056, 0.00583715, 52.9829189);\n    return frac(magic.z * frac(dot(pixelCoord, magic.xy)));\n}\n\n\nstatic const int SSAO_SAMPLE_COUNT = 16;\nstatic const float3 kSSAOKernel[16] = {\n    float3( 0.2024, 0.0841, 0.0453), float3(-0.1284, 0.1682, 0.0912),\n    float3( 0.0631,-0.1423, 0.1145), float3(-0.0512,-0.0623, 0.2341),\n    float3( 0.1845, 0.1234, 0.0234), float3(-0.1523, 0.0453, 0.1834),\n    float3( 0.0234,-0.1845, 0.0923), float3( 0.1345, 0.1523, 0.1234),\n    float3(-0.0834, 0.0234, 0.2534), float3( 0.1634,-0.0834, 0.1345),\n    float3(-0.1934, 0.1345, 0.0534), float3( 0.0534, 0.1934, 0.1634),\n    float3(-0.0234,-0.1345, 0.2134), float3( 0.1123, 0.0534, 0.2334),\n    float3(-0.1423,-0.1123, 0.1523), float3( 0.0923, 0.1723, 0.0834),\n};\n\n\nstruct PS_IN { float4 pos : SV_Position; float2 uv : TEXCOORD0; };\n\nfloat4 main(PS_IN In) : SV_Target0\n{\n    float4 node6_out = g_params[0];\n    float node7_out = g_params[1].x;\n    float4 node10_out = g_params[3];\n    float node9_out = g_params[2].x;\n    float node20_out = g_params[7].x;\n    float node24_out = g_params[10].x;\n    float node25_out = g_params[11].x;\n    float node22_out = g_params[8].x;\n    float node23_out = g_params[9].x;\n    float3 vol18_worldPos = g_input0.Sample(g_sampler, In.uv).xyz;\n    float vol18_isBG = (length(vol18_worldPos) < 0.001) ? 1.0 : 0.0;\n    float3 vol18_rayStart = g_camPos;\n    float3 vol18_rayEnd = vol18_worldPos;\n    if (vol18_isBG > 0.5)\n    {\n        float2 vol18_ndc = In.uv * 2.0 - 1.0;\n        vol18_ndc.y = -vol18_ndc.y;\n        float4 vol18_far = mul(float4(vol18_ndc, 1.0, 1.0), g_invViewProj);\n        vol18_rayEnd = vol18_far.xyz / vol18_far.w;\n    }\n    float3 vol18_rayDir = normalize(vol18_rayEnd - vol18_rayStart);\n    float vol18_rayLen = min(length(vol18_rayEnd - vol18_rayStart), max(node25_out, 0.1));\n    int vol18_steps = clamp((int)(min(node24_out, 256.0f)), 4, 128);\n    float vol18_stepSize = vol18_rayLen / vol18_steps;\n    float vol18_dither = InterleavedGradientNoiseVol(In.pos.xy);\n    float3 vol18_pos = vol18_rayStart + vol18_rayDir * vol18_stepSize * vol18_dither;\n    float vol18_accum = 0.0;\n    float vol18_dist = vol18_stepSize * vol18_dither;\n    float3 vol18_L = normalize((node6_out).xyz);\n    float vol18_cosT = dot(vol18_rayDir, -vol18_L);\n    float vol18_phase = HGPhase(vol18_cosT, node20_out);\n    int vol18_shStride = max((int)(node22_out), 1);\n    float vol18_noiseAmt = saturate(node23_out);\n    float vol18_cachedNoise = 1.0;\n    float vol18_stepAtten = exp(-vol18_stepSize * (node9_out));\n    float vol18_curAtten = exp(-vol18_dist * (node9_out));\n    float vol18_cachedShadow = 1.0;\n    for (int vol18_i = 0; vol18_i < vol18_steps; ++vol18_i)\n    {\n        if (vol18_i % vol18_shStride == 0)\n            vol18_cachedShadow = CalcShadowVol(vol18_pos, vol18_dist);\n        float vol18_lit = vol18_cachedShadow;\n        [branch] if (vol18_noiseAmt > 1e-4 && vol18_i % 2 == 0)\n        {\n            float vol18_nv = volNoise(vol18_pos * 0.5 + float3(0, g_time * 0.2, 0));\n            vol18_cachedNoise = lerp(1.0, 0.5 + 0.5 * vol18_nv, vol18_noiseAmt);\n        }\n        float vol18_n = vol18_cachedNoise;\n        vol18_accum += vol18_lit * vol18_n * vol18_curAtten * vol18_phase;\n        vol18_pos += vol18_rayDir * vol18_stepSize;\n        vol18_dist += vol18_stepSize;\n        vol18_curAtten *= vol18_stepAtten;\n        if (vol18_curAtten < 0.003) { vol18_i = vol18_steps; }\n    }\n    vol18_accum = (vol18_accum / vol18_steps) * (node7_out);\n    float3 vol18_volCol = (node10_out).rgb * vol18_accum;\n    float4 node18_out = float4(vol18_volCol, 1.0);\n    float node14_out = g_params[4].x;\n    float node15_out = g_params[5].x;\n    float node16_out = g_params[6].x;\n    float3 ssao11_worldPos = g_input0.Sample(g_sampler, In.uv).xyz;\n    float3 ssao11_normal = normalize(g_input1.Sample(g_sampler, In.uv).rgb * 2.0 - 1.0);\n    float ssao11_isBG = (length(ssao11_worldPos) < 0.001) ? 1.0 : 0.0;\n    float ssao11_camDist = max(length(g_camPos - ssao11_worldPos), 0.001);\n    float ssao11_radius = clamp(ssao11_camDist * max(node14_out, 0.0001), max(node15_out, 0.001), max(node16_out, 0.001));\n    float ssao11_occlusion = 0.0;\n    float ssao11_weightSum = 0.0;\n    float3 ssao11_bentSum = ssao11_normal * 0.001;\n    for (int ssao11_i = 0; ssao11_i < SSAO_SAMPLE_COUNT; ++ssao11_i)\n    {\n        float3 ssao11_s = kSSAOKernel[ssao11_i];\n        if (dot(ssao11_s, ssao11_normal) < 0.0) ssao11_s = -ssao11_s;\n        float3 ssao11_samplePos = ssao11_worldPos + ssao11_s * ssao11_radius;\n        float4 ssao11_clip = mul(float4(ssao11_samplePos, 1.0), g_viewProj);\n        if (ssao11_clip.w <= 0.0) continue;\n        ssao11_clip.xyz /= ssao11_clip.w;\n        float2 ssao11_sampleUV = ssao11_clip.xy * float2(0.5, -0.5) + 0.5;\n        if (ssao11_sampleUV.x < 0.0 || ssao11_sampleUV.x > 1.0 || ssao11_sampleUV.y < 0.0 || ssao11_sampleUV.y > 1.0) continue;\n        float3 ssao11_surface = g_input0.Sample(g_sampler, ssao11_sampleUV).xyz;\n        if (length(ssao11_surface) < 0.001) continue;\n        float ssao11_planeDist = length(ssao11_surface - ssao11_worldPos);\n        float ssao11_rangeCheck = smoothstep(1.0, 0.0, ssao11_planeDist / (ssao11_radius * 2.0));\n        float ssao11_sampleDist = length(g_camPos - ssao11_samplePos);\n        float ssao11_surfaceDist = length(g_camPos - ssao11_surface);\n        float ssao11_occ = (ssao11_surfaceDist < ssao11_sampleDist - 0.02) ? 1.0 : 0.0;\n        ssao11_occlusion += ssao11_occ * ssao11_rangeCheck;\n        ssao11_weightSum += 1.0;\n        ssao11_bentSum += ssao11_s * (1.0 - ssao11_occ);\n    }\n    float ssao11_ao = 1.0 - (ssao11_occlusion / max(ssao11_weightSum, 1.0));\n    ssao11_ao = lerp(ssao11_ao, 1.0, ssao11_isBG);\n    ssao11_ao = pow(saturate(ssao11_ao), 1.5);\n    float3 ssao11_bentNormal = normalize(ssao11_bentSum);\n    float4 node11_out = float4(ssao11_bentNormal * 0.5 + 0.5, ssao11_ao);\n    float4 node17_out = node18_out * node11_out;\n    return node17_out;\n}\n",
-            "scaleFactor": 1.0,
-            "targetCount": 1,
-            "targetNames": [],
-            "usesPrevPass": false
-        },
-        {
-            "inputs": [
-                {
                     "key": "GBufferA",
                     "kind": "namedbuffer"
                 },
@@ -332,7 +211,7 @@
                     "kind": "namedbuffer"
                 },
                 {
-                    "key": "Volumetric",
+                    "key": "Scene",
                     "kind": "namedbuffer"
                 }
             ],
@@ -344,7 +223,7 @@
                 "GBufferC",
                 "GBufferD",
                 "SSAO",
-                "Volumetric"
+                "Scene"
             ],
             "outputName": "PBR",
             "params": [
@@ -672,18 +551,6 @@
                 {
                     "key": "Bloom",
                     "kind": "namedbuffer"
-                },
-                {
-                    "key": "Sky",
-                    "kind": "namedbuffer"
-                },
-                {
-                    "key": "GBufferA",
-                    "kind": "namedbuffer"
-                },
-                {
-                    "key": "PBR",
-                    "kind": "namedbuffer"
                 }
             ],
             "isMaterial": false,
@@ -691,10 +558,7 @@
             "namedBufferRefs": [
                 "GBufferB",
                 "GBufferC",
-                "Bloom",
-                "Sky",
-                "GBufferA",
-                "PBR"
+                "Bloom"
             ],
             "outputName": "SSGI",
             "params": [
@@ -702,66 +566,7 @@
                     "default": 1.0,
                     "max": 1.0,
                     "min": 0.0,
-                    "name": "SSGIIntensity",
-                    "type": "float"
-                },
-                {
-                    "default": 1.0,
-                    "max": 1.0,
-                    "min": 0.0,
-                    "name": "SSGIRadius",
-                    "type": "float"
-                },
-                {
-                    "default": 1.0,
-                    "max": 1.0,
-                    "min": 0.0,
                     "name": "BloomIntensity",
-                    "type": "float"
-                },
-                {
-                    "default": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "max": 1.0,
-                    "min": 0.0,
-                    "name": "LightDir",
-                    "type": "float4"
-                },
-                {
-                    "default": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "max": 1.0,
-                    "min": 0.0,
-                    "name": "SSSColor",
-                    "type": "float4"
-                },
-                {
-                    "default": 1.0,
-                    "max": 1.0,
-                    "min": 0.0,
-                    "name": "SSSPower",
-                    "type": "float"
-                },
-                {
-                    "default": 1.0,
-                    "max": 1.0,
-                    "min": 0.0,
-                    "name": "SSSStrength",
-                    "type": "float"
-                },
-                {
-                    "default": 1.0,
-                    "max": 1.0,
-                    "min": 0.0,
-                    "name": "Thickness",
                     "type": "float"
                 },
                 {
@@ -792,7 +597,7 @@
                 }
             ],
             "passType": 1,
-            "ps": "Texture2D g_input0 : register(t0);\nTexture2D g_input1 : register(t1);\nTexture2D g_input2 : register(t2);\nTexture2D g_input3 : register(t3);\nTexture2D g_input4 : register(t4);\nTexture2D g_input5 : register(t5);\nSamplerState g_sampler : register(s0);\n\ncbuffer cbEffect : register(b0)\n{\n    float g_time;\n    float g_audioBass;\n    float g_audioMid;\n    float g_audioTreble;\n    float4 g_params[16];\n};\n\ncbuffer cbRaymarchCamera : register(b3)\n{\n    float3 g_camPos;\n    float  _camPad;\n    row_major float4x4 g_invViewProj; \n    row_major float4x4 g_viewProj;\n};\n\n\nstatic const int SSGI_SAMPLE_COUNT = 16;\nstatic const float3 kSSGIKernel[16] = {\n    float3( 0.2024, 0.0841, 0.0453), float3(-0.1284, 0.1682, 0.0912),\n    float3( 0.0631,-0.1423, 0.1145), float3(-0.0512,-0.0623, 0.2341),\n    float3( 0.1845, 0.1234, 0.0234), float3(-0.1523, 0.0453, 0.1834),\n    float3( 0.0234,-0.1845, 0.0923), float3( 0.1345, 0.1523, 0.1234),\n    float3(-0.0834, 0.0234, 0.2534), float3( 0.1634,-0.0834, 0.1345),\n    float3(-0.1934, 0.1345, 0.0534), float3( 0.0534, 0.1934, 0.1634),\n    float3(-0.0234,-0.1345, 0.2134), float3( 0.1123, 0.0534, 0.2334),\n    float3(-0.1423,-0.1123, 0.1523), float3( 0.0923, 0.1723, 0.0834),\n};\n\n\nstruct PS_IN { float4 pos : SV_Position; float2 uv : TEXCOORD0; };\n\nfloat4 main(PS_IN In) : SV_Target0\n{\n    float4 node8_out = g_input2.Sample(g_sampler, In.uv);\n    float4 node13_out = g_params[3];\n    float4 node19_out = g_params[8];\n    float node20_out = g_params[9].x;\n    float node21_out = g_params[10].x;\n    float4 aniso18_scene = node8_out;\n    float3 aniso18_worldPos = g_input1.Sample(g_sampler, In.uv).xyz;\n    float3 aniso18_N = normalize(g_input0.Sample(g_sampler, In.uv).rgb * 2.0 - 1.0);\n    float aniso18_isBG = (length(aniso18_worldPos) < 0.001) ? 1.0 : 0.0;\n    float3 aniso18_V = normalize(g_camPos - aniso18_worldPos);\n    float3 aniso18_L = normalize(((node13_out).xyz));\n    float3 aniso18_H = normalize(aniso18_V + aniso18_L);\n    float3 aniso18_T = normalize(cross(aniso18_N, float3(0, 1, 0)));\n    float3 aniso18_B = normalize(cross(aniso18_N, aniso18_T));\n    float aniso18_TdotH = dot(aniso18_T, aniso18_H);\n    float aniso18_BdotH = dot(aniso18_B, aniso18_H);\n    float aniso18_NdotH = dot(aniso18_N, aniso18_H);\n    float aniso18_aT = max(0.05, 0.3 * (1.0 - (node21_out)));\n    float aniso18_aB = 0.3 * (1.0 + (node21_out));\n    float aniso18_ex = aniso18_TdotH / aniso18_aT;\n    float aniso18_ey = aniso18_BdotH / aniso18_aB;\n    float aniso18_d = aniso18_ex * aniso18_ex + aniso18_ey * aniso18_ey + aniso18_NdotH * aniso18_NdotH;\n    float aniso18_spec = 1.0 / max(aniso18_d * aniso18_d, 0.001);\n    aniso18_spec = saturate(aniso18_spec) * (node20_out) * (1.0 - aniso18_isBG);\n    aniso18_spec *= max(dot(aniso18_N, aniso18_L), 0.0);\n    float3 aniso18_result = aniso18_scene.rgb + aniso18_spec * (node19_out).rgb;\n    float4 node18_out = float4(aniso18_result, aniso18_scene.a);\n    float4 node2_out = g_input3.Sample(g_sampler, In.uv);\n    float node7_out = g_params[2].x;\n    float3 bcomp6_scene = (node2_out).rgb;\n    float3 bcomp6_bloom = g_input2.Sample(g_sampler, In.uv).rgb;\n    float3 bcomp6_result = bcomp6_scene + bcomp6_bloom * (node7_out);\n    float4 node6_out = float4(bcomp6_result, 1.0);\n    float node4_out = g_params[0].x;\n    float node5_out = g_params[1].x;\n    float4 ssgi3_scene = node2_out;\n    float3 ssgi3_worldPos = g_input1.Sample(g_sampler, In.uv).xyz;\n    float3 ssgi3_normal = normalize(g_input0.Sample(g_sampler, In.uv).rgb * 2.0 - 1.0);\n    float ssgi3_isBG = (length(ssgi3_worldPos) < 0.001) ? 1.0 : 0.0;\n    float3 ssgi3_gi = float3(0,0,0);\n    float ssgi3_rad = (node5_out);\n    for (int ssgi3_i = 0; ssgi3_i < SSGI_SAMPLE_COUNT; ++ssgi3_i)\n    {\n        float3 ssgi3_s = kSSGIKernel[ssgi3_i];\n        if (dot(ssgi3_s, ssgi3_normal) < 0.0) ssgi3_s = -ssgi3_s;\n        float3 ssgi3_samplePos = ssgi3_worldPos + ssgi3_s * ssgi3_rad;\n        float4 ssgi3_clip = mul(float4(ssgi3_samplePos, 1.0), g_viewProj);\n        if (ssgi3_clip.w <= 0.0) continue;\n        ssgi3_clip.xyz /= ssgi3_clip.w;\n        float2 ssgi3_sampleUV = ssgi3_clip.xy * float2(0.5, -0.5) + 0.5;\n        if (ssgi3_sampleUV.x < 0.0 || ssgi3_sampleUV.x > 1.0 || ssgi3_sampleUV.y < 0.0 || ssgi3_sampleUV.y > 1.0) continue;\n        float3 ssgi3_sWP = g_input1.Sample(g_sampler, ssgi3_sampleUV).xyz;\n        if (length(ssgi3_sWP) < 0.001) continue;\n        float3 ssgi3_toSample = ssgi3_sWP - ssgi3_worldPos;\n        float ssgi3_d = length(ssgi3_toSample);\n        if (ssgi3_d > ssgi3_rad * 2.0) continue;\n        if (ssgi3_d < 0.01) continue;\n        float3 ssgi3_dir = ssgi3_toSample / ssgi3_d;\n        float ssgi3_ndl = max(dot(ssgi3_normal, ssgi3_dir), 0.0);\n        float ssgi3_atten = saturate(1.0 - ssgi3_d / (ssgi3_rad * 2.0));\n        float3 ssgi3_sCol = g_input5.Sample(g_sampler, ssgi3_sampleUV).rgb;\n        ssgi3_gi += ssgi3_sCol * ssgi3_ndl * ssgi3_atten;\n    }\n    ssgi3_gi = (ssgi3_gi / SSGI_SAMPLE_COUNT) * (node4_out) * (1.0 - ssgi3_isBG);\n    float3 ssgi3_result = ssgi3_scene.rgb + ssgi3_gi;\n    float4 node3_out = float4(ssgi3_result, ssgi3_scene.a);\n    float4 node14_out = g_params[4];\n    float node15_out = g_params[5].x;\n    float node16_out = g_params[6].x;\n    float node17_out = g_params[7].x;\n    float4 sss11_scene = node3_out;\n    float3 sss11_worldPos = g_input1.Sample(g_sampler, In.uv).xyz;\n    float3 sss11_N = normalize(g_input0.Sample(g_sampler, In.uv).rgb * 2.0 - 1.0);\n    float3 sss11_albedo = g_input4.Sample(g_sampler, In.uv).rgb;\n    float sss11_isBG = (length(sss11_worldPos) < 0.001) ? 1.0 : 0.0;\n    float3 sss11_V = normalize(g_camPos - sss11_worldPos);\n    float3 sss11_L = normalize(((node13_out).xyz));\n    float3 sss11_Lt = -sss11_L - sss11_N * 0.3;\n    float sss11_t = pow(saturate(dot(sss11_V, -sss11_Lt)), (node15_out));\n    float3 sss11_transmit = sss11_t * (node16_out) * (node17_out) * (node14_out).rgb * sss11_albedo;\n    sss11_transmit *= (1.0 - sss11_isBG);\n    float3 sss11_result = sss11_scene.rgb + sss11_transmit;\n    float4 node11_out = float4(sss11_result, sss11_scene.a);\n    float4 node28_out = node6_out + node11_out;\n    float4 node22_out = node18_out * node28_out;\n    return node22_out;\n}\n",
+            "ps": "Texture2D g_input0 : register(t0);\nTexture2D g_input1 : register(t1);\nTexture2D g_input2 : register(t2);\nSamplerState g_sampler : register(s0);\n\ncbuffer cbEffect : register(b0)\n{\n    float g_time;\n    float g_audioBass;\n    float g_audioMid;\n    float g_audioTreble;\n    float4 g_params[16];\n};\n\ncbuffer cbRaymarchCamera : register(b3)\n{\n    float3 g_camPos;\n    float  _camPad;\n    row_major float4x4 g_invViewProj; \n    row_major float4x4 g_viewProj;\n};\n\n\nstruct PS_IN { float4 pos : SV_Position; float2 uv : TEXCOORD0; };\n\nfloat4 main(PS_IN In) : SV_Target0\n{\n    float4 node2_out = g_input2.Sample(g_sampler, In.uv);\n    float4 node19_out = g_params[1];\n    float node20_out = g_params[2].x;\n    float node21_out = g_params[3].x;\n    float4 aniso18_scene = node2_out;\n    float3 aniso18_worldPos = g_input1.Sample(g_sampler, In.uv).xyz;\n    float3 aniso18_N = normalize(g_input0.Sample(g_sampler, In.uv).rgb * 2.0 - 1.0);\n    float aniso18_isBG = (length(aniso18_worldPos) < 0.001) ? 1.0 : 0.0;\n    float3 aniso18_V = normalize(g_camPos - aniso18_worldPos);\n    float3 aniso18_L = normalize((float3(0.0f, 0.0f, 0.0f)));\n    float3 aniso18_H = normalize(aniso18_V + aniso18_L);\n    float3 aniso18_T = normalize(cross(aniso18_N, float3(0, 1, 0)));\n    float3 aniso18_B = normalize(cross(aniso18_N, aniso18_T));\n    float aniso18_TdotH = dot(aniso18_T, aniso18_H);\n    float aniso18_BdotH = dot(aniso18_B, aniso18_H);\n    float aniso18_NdotH = dot(aniso18_N, aniso18_H);\n    float aniso18_aT = max(0.05, 0.3 * (1.0 - (node21_out)));\n    float aniso18_aB = 0.3 * (1.0 + (node21_out));\n    float aniso18_ex = aniso18_TdotH / aniso18_aT;\n    float aniso18_ey = aniso18_BdotH / aniso18_aB;\n    float aniso18_d = aniso18_ex * aniso18_ex + aniso18_ey * aniso18_ey + aniso18_NdotH * aniso18_NdotH;\n    float aniso18_spec = 1.0 / max(aniso18_d * aniso18_d, 0.001);\n    aniso18_spec = saturate(aniso18_spec) * (node20_out) * (1.0 - aniso18_isBG);\n    aniso18_spec *= max(dot(aniso18_N, aniso18_L), 0.0);\n    float3 aniso18_result = aniso18_scene.rgb + aniso18_spec * (node19_out).rgb;\n    float4 node18_out = float4(aniso18_result, aniso18_scene.a);\n    float node7_out = g_params[0].x;\n    float3 bcomp6_scene = (node2_out).rgb;\n    float3 bcomp6_bloom = g_input2.Sample(g_sampler, In.uv).rgb;\n    float3 bcomp6_result = bcomp6_scene + bcomp6_bloom * (node7_out);\n    float4 node6_out = float4(bcomp6_result, 1.0);\n    float4 node22_out = node18_out * node6_out;\n    return node22_out;\n}\n",
             "scaleFactor": 1.0,
             "targetCount": 1,
             "targetNames": [],

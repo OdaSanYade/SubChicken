@@ -1,0 +1,27 @@
+{
+    "assetFolders": [],
+    "autosaveInterval": 60.0,
+    "gameLinkPort": 50001,
+    "layoutLocked": true,
+    "layoutSplitX": 0.6800000071525574,
+    "layoutSplitY": 0.47999998927116394,
+    "layoutVersion": 2,
+    "midiMap": {},
+    "particleSplit": [
+        0.2199999988079071,
+        0.6800000071525574,
+        0.550000011920929
+    ],
+    "passListHeight": 240.0,
+    "recentFiles": [
+        "C:\\3DGameProject\\SubChicken\\ShaderEditor\\EditorLibrary\\MyShaders\\Render.json"
+    ],
+    "shortcuts": {},
+    "trailSplit": [
+        0.20000000298023224,
+        0.6399999856948853
+    ],
+    "uiScale": 0.0,
+    "vjMonitor": 1,
+    "workspace": 0
+}
