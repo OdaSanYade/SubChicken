@@ -353,22 +353,6 @@ void Player::PostUpdate()
 		m_attackLanded = true;
 		if (ev.tag == PlayerAttackTag::kCounter) SetFlag(TestEntityFlag::kCounterHit);
 	}
-
-	auto& ps = GPUParticleSystem::Instance();
-	if (CanCryFull())
-	{
-		if (m_canCryEffectID == -1)
-		{
-			m_canCryEffectID = ps.SpawnEffect("CanCry", tc.GetPosition());
-		}
-		else
-			ps.SetEffectPos(m_canCryEffectID, tc.GetPosition());
-	}
-	else if (m_canCryEffectID != -1)
-	{
-		ps.StopEffect(m_canCryEffectID);
-		m_canCryEffectID = -1;
-	}
 }
 
 // ===========================================================

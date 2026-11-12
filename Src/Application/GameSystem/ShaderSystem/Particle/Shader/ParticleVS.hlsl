@@ -22,8 +22,8 @@ struct VS_OUT
 	float2 uv : TEXCOORD0;
 	float4 color : COLOR;
 	nointerpolation int texIndex : TEXINDEX;
-	float viewDepth : VIEWDEPTH; // ★粒のビュー空間Z（カメラからの距離）
-	float4 clipPos : CLIPPOS; // ★クリップ座標（画面UV計算用）
+	float viewDepth : VIEWDEPTH; // 粒のビュー空間Z（カメラからの距離）
+	float4 clipPos : CLIPPOS; // クリップ座標（画面UV計算用）
 	nointerpolation float4 form0 : FORM0; // sides, round, spike, aspect
 	nointerpolation float4 form1 : FORM1; // twist, edge, hollow, on
 	nointerpolation float4 form2 : FORM2; // rotate, shear, ripple, rippleFreq
@@ -44,7 +44,7 @@ VS_OUT main(uint id : SV_VertexID)
 	VS_OUT o;
 	if (p.life <= 0.0)
 	{
-        // ★全メンバを初期化（未初期化の出力を残さない）
+        // 全メンバを初期化（未初期化の出力を残さない）
 		o.pos = float4(0, 0, -10, 1);
 		o.uv = float2(0, 0);
 		o.color = float4(0, 0, 0, 0);
@@ -63,12 +63,10 @@ VS_OUT main(uint id : SV_VertexID)
 	float total = max(p.age + p.life, 0.0001);
 	float tNorm = saturate(p.age / total);
 
-    // ★2 サイズカーブ（3キー：begin → mid → end）
-    //    ゼロ初期化のエミッタで粒が消えないよう安全弁
+    //  サイズカーブ
 	float curve;
 	if (e.sizeCurveOn != 0)
 	{
-		// ★Phase8c カーブが有効ならこちらを使う
 		curve = EvalCurve8(e.sizeCurve, e.sizeCurvePointCount, e.sizeCurveInterp, tNorm);
 	}
 	else
@@ -85,9 +83,9 @@ VS_OUT main(uint id : SV_VertexID)
 	float size = e.size * curve;
 	size += e.cSizeGrow * p.age * 0.1;
 
-    // ★11 速度連動（速い粒ほど大きく／明るく）
+    // 速度連動
 	float speed = length(p.vel);
-	size *= lerp(1.0 - saturate(e.sizeRandom), 1.0, p.seed); // ★2 粒ごとのばらつき
+	size *= lerp(1.0 - saturate(e.sizeRandom), 1.0, p.seed); // 粒ごとのばらつき
 	size *= 1.0 + speed * e.velSizeScale;
 	size *= (e.emitScale > 0.0001) ? e.emitScale : 1.0;
 	if (size < 0.001)
@@ -111,7 +109,7 @@ VS_OUT main(uint id : SV_VertexID)
 	float2 quad;
 	if (e.stretchOn != 0)
 	{
-        // ★5 速度方向へ引き伸ばす（回転は無視される）
+        // 速度方向へ引き伸ばす
 		float3 vdir = (speed > 0.0001) ? (p.vel / speed) : camUp;
 
         // 速度をビルボード平面へ射影
@@ -125,14 +123,14 @@ VS_OUT main(uint id : SV_VertexID)
 	}
 	else
 	{
-        // ★4 通常の回転ビルボード
+        // 通常の回転ビルボード
 		float sn, cs;
 		sincos(p.rot, sn, cs);
 		quad = float2(off.x * cs - off.y * sn,
                       off.x * sn + off.y * cs);
 	}
 
-	float3 basePos = (e.simSpace != 0) ? (p.pos + e.pos) : p.pos; // ★4
+	float3 basePos = (e.simSpace != 0) ? (p.pos + e.pos) : p.pos; 
 	float3 worldPos = basePos + camRight * quad.x + camUp * quad.y;
 
 	o.texIndex = e.textureIndex;
@@ -142,7 +140,7 @@ VS_OUT main(uint id : SV_VertexID)
 	o.uv = uvs[corner];
 
 	o.color = p.color;
-	o.color.rgb *= 1.0 + speed * e.velColorScale; // ★11
+	o.color.rgb *= 1.0 + speed * e.velColorScale; 
 
 	o.form0 = float4(e.formSides, e.formRound, e.formSpike, e.formAspect);
 	o.form1 = float4(e.formTwist, e.formEdge, e.formHollow, (float) e.formOn);

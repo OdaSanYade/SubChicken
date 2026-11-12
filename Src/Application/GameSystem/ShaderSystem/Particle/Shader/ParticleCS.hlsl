@@ -8,19 +8,19 @@ StructuredBuffer<uint> g_activeList : register(t3); // 動かすエミッタ番�
 
 cbuffer CB : register(b0)
 {
-	float g_dt; // 0
-	float g_time; // 4
-	int g_totalCount; // 8
-	int g_particlesPerEmitter; // 12
-	float4x4 g_viewProj; // 16〜79
-	int g_screenW; // 80
-	int g_screenH; // 84
-	int g_collisionOn; // 88
-	float g_nearZ; // 92
-	float g_farZ; // 96
-	float g_restitution; // 100
-	int g_trailCursor; // 104
-	int g_trailWrite; // 108
+	float g_dt; 
+	float g_time; 
+	int g_totalCount;
+	int g_particlesPerEmitter; 
+	float4x4 g_viewProj;
+	int g_screenW;
+	int g_screenH;
+	int g_collisionOn; 
+	float g_nearZ; 
+	float g_farZ;
+	float g_restitution;
+	int g_trailCursor;
+	int g_trailWrite;
 };
 
 float LinearizeDepth(float d, float n, float f)
@@ -220,8 +220,7 @@ void main(uint3 id : SV_DispatchThreadID)
 			return;
 		}
 
-        // ★17 バースト：emitBase から emitCount 個ぶんの窓だけ生成する
-        //    窓を回していかないと、前のバーストの粒が生きていて出られなくなる
+        // バースト：emitBase から emitCount 個ぶんの窓だけ生成する
 		if (e.mode == 2)
 		{
 			if (e.emitTrigger == 0)
@@ -240,8 +239,7 @@ void main(uint3 id : SV_DispatchThreadID)
 			}
 		}
 
-        // 継続リスポーンの暴発防止（確率の門）
-        // ※ワンショットのときは門なしで一斉に出す
+        // 継続リスポーンの暴発防止
 		float seed = (float) i + g_time;
 		if (e.mode == 0)
 		{
@@ -256,7 +254,7 @@ void main(uint3 id : SV_DispatchThreadID)
 
         // 生成
 		float a = rand(float2(seed, 1.0)) * 6.2831853; // 方位角
-		float r = rand(float2(seed, 2.0)); // 0〜1
+		float r = rand(float2(seed, 2.0)); 
 
 		float3 radialDir = float3(cos(a), 0, sin(a));
 		float3 tangentDir = float3(-sin(a), 0, cos(a));
@@ -268,7 +266,7 @@ void main(uint3 id : SV_DispatchThreadID)
             (rand(float2(seed, 5.0)) - 0.5),
             (rand(float2(seed, 6.0)) - 0.5));
 
-        // ★球面放射（全方向。爆発）
+        // 球面放射（全方向。爆発）
 		float theta = rand(float2(seed, 8.0)) * 6.2831853;
 		float phi = acos(2.0 * rand(float2(seed, 9.0)) - 1.0); // 均一な球面
 		float3 sphereDir = float3(
@@ -280,7 +278,7 @@ void main(uint3 id : SV_DispatchThreadID)
             upDir * e.cUpward +
             radialDir * e.cRadial * (0.5 + r) +
             tangentDir * e.cTangent +
-            sphereDir * e.cSphere * (0.5 + r) + // ★球面
+            sphereDir * e.cSphere * (0.5 + r) + 
             randDir * e.spread;
 
 		float spdMul = lerp(1.0 - saturate(e.speedRandom), 1.0, rand(float2(seed, 10.0)));
@@ -300,7 +298,7 @@ void main(uint3 id : SV_DispatchThreadID)
 		p.seed = rand(float2(seed, 13.0));
 		p._padP = 0.0;
 
-        // ★1/3 グラデーションの始点＋粒ごとのHSVずらし（seed 確定後に評価する）
+        // グラデーションの始点＋粒ごとのHSVずらし（seed 確定後に評価する）
 		p.color = float4(ResolveColor(e, 0.0, p.seed), 1.0);
 
         // 履歴を発生位置で埋める（前の粒の残骸を引きずらない）
@@ -309,14 +307,14 @@ void main(uint3 id : SV_DispatchThreadID)
 	}
 	else
 	{
-		// ★4 Local のとき、渦の中心と目標を相対系に読み替える
+		// Local のとき、渦の中心と目標を相対系に読み替える
 		float3 orgPos = (e.simSpace != 0) ? float3(0, 0, 0) : e.pos;
 		float3 tgtPos = (e.simSpace != 0) ? (e.targetPos - e.pos) : e.targetPos;
 
 		// 重力
 		p.vel.y -= e.gravity * g_dt;
 
-		// ★減速（空気抵抗）：速度に比例して減速
+		// 減速（空気抵抗）：速度に比例して減速
 		p.vel -= p.vel * e.cDrag * g_dt;
 
 		if (e.curlStrength != 0.0)
@@ -326,7 +324,7 @@ void main(uint3 id : SV_DispatchThreadID)
 			p.vel += CurlNoise(np) * e.curlStrength * g_dt;
 		}
 
-		// 渦の継続（既存）
+		// 渦の継続
 		if (e.cSwirl != 0.0)
 		{
 			float2 toCenter = p.pos.xz - orgPos.xz;
@@ -338,7 +336,7 @@ void main(uint3 id : SV_DispatchThreadID)
 			}
 		}
 
-		// ★乱流（時間と位置でゆらゆら）
+		// 乱流
 		if (e.cTurbulence != 0.0)
 		{
 			float t = g_time + p.age;
@@ -349,7 +347,7 @@ void main(uint3 id : SV_DispatchThreadID)
 			p.vel += turb * e.cTurbulence * g_dt;
 		}
 
-		// ★目標への引き寄せ（cSeek）
+		// 目標への引き寄せ
 		if (e.cSeek != 0.0)
 		{
 			float3 toTarget = tgtPos - p.pos;
@@ -358,20 +356,20 @@ void main(uint3 id : SV_DispatchThreadID)
 				p.vel += (toTarget / dist) * e.cSeek * g_dt;
 		}
 
-        // ★波打ち（cWave）
+        // 波打ち
 		if (e.cWave != 0.0)
 		{
 			p.pos.y += sin(g_time * 3.0 + p.pos.x * 2.0) * e.cWave * g_dt;
 		}
 
-        // ★らせん（cSpiral）
+        // らせん
 		if (e.cSpiral != 0.0)
 		{
 			float ang = g_time * 2.0 + p.age * 5.0;
 			p.vel.xz += float2(cos(ang), sin(ang)) * e.cSpiral * g_dt;
 		}
 
-        // ★収束（cConverge：近づくと減速して溜まる）
+        // 収束
 		if (e.cConverge != 0.0)
 		{
 			float3 toTarget = tgtPos - p.pos;
@@ -384,17 +382,15 @@ void main(uint3 id : SV_DispatchThreadID)
 		p.age += g_dt;
 		p.rot += p.rotSpeed * g_dt;
 
-        // ★3 アルファカーブ（fadeIn/fadeOut は寿命に対する割合 0〜1）
-        //    両方0のときは従来挙動（saturate(life)）にフォールバック
+        // アルファカーブ
 		float total = max(p.age + p.life, 0.0001);
 		float tNorm = saturate(p.age / total);
 
-        // ★1 寿命に沿って色を更新（毎フレーム基本色から作り直すので累積しない）
+        // 寿命に沿って色を更新
 		p.color.rgb = ResolveColor(e, tNorm, p.seed);
 
 		if (e.alphaCurveOn != 0)
 		{
-			// ★Phase8c カーブが有効なら fadeIn/fadeOut は無視してこちらを使う
 			p.color.a = EvalCurve8(e.alphaCurve, e.alphaCurvePointCount, e.alphaCurveInterp, tNorm);
 		}
 		else
@@ -409,7 +405,7 @@ void main(uint3 id : SV_DispatchThreadID)
 		if (g_trailWrite != 0)
 			g_history[i * 8 + g_trailCursor] = float4(p.pos, 1.0);
 
-		// ★深度を使った当たり判定（スクリーン空間）
+		// 深度を使った当たり判定
 		if (g_collisionOn != 0)
 		{
 			float3 wpos = (e.simSpace != 0) ? (p.pos + e.pos) : p.pos;

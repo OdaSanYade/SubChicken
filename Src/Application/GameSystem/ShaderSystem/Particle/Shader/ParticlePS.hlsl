@@ -51,8 +51,7 @@ float vnoise2(float2 x)
                 lerp(hash12(i + float2(0, 1)), hash12(i + float2(1, 1)), f.x), f.y);
 }
 
-// 手続き形状：多角形 + 丸み + 星化 + アスペクト + ねじれ + 中空
-//              + 回転 + シアー + 波打ち + ふくらみ + 扇形 + 溶解 + コア
+// 手続き形状
 float FormAlpha(float2 uv, float4 f0, float4 f1, float4 f2, float4 f3)
 {
 	float sides = f0.x;
@@ -79,7 +78,7 @@ float FormAlpha(float2 uv, float4 f0, float4 f1, float4 f2, float4 f3)
 	sincos(rotAng, rs, rc);
 	p = float2(p.x * rc - p.y * rs, p.x * rs + p.y * rc);
 
-    // シアー：平行四辺形にする
+    // 平行四辺形にする
 	p.x += p.y * shear;
 
 	p.x /= aspect;
@@ -99,7 +98,7 @@ float FormAlpha(float2 uv, float4 f0, float4 f1, float4 f2, float4 f3)
 		float rMid = cos(seg * 0.5);
 		float base = rMid / max(cos(h), 1e-4);
 
-        // ふくらみ／へこみ：1.0で直線、小で外へ張り、大で内へ凹む
+        // 1.0で直線、小で外へ張り、大で内へ凹む
 		if (abs(bulge - 1.0) > 0.001)
 		{
 			float u = saturate(abs(h) / (seg * 0.5));
@@ -115,7 +114,7 @@ float FormAlpha(float2 uv, float4 f0, float4 f1, float4 f2, float4 f3)
 		}
 	}
 
-    // 輪郭の波打ち：花びら・歯車・ギザギザ
+    // 花びら・歯車・ギザギザ
 	if (abs(ripple) > 0.0001)
 		rp *= 1.0 + sin(a * rippleFrq) * ripple;
 

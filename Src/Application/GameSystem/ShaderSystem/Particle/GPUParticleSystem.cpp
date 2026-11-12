@@ -848,12 +848,12 @@ void GPUParticleSystem::Render(ID3D11RenderTargetView* rtv,
 	context->IASetInputLayout(nullptr);
 	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	// 動いているエミッタの粒だけ描く（t3 = 一覧）
+	// 動いているエミッタの粒だけ描く
 	context->VSSetShaderResources(3, 1, m_activeListSRV.GetAddressOf());
 	if (!m_activeList.empty())
 		context->Draw((UINT)(m_activeList.size() * kParticlesPerEmitter * 6), 0);
 
-	// ---- トレイル（本体のあとに重ねる。trailOn のエミッタだけ）----
+	// ---- トレイル----
 	if (!m_trailList.empty() && m_trailVS)
 	{
 		GPUTrailCB tcb = {};
@@ -1271,7 +1271,7 @@ int GPUParticleSystem::SpawnEffect(const std::string& name, const DirectX::XMFLO
 	}
 
 	EffectInstance& inst = m_effectInstances[index];
-	// 再利用のたびに世代を進める（1〜0x7FFF。ハンドルを正の int に保つ）
+	// 再利用のたびに世代を進める
 	const uint16_t nextGen = (uint16_t)((inst.generation % 0x7FFF) + 1);
 	inst = EffectInstance{};
 	inst.generation = nextGen;

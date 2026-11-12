@@ -9,7 +9,7 @@ public:
 	static constexpr float kMax = 100.0f;
 	static constexpr float kShortCost = 0.0f;	
 	static constexpr float kFullCost = kMax;
-	static constexpr float kFullEpsilon = 0.5f;
+	static constexpr float kFullEpsilon = 0.0f;
 	static constexpr float kHeavyCost = 4.0f;
 
 	void Update()
