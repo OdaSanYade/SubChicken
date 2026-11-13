@@ -117,12 +117,12 @@ int MultiPassRuntime::AcquireRT(int width, int height,
 	PooledRT rt;
 	rt.width = width; rt.height = height; rt.inUse = true;
 	rt.lastUsedFrame = m_poolFrame;
-	rt.format = format;   // ★保持
+	rt.format = format; 
 
 	D3D11_TEXTURE2D_DESC desc = {};
 	desc.Width = width; desc.Height = height;
 	desc.MipLevels = 1; desc.ArraySize = 1;
-	desc.Format = format;   // ★指定フォーマット
+	desc.Format = format;
 	desc.SampleDesc.Count = 1;
 	desc.Usage = D3D11_USAGE_DEFAULT;
 	desc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
@@ -531,8 +531,7 @@ void MultiPassRuntime::RestoreDefaults()
 		for (ParamRuntime* p : it->second)
 			p->value = value;
 	}
-	// "__last__" は起動時に一度だけ当てて既定値に取り込んでいる（PipelineSystem::LoadDefaults）。
-	// ここで毎回当てると、エディタから送った値が古い値に戻ってしまう
+	// "__last__" は起動時に一度だけ当てて既定値に取り込んでいる（PipelineSystem::LoadDefaults）
 }
 
 void MultiPassRuntime::SetLights(const std::vector<PointLightData>& lights)
@@ -633,7 +632,7 @@ void MultiPassRuntime::Execute(float time, float bass, float mid, float treble,
 		ID3D11ShaderResourceView* prevSRV = nullptr;
 		if (i == 0)
 		{
-			prevSRV = externalInput;   // ★最初のパスはゲーム画面
+			prevSRV = externalInput;   // 最初のパスはゲーム画面
 		}
 		else if (!m_passResults[i - 1].empty())
 		{
@@ -691,7 +690,7 @@ void MultiPassRuntime::Execute(float time, float bass, float mid, float treble,
 			finalSRV->GetResource(&srcRes);
 			if (srcRes)
 			{
-				// CopyResource はサイズと形式が完全に同じでないと失敗する（デバッグレイヤーでエラー）。
+				// CopyResource はサイズと形式が完全に同じでないと失敗する（デバッグレイヤーでエラー）
 				// 違うときは履歴を最終結果に合わせて作り直してからコピーする
 				ID3D11Texture2D* srcTex = nullptr;
 				srcRes->QueryInterface(IID_PPV_ARGS(&srcTex));
@@ -902,7 +901,7 @@ void MultiPassRuntime::RenderPass(PassRuntime& pass, const std::vector<int>& rtI
 		m_context->PSSetConstantBuffers(4, 1, m_cbLights.GetAddressOf());
 	if (m_cbShadowLighting)
 		m_context->PSSetConstantBuffers(6, 1, m_cbShadowLighting.GetAddressOf());
-	// ★入力を t0 から連番でバインド（inputs の順）
+	// 入力を t0 から連番でバインド（inputs の順）
 	std::vector<ID3D11ShaderResourceView*> inputSRVs;
 	int namedIdx = 0;
 	for (const auto& in : pass.inputs)
@@ -930,16 +929,16 @@ void MultiPassRuntime::RenderPass(PassRuntime& pass, const std::vector<int>& rtI
 		if (ShaderHelper::irradianceSRV)
 			m_context->PSSetShaderResources(20, 1, ShaderHelper::irradianceSRV.GetAddressOf());
 		if (ShaderHelper::prefilterSRV)
-			m_context->PSSetShaderResources(21, 1, ShaderHelper::prefilterSRV.GetAddressOf());   // ★プレフィルタ
+			m_context->PSSetShaderResources(21, 1, ShaderHelper::prefilterSRV.GetAddressOf());
 		if (ShaderHelper::brdfLutSRV)
-			m_context->PSSetShaderResources(22, 1, ShaderHelper::brdfLutSRV.GetAddressOf());      // ★BRDF LUT
+			m_context->PSSetShaderResources(22, 1, ShaderHelper::brdfLutSRV.GetAddressOf());
 		if (ShaderHelper::cascadeSRV[0])
 		{
 			ID3D11ShaderResourceView* csrvs[3] = {
 				ShaderHelper::cascadeSRV[0].Get(),
 				ShaderHelper::cascadeSRV[1].Get(),
 				ShaderHelper::cascadeSRV[2].Get() };
-			m_context->PSSetShaderResources(23, 3, csrvs);   // ★t23,t24,t25
+			m_context->PSSetShaderResources(23, 3, csrvs);
 		}
 	}
 
