@@ -129,60 +129,58 @@ void CameraBase::PostUpdate()
 	if (CombatFx::Instance().ConsumeVibration(vl, vr, vs))
 		KdInputActionSystem::Instance().SetVibration(0, vl, vr, vs);
 
-	if (auto sp = m_wpWorld.lock())
-	{
-		const float probeR = m_occlusionProbeRadius;
-		const float minDist = m_occlusionMinDistance;
-		const float ignore = m_occlusionIgnoreDistance;
+	//if (auto sp = m_wpWorld.lock())
+	//{
+	//	const float probeR = m_occlusionProbeRadius;
+	//	const float minDist = m_occlusionMinDistance;
+	//	const float ignore = m_occlusionIgnoreDistance;
 
-		float& occDist = m_occDistance;
-		bool& occInit = m_occInitialized;
+	//	float& occDist = m_occDistance;
+	//	bool& occInit = m_occInitialized;
 
-		// 遮蔽なしとみなす誤差
-		constexpr float kNoHitSlack = 1e-3f;
+	//	// 遮蔽なしとみなす誤差
+	//	constexpr float kNoHitSlack = 1e-3f;
 
-		cam.Update(dt, [&](const Math::Vector3& from, const Math::Vector3& to, float& outDist) -> bool
-			{
-				const float dist = (to - from).Length();
-				if (dist < kEpsilon) return false;
+	//	cam.Update(dt, [&](const Math::Vector3& from, const Math::Vector3& to, float& outDist) -> bool
+	//		{
+	//			const float dist = (to - from).Length();
+	//			if (dist < kEpsilon) return false;
 
-				float best = dist;
-				bool  anyHit = false;
+	//			float best = dist;
+	//			bool  anyHit = false;
 
-				// 芯のレイ。正確で速い
-				if (const auto ray = sp->RaycastStage(from, to); ray.isHit && ray.distance < best)
-				{
-					best = ray.distance; anyHit = true;
-				}
+	//			// 芯のレイ。正確で速い
+	//			if (const auto ray = sp->RaycastStage(from, to); ray.isHit && ray.distance < best)
+	//			{
+	//				best = ray.distance; anyHit = true;
+	//			}
 
-				// 球スイープ
-				if (const auto sw = sp->SphereCastStage(from, to, probeR); sw.isHit && sw.distance < best)
-				{
-					best = sw.distance; anyHit = true;
-				}
+	//			// 球スイープ
+	//			if (const auto sw = sp->SphereCastStage(from, to, probeR); sw.isHit && sw.distance < best)
+	//			{
+	//				best = sw.distance; anyHit = true;
+	//			}
 
-				// 始点が地面や壁に接触していると距離ほぼ0で返る
-				if (anyHit && best <= ignore) anyHit = false;
+	//			// 始点が地面や壁に接触していると距離ほぼ0で返る
+	//			if (anyHit && best <= ignore) anyHit = false;
 
-				const float target = anyHit ? best : dist;
+	//			const float target = anyHit ? best : dist;
 
-				// ※元は「詰める側だけ速度制限をかける」つもりだったようだが、
-				//   初回もそれ以降も同じ代入になっていて制限は掛かっていない。
-				//   挙動を変えないよう、そのまま目標値を入れている(要確認リスト参照)
-				occDist = target;
-				occInit = true;
+	//			// ※元は「詰める側だけ速度制限をかける」つもりだったようだが、
+	//			//   初回もそれ以降も同じ代入になっていて制限は掛かっていない。
+	//			//   挙動を変えないよう、そのまま目標値を入れている(要確認リスト参照)
+	//			occDist = target;
+	//			occInit = true;
 
-				if (occDist >= dist - kNoHitSlack) return false;	// 遮蔽なし
+	//			if (occDist >= dist - kNoHitSlack) return false;	// 遮蔽なし
 
-				// 壁に密着してもpivotまでは潰さない
-				outDist = std::max(occDist, minDist);
-				return true;
-			});
-	}
-	else
-	{
-		cam.Update(dt);
-	}
+	//			// 壁に密着してもpivotまでは潰さない
+	//			outDist = std::max(occDist, minDist);
+	//			return true;
+	//		});
+	//}
+	cam.Update(dt);
+	
 
 	cam.ApplyToKdCamera(*m_camera);
 	m_camera->SetToShader();

@@ -45,7 +45,9 @@ void Player::Init()
 		{ RenderKind::Work, wid,
 		RES_MGR.GetWorkPool()->GetGeneration(wid) });
 
-	m_cm.add<GhostTrailComponent>(m_entity);
+	auto& gc = m_cm.add<GhostTrailComponent>(m_entity);
+	gc.mode = GhostMode::XRay;
+
 	m_cm.add<TrailComponent>(m_entity);
 
 	auto& tc = m_cm.get<TransformComponent>(m_entity);
@@ -302,7 +304,6 @@ void Player::PostUpdate()
 		m_hitInvincibleTime = m_tuning.hitInvincibleTime;
 		ComboTracker::Instance().Break();
 
-		// UIを揺らす。1発で必ず base 分、ダメージが大きいほど extra 分まで足す
 		const float extraShock = std::min(hit.damage / std::max(m_tuning.damageShockPerDamage, 1.0f), m_tuning.damageShockExtraMax);
 		m_damageShock = std::min(1.0f, m_damageShock + m_tuning.damageShockBase + extraShock);
 

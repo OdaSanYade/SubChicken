@@ -28,8 +28,7 @@ namespace {
 		return table.other;
 	}
 
-	// 被弾リアクションの段階。EnemyStateSetup の TryReaction が
-	// 1:Stagger 2:Blow 3:Launch 4:Down の順で受け取る
+	// 被弾リアクションの段階
 	namespace Reaction
 	{
 		constexpr int kBlow = 2;
@@ -89,7 +88,6 @@ void EnemyBase::AdvanceAnim()
 void EnemyBase::Init()
 {
 	// ---- 種類ごとのパラメータ ----
-	// コードの MakeSpec() が既定値。EnemyTuning.json の "types" に同じ種類名があれば上書きする
 	m_spec = MakeSpec();
 	{
 		const nlohmann::json types = Tuning::LoadSection(EnemyTuningKey::kFile, "types");
@@ -137,7 +135,7 @@ void EnemyBase::Init()
 	}
 
 
-	// 個体差。全員が同じ間合い・同じ間隔で動くと機械的に見える
+	// 個体差
 	m_attackBias = KdRandom::GetFloat(0.0f, T().motion.attackBiasMax);
 	m_slotDistanceBias = KdRandom::GetFloat(T().motion.slotBiasMin, T().motion.slotBiasMax) + m_spec.slotDistanceOffset;
 
@@ -226,9 +224,7 @@ void EnemyBase::Update()
 	// ステート更新(索敵・移動・遷移判定は全てここで行われる)
 	sys->Update(sm, deltaTime, this, m_entity.index);
 
-	// 遷移が起きた場合はここで合わせ直す。
-	// やらないと PostUpdate の AdvanceAnimation が「遷移前のクリップ」を
-	// 1フレーム進めてしまい、被弾や死亡のように Forced が連続する所で絵が飛ぶ。
+	// 遷移が起きた場合はここで合わせ直す
 	sys->SyncAnimation(sm, m_enemyAnim, resolver);
 
 	// コリジョンへ提出
@@ -256,7 +252,7 @@ void EnemyBase::Update()
 
 void EnemyBase::PostUpdate()
 {
-	// 走り去り中は当たり判定を通さない。被弾も着地も見ずに進むだけ。
+	// 走り去り中は当たり判定を通さない
 	if (m_isLeaving)
 	{
 		auto& tcLeave = m_cm.get<TransformComponent>(m_entity);
@@ -298,8 +294,7 @@ void EnemyBase::PostUpdate()
 		if (!sm.HasTag(EnemyTag::kDie))
 			TickCorpse(Time::Instance().GetDeltaTime());
 
-		// 死体でもアニメは進める。ここで return すると
-		// 倒れるモーションが1フレーム目で止まったまま沈んでいく。
+		// 死体でもアニメは進める
 		AdvanceAnim();
 		return;
 	}
@@ -351,14 +346,12 @@ void EnemyBase::PostUpdate()
 
 			if (m_breakGauge >= T().hit.breakThreshold && !HasFlag(EnemyFlag::kShatterRequested))
 			{
-				auto& tcS = m_cm.get<TransformComponent>(m_entity);
-				m_shatterOrigin = tcS.GetPosition() + Math::Vector3(0.0f, m_eyeHeight, 0.0f);
+				m_shatterOrigin = tc.GetPosition() + Math::Vector3(0.0f, m_eyeHeight, 0.0f);
 				SetFlag(EnemyFlag::kShatterRequested);
 			}
 		}
 
 		// ---- 体幹を削る ----
-		// 硬化中は体幹を無視して確定でブレイクする。
 		m_poise += frozen ? m_poiseMax : poise.poise;
 
 		// ブレイクするまでは怯ませない
@@ -370,7 +363,7 @@ void EnemyBase::PostUpdate()
 			m_poise = 0.0f;
 			m_breakFlash = 1.0f;
 
-			// 崩れた拍子に口が開く。HUDの体幹ゲージがそのまま「取り返すまで」になる。
+			// 崩れた拍子に口が開く
 			ReleaseCarryByBreak();
 
 			const bool launch = (hit.knockback.y >= T().hit.launchThreshold);
@@ -379,13 +372,10 @@ void EnemyBase::PostUpdate()
 		}
 
 		// ---- ノックバック ----
-		// ※直前で崩れたときに m_poise を 0 に戻しているので、ここは常に false になる。
-		//   スーパーアーマー中は崩しても押されない動きになっているが、
-		//   挙動を変えないよう元のまま残している(要確認リスト参照)
 		const bool poiseBroken = (m_poise >= m_poiseMax);
 		if (!frozen && (!m_superArmor || poiseBroken))
 		{
-			// 崩していない間は押されるだけ。足は止めない。
+			// 崩していない間は押されるだけ
 			const float horizontal = T().hit.knockbackHorizontalMul;
 			m_knockbackVelocity = { hit.knockback.x * horizontal, 0.0f, hit.knockback.z * horizontal };
 			m_isKnockback = true;
@@ -408,7 +398,6 @@ void EnemyBase::PostUpdate()
 					from.Normalize();
 					m_lastKnownPos = tc.GetPosition() + from * m_sightOffset;
 				}
-
 				RequestReaction(level, duration);
 			}
 		}
@@ -460,41 +449,6 @@ void EnemyBase::PostUpdate()
 			const float into = m_knockbackVelocity.Dot(n);
 			if (into < 0.0f)
 				m_knockbackVelocity -= n * into * T().wall.bounce;
-		}
-
-		if (speed >= T().wall.slamSpeed)
-		{
-			auto& hc = m_cm.get<Game::Health>(m_entity);
-			const float before = hc.hp;
-			hc.hp -= T().wall.slamDamage;
-
-			// 壁で倒した場合も、必ず通常の撃破と同じ経路を通す
-			if (before > 0.0f && hc.hp <= 0.0f)
-			{
-				Math::Vector3 launch = m_knockbackVelocity * T().wall.killLaunchRatio;
-				launch.y = T().wall.killLaunchUp;
-				Die(launch, T().wall.slamDamage - before);
-
-				// とどめ演出
-				CombatFx::HitEvent ev;
-				ev.position = tc.GetPosition() + Math::Vector3(0.0f, m_eyeHeight, 0.0f);
-				ev.knockback = launch;
-				ev.damage = T().wall.slamDamage;
-				ev.tag = PlayerAttackTag::kNormal;
-				ev.lethal = true;
-				ev.attackerType = Collision::ObjectType::PlayerAttack;
-				CombatFx::Instance().Notify(ev);
-
-				m_knockbackVelocity *= T().wall.speedKeep;
-			}
-			else
-			{
-				m_knockbackVelocity *= T().wall.speedKeep;
-				RequestReaction(Reaction::kDown, T().wall.reactionSec);
-			}
-
-			CombatFx::Instance().RequestHitStop(T().wall.hitstop);
-			CombatFx::Instance().AddTrauma(T().wall.trauma);
 		}
 	}
 
@@ -1489,10 +1443,8 @@ void EnemyBase::BurstFromFreeze(bool _broken)
 	if (dir.LengthSquared() <= 0.0f) dir = -GetFacing();
 	dir.Normalize();
 
-	// 時間切れは「勝手に解けた」なので、絵も手応えも一段落とす。
-	// ここで差をつけないと、ブレイクを狙う理由がなくなる。
 	const EnemyTuning::Shatter& sh = T().shatter;
-	const float power = _broken ? 1.0f : sh.timeoutPower;
+	const float power = 1.0f;
 
 	m_knockbackVelocity = dir * sh.burstSpeed * power;
 	m_jumpMoment = sh.burstUp * power;
@@ -1502,15 +1454,17 @@ void EnemyBase::BurstFromFreeze(bool _broken)
 	m_isKnockback = true;
 	m_knockbackTimer = sh.burstKnockbackSec;
 
+	m_frozenDamage = 0.0f;
+	m_breakGauge = 0.0f;
+	m_shatterFromChain = false;
+
+	if (!_broken)return;
+
 	RequestReaction(Reaction::kBlow, _broken ? sh.reactionBrokenSec : sh.reactionTimeoutSec);
 
 	CombatFx::Instance().RequestHitStop(_broken ? sh.hitstopBroken : sh.hitstopTimeout);
 	CombatFx::Instance().AddTrauma(sh.trauma * power);
 	CombatFx::Instance().AddVibration(sh.vibration.x * power, sh.vibration.y, sh.vibration.z);
-
-	m_frozenDamage = 0.0f;
-	m_breakGauge = 0.0f;
-	m_shatterFromChain = false;
 }
 
 // ===========================================================

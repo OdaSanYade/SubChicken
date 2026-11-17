@@ -28,7 +28,7 @@
         "minAlpha": 0.55,
         "minSpacing": 46.0,
         "maxVisible": 8,
-        "lockedScale": 1.45,
+        "lockedScale": 1.5,
         "offCenterFade": 0.45,
         "lockedGap": 6.0
     },

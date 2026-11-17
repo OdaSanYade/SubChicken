@@ -1,12 +1,4 @@
-Texture2D g_tex0 : register(t0);
-Texture2D g_tex1 : register(t1);
-Texture2D g_tex2 : register(t2);
-Texture2D g_tex3 : register(t3);
-Texture2D g_tex4 : register(t4);
-Texture2D g_tex5 : register(t5);
-Texture2D g_tex6 : register(t6);
-Texture2D g_tex7 : register(t7);
-Texture2D g_gbufferC : register(t8);
+Texture2D g_gbufferC : register(t0);
 SamplerState g_sampler : register(s0);
 
 cbuffer CB : register(b0)
@@ -152,36 +144,17 @@ float4 main(VS_OUT i) : SV_Target
 	float4 t;
 	if (i.texIndex < 0)
 	{
-        // ★8 リボン：幅方向にソフトなフォールオフ（form1.y = Edge Soft）
+        // リボン：幅方向にソフトなフォールオフ（form1.y = Edge Soft）
 		float across = 1.0 - abs(i.uv.x * 2.0 - 1.0);
 		float soft = max(i.form1.y, 0.02);
 		t = float4(1, 1, 1, smoothstep(0.0, soft, across));
 	}
-	else if (i.form1.w > 0.5)
+	else 
 	{
         // 手続き形状（テクスチャを使わない）
 		t = float4(1, 1, 1, FormAlpha(i.uv, i.form0, i.form1, i.form2, i.form3));
 	}
-	else
-	{
-		int ti = i.texIndex;
-		if (ti == 1)
-			t = g_tex1.Sample(g_sampler, i.uv);
-		else if (ti == 2)
-			t = g_tex2.Sample(g_sampler, i.uv);
-		else if (ti == 3)
-			t = g_tex3.Sample(g_sampler, i.uv);
-		else if (ti == 4)
-			t = g_tex4.Sample(g_sampler, i.uv);
-		else if (ti == 5)
-			t = g_tex5.Sample(g_sampler, i.uv);
-		else if (ti == 6)
-			t = g_tex6.Sample(g_sampler, i.uv);
-		else if (ti == 7)
-			t = g_tex7.Sample(g_sampler, i.uv);
-		else
-			t = g_tex0.Sample(g_sampler, i.uv);
-	}
+	
 	float4 col = i.color * t;
 
 	float2 screenUV = i.clipPos.xy / i.clipPos.w;
@@ -190,6 +163,7 @@ float4 main(VS_OUT i) : SV_Target
     // GBufferC から worldPos → カメラ距離
 	float3 sceneWorldPos = g_gbufferC.Sample(g_sampler, screenUV).xyz;
 	float sceneDist = length(g_camPos - sceneWorldPos);
+	
     // 背景（worldPos≈0）は遠方扱い（隠さない）
 	if (length(sceneWorldPos) < 0.001)
 		sceneDist = 10000.0;

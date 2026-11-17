@@ -15,7 +15,7 @@ bool MaterialLibrary::LoadRegistry(std::unordered_map<std::string, uint32_t>& ou
 		{
 			if (!id.is_number_unsigned() && !id.is_number_integer()) continue;
 			const int64_t v = id.get<int64_t>();
-			if (v <= 0 || v > 0xFFFF || name.empty()) continue;   // 0 は標準マテリアル用
+			if (v <= 0 || v > 0xFFFF || name.empty()) continue;
 			out[name] = (uint32_t)v;
 		}
 	}
@@ -59,10 +59,10 @@ void MaterialLibrary::BuildFromRuntime(ShaderRuntime* rt, const std::string& reg
 	m_registryPath = registryPath;
 	m_names.clear();
 	m_nameToId.clear();
-	m_names.push_back("");        // id 0 = デフォルト
+	m_names.push_back("");
 	m_nameToId[""] = 0;
 
-	// 1) 登録ファイルの番号をそのまま使う（今は無いマテリアルも番号は空けておく）
+	// 登録ファイルの番号をそのまま使う（今は無いマテリアルも番号は空けておく）
 	std::unordered_map<std::string, uint32_t> reg;
 	LoadRegistry(reg);
 	uint32_t maxId = 0;
@@ -74,7 +74,7 @@ void MaterialLibrary::BuildFromRuntime(ShaderRuntime* rt, const std::string& reg
 		m_nameToId[name] = id;
 	}
 
-	// 2) ファイルに無いマテリアルは後ろに足す（ファイルが無い初回は従来と同じ並び）
+	// ファイルに無いマテリアルは後ろに足す（ファイルが無い初回は従来と同じ並び）
 	bool added = false;
 	for (auto& n : rt->GetMaterialNames())
 	{

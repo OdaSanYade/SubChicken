@@ -314,10 +314,11 @@ void SetupPlayerStates()
 
 				// 残像。描画パラメータの0番で残像の濃さを決めている
 				constexpr int kGhostParamSlot = 0;
-				auto& g = p->GetComponentManager().get<GhostTrailComponent>(p->GetEntity());
-				BeginGhostTrail(g, ctx.ParamStr("ghostMaterial"_sid));
+				auto& gc = p->GetComponentManager().get<GhostTrailComponent>(p->GetEntity());
+				gc.mode = GhostMode::History;
+				BeginGhostTrail(gc, ctx.ParamStr("ghostMaterial"_sid));
 				SetParam(Render(p), kGhostParamSlot, ctx.Param("fx.ghostParam"_sid));
-				g.lifeTime = ctx.Param("fx.ghostLife"_sid);
+				gc.lifeTime = ctx.Param("fx.ghostLife"_sid);
 
 				auto& pe = PostEffect(p);
 				pe.radialBlur.enabled = true;
@@ -354,8 +355,9 @@ void SetupPlayerStates()
 			{
 				auto* p = ctx.As<Player>();
 				p->EndDodge();
-				auto& g = p->GetComponentManager().get<GhostTrailComponent>(p->GetEntity());
-				EndGhostTrail(g);
+				auto& gc = p->GetComponentManager().get<GhostTrailComponent>(p->GetEntity());
+				EndGhostTrail(gc);
+				gc.mode = GhostMode::XRay;
 
 				PostEffect(p).AllStopEnabled();
 			});
@@ -364,7 +366,7 @@ void SetupPlayerStates()
 	// アクションの子: 3段コンボ
 	// =======================================================
 	sys->State("Attack1").Base("Action")
-		.Anim("ClawAttack", 4.0f, false)
+		.Anim("Atk_Combo1", 4.0f, false)
 		.AllowFrom({ "Idle"_sid, "Walk"_sid, "Run"_sid })
 		.MinTime(0.12f)
 		.Buffer(0.3f)
@@ -439,7 +441,7 @@ void SetupPlayerStates()
 			});
 
 	sys->State("Attack2").Base("Action")
-		.Anim("ClawAttack_Combo2", 4.5f, false)
+		.Anim("Atk_Combo2", 4.5f, false)
 		.MinTime(0.12f)
 		.Param("damage", 22.0f)
 		.Param("reach", 19.0_m)
@@ -514,7 +516,7 @@ void SetupPlayerStates()
 
 	// 締め
 	sys->State("Attack3").Base("Action")
-		.Anim("ClawAttack_Combo3", 3.0f, false)
+		.Anim("Atk_Combo3", 3.0f, false)
 		.MinTime(0.65f)
 		.Param("damage", 34.0f)
 		.Param("reach", 26.0_m)
@@ -589,7 +591,7 @@ void SetupPlayerStates()
 	// 強攻撃
 	// =======================================================
 	sys->State("Heavy1").Base("Action")
-		.Anim("ClawAttack_Heavy", 2.6f, false)
+		.Anim("Atk_Heavy1", 2.6f, false)
 		.AllowFrom({ "Idle"_sid, "Walk"_sid, "Run"_sid })
 		.MinTime(0.18f)
 		.Buffer(0.3f)
@@ -665,7 +667,7 @@ void SetupPlayerStates()
 
 	// 強の2段目。締めとして打ち上げる。
 	sys->State("Heavy2").Base("Action")
-		.Anim("ClawAttack_Heavy", 2.2f, false)
+		.Anim("Atk_Heavy2", 2.2f, false)
 		.MinTime(0.2f)
 		.Param("damage", 60.0f)
 		.Param("reach", 28.0_m)
@@ -737,7 +739,7 @@ void SetupPlayerStates()
 	// アクションの子: カウンター(ジャスト回避からの反撃)
 	// =======================================================
 	sys->State("Counter").Base("Action")
-		.Anim("Counter", 3.0f, false)
+		.Anim("Atk_Counter", 3.0f, false)
 		.MinTime(0.15f)
 		.Param("damage", 60.0f)
 		.Param("reach", 28.0_m)
@@ -823,7 +825,7 @@ void SetupPlayerStates()
 	// アクションの子: 追撃(カウンターが当たったときだけ入る)
 	// =======================================================
 	sys->State("Finisher").Base("Action")
-		.Anim("Counter_Finish", 2.5f, false)
+		.Anim("Atk_Finisher", 2.5f, false)
 		.MinTime(0.2f)
 		.Param("damage", 80.0f)
 		.Param("reach", 30.0_m)

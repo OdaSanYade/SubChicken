@@ -102,9 +102,6 @@ void Application::PostUpdate()
 void Application::KdBeginDraw(bool usePostProcess)
 {
 	KdDirect3D::Instance().ClearBackBuffer();
-
-	if (!usePostProcess) return;
-	KdShaderManager::Instance().m_postProcessShader.Draw();
 }
 
 // ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// /////
@@ -162,8 +159,6 @@ void Application::Draw()
 // ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// /////
 void Application::PostDraw()
 {
-	// 画面のぼかしや被写界深度処理の実施
-	KdShaderManager::Instance().m_postProcessShader.PostEffectProcess();
 }
 
 // ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// /////

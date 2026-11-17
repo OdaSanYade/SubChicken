@@ -544,7 +544,6 @@ void SetupEnemyStates()
 	// 硬化(鳴き声)
 	// =======================================================
 	sys->State("Frozen").Base("Damage").Tag(EnemyTag::kFrozen)
-		// 固まっている間は目を青く光らせる
 		.Param("fx.light.r", 0.0f).Param("fx.light.g", 0.3f).Param("fx.light.b", 1.0f)
 		.Param("fx.lightPower", 0.3f)
 		.Param("fx.lightLift", 1.0f)	// ライトを置く高さ(目の高さからの差ではなく足元から)
@@ -1058,8 +1057,7 @@ void SetupEnemyStates()
 				e->FaceAttackDir(e->TurnRate(ctx.Param("turnRate"_sid)));
 				e->ApplyChaseMotion(dt, e->MoveSpeed(ctx.Param("stepSpeed"_sid)));
 
-				// 判定は発生フレームの間だけ出す。
-				// 毎フレーム提出しても attackId が同じなので多段ヒットしない。
+				// 判定は発生フレームの間だけ出す
 				const float hitStart = ctx.Param("hitStart"_sid);
 				const float hitEnd = ctx.Param("hitEnd"_sid);
 				if (t >= hitStart && t < hitEnd)

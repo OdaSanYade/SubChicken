@@ -69,7 +69,7 @@ DirectX::BoundingSphere CalcModelBoundingSphere(const std::shared_ptr<KdModelDat
 		}
 	}
 
-	if (first)   // メッシュが1つもなかった場合の保険
+	if (first)
 	{
 		result.Center = { 0, 0, 0 };
 		result.Radius = 1.0f;
@@ -78,7 +78,7 @@ DirectX::BoundingSphere CalcModelBoundingSphere(const std::shared_ptr<KdModelDat
 	return result;
 }
 
-// スキンモデルのボーン行列を作る。使っている本数（最大ボーン番号 + 1）を返す（0 = スキンでない）
+// スキンモデルのボーン行列を作る
 static int CalcBoneMatrices(const std::shared_ptr<KdModelWork>& work,
 	std::vector<DirectX::XMFLOAT4X4>& out)
 {
@@ -126,14 +126,13 @@ ShaderRender::~ShaderRender()
 {
 	if (m_runtime) { m_runtime->StopNetwork(); }
 
-	// エディタで調整した値を "__last__" として残すのは開発中だけ。
 	// リリース版は常に設定ファイルの値で始まる
 	if (m_liveLinkEnabled && m_pipelines && m_pipelines->Material())
 	{
-		m_pipelines->Material()->SaveLastParams();
+		//m_pipelines->Material()->SaveLastParams();
 	}
 
-	// GPU リソースはデバイスより先に解放する（グローバル・シングルトンは自動では間に合わない）
+	// GPU リソースはデバイスより先に解放する
 	m_scene.reset();
 	m_trails.reset();
 	m_ghosts.reset();
@@ -142,7 +141,6 @@ ShaderRender::~ShaderRender()
 	m_runtime.reset();
 	if (m_gpuReady)
 	{
-		GPUParticleSystem::Instance().SetRuntime(nullptr);
 		GPUParticleSystem::Instance().Release();
 	}
 	ShaderHelper::ReleaseAll();
@@ -161,13 +159,13 @@ void ShaderRender::BuildFrameContext(const std::shared_ptr<KdCamera>& camera,
 	f.viewProj = f.view * f.proj;
 	f.invView = DirectX::XMMatrixInverse(nullptr, f.view);
 
-	// カメラ位置（カメラのワールド行列の平行移動成分）
+	// カメラ位置
 	DirectX::XMMATRIX camWorld = camera->GetCameraMatrix();
 	f.camPos.x = DirectX::XMVectorGetX(camWorld.r[3]);
 	f.camPos.y = DirectX::XMVectorGetY(camWorld.r[3]);
 	f.camPos.z = DirectX::XMVectorGetZ(camWorld.r[3]);
 
-	// 近い面・遠い面は射影行列から逆算する（透視投影 LH）
+	// 近い面・遠い面は射影行列から逆算する
 	DirectX::XMFLOAT4X4 p;
 	DirectX::XMStoreFloat4x4(&p, f.proj);
 	if (fabsf(p._33) > 1e-6f && fabsf(p._33 - 1.0f) > 1e-6f && p._34 > 0.5f)
@@ -251,11 +249,9 @@ void ShaderRender::Render(const std::shared_ptr<KdCamera>& _camera, const Math::
 		m_scene->EndFrame();
 		m_scene->Cull(ctx, viewProj, camPos);
 	}
-	// EndFrame（= Build）でこのフレームのインスタンス数が決まってから判定する
+	// EndFrameでこのフレームのインスタンス数が決まってから判定する
 	const bool sceneReady = (m_scene && m_scene->IsReady());
 
-	// 使うのは kActiveCascades 段だけ。残りの段には 0 段目と同じ行列・距離を入れて、
-	// シェーダがどの段を選んでも正しい値を読むようにする
 	static_assert(kActiveCascades >= 1 && kActiveCascades <= ShaderHelper::kCascadeCount,
 		"kActiveCascades must be 1..kCascadeCount");
 	const float kCascadeRadius[ShaderHelper::kCascadeCount] = { 80.0f, 50.0f, 80.0f };
@@ -278,7 +274,7 @@ void ShaderRender::Render(const std::shared_ptr<KdCamera>& _camera, const Math::
 		m_runtime->RenderShadowMapTo(ctx, ShaderHelper::cascadeDSV[c].Get(),
 			kCascadeSize[c], cascadeVP[c],
 			[&](const DirectX::XMMATRIX& lvp) {
-				//一点物の影（ノードカリング付き）
+				// 単体の静的オブジェクト
 				for (auto& m : m_staticList)
 				{
 					m_runtime->SetShadowMatrix(ctx, m.m_World * lvp);
@@ -309,6 +305,7 @@ void ShaderRender::Render(const std::shared_ptr<KdCamera>& _camera, const Math::
 		Math::Matrix::Identity, Math::Matrix::Identity, Math::Matrix::Identity,
 		screenW, screenH,
 		[&]() {
+			// 単体の静的オブジェクト
 			for (auto& m : m_staticList)
 			{
 				DirectX::BoundingSphere ws;
@@ -320,7 +317,6 @@ void ShaderRender::Render(const std::shared_ptr<KdCamera>& _camera, const Math::
 					m.m_World * viewProj, m.m_World * view, m.m_World);
 
 				// マテリアル指定があり、パラメータを持たないものだけ PS を差し替える
-				// （パラメータ付きは AddStatic でインスタンス描画の重ね塗りに回している）
 				bool overridden = false;
 				if (m.m_MaterialId != 0 && !m.m_HasParams)
 				{
@@ -344,6 +340,7 @@ void ShaderRender::Render(const std::shared_ptr<KdCamera>& _camera, const Math::
 			m_scene->DrawAll(ctx,
 				[&](const std::shared_ptr<KdModelData>& spModel, int materialNo)
 				{
+					// 材質とテクスチャの設定
 					auto& materials = spModel->GetMaterials();
 					if (materialNo < 0 || materialNo >= (int)materials.size()) return;
 					const KdMaterial& mat = materials[materialNo];
@@ -360,13 +357,14 @@ void ShaderRender::Render(const std::shared_ptr<KdCamera>& _camera, const Math::
 							mat.m_baseColorRate.z, mat.m_baseColorRate.w),
 						mat.m_metallicRate, mat.m_roughnessRate);
 				},
-				[&](int materialId)   // マテリアル切り替え
+				[&](int materialId)
 				{
 					if (materialId == 0)
 					{
 						m_pipelines->Material()->RestoreMaterialPS();
 						return;
 					}
+					// マテリアルを持っているのであればピクセルシェーダの切替を行う
 					const MaterialCacheEntry* me = GetMaterialEntry((uint32_t)materialId);
 					if (!me || !me->ps) { m_pipelines->Material()->EndOverlay(); return; }
 					m_pipelines->Material()->OverrideMaterialPS(me->ps, &me->params);
@@ -378,7 +376,7 @@ void ShaderRender::Render(const std::shared_ptr<KdCamera>& _camera, const Math::
 	auto gbC = m_pipelines->GetGBuffer("GBufferC");
 	auto gbE = m_pipelines->GetGBuffer("GBufferE");
 
-	//GPUパーティクルのシミュレーション（このフレームの行列・画面サイズ・GBufferC を使う）
+	//GPUパーティクルのシミュレーション
 	if (m_gpuReady && m_particleStepPending)
 	{
 		m_particleStepPending = false;
@@ -461,7 +459,7 @@ void ShaderRender::InitRuntime()
 	m_runtime->Init(KdDirect3D::Instance().WorkDev(),
 		KdDirect3D::Instance().WorkDevContext());
 
-	// LiveSync用のUDP（エディタからのホットリロード）。
+	// LiveSync用のUDP（エディタからのホットリロード）
 #ifdef SHADER_LIVELINK_DISABLED
 	m_liveLinkEnabled = false;
 #else
@@ -581,8 +579,7 @@ void ShaderRender::InitPipeline()
 
 	t = std::chrono::steady_clock::now();
 	m_pipelines->LoadDefaults(
-		"Asset/Data/Shader/Pipeline/Render.pipeline.json",
-		"Asset/Data/Shader/Pipeline/PostEffect.pipeline.json");
+		"Asset/Data/Shader/Pipeline/Render.pipeline.json");
 	mark("LoadDefaults", t);
 
 	t = std::chrono::steady_clock::now();
@@ -604,7 +601,6 @@ void ShaderRender::InitPipeline()
 	t = std::chrono::steady_clock::now();
 	auto& effect = GPUParticleSystem::Instance();
 	m_gpuReady = effect.Init();
-	effect.SetRuntime(m_runtime.get());
 	effect.LoadEffectFolder("Asset/Data/Shader/Particle");
 	mark("Particle", t);
 
@@ -1040,7 +1036,7 @@ void ShaderRender::DrawDebug()
 	ImGui::Text("Shadow nodes: %d / %d",
 		m_stats.shadowNodesDrawn, m_stats.shadowNodesTotal);
 
-	// 容量の使用状況。上限に当たっているものは赤く出す
+	// 容量の使用状況
 	if (ImGui::CollapsingHeader("Render capacity", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		auto row = [](const char* name, int used, int cap, int dropped)

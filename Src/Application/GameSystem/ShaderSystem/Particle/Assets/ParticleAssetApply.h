@@ -1,16 +1,4 @@
 ﻿#pragma once
-//------------------------------------------------------------------------------
-// ParticleAsset → EmitterData / EP_EmitterData
-//
-// 本番とエディタでエミッタ構造体の型名が違うため、テンプレートで1本化する。
-// 両者はメンバ名・並びとも同一なので、そのまま両方で使える。
-//
-// ★パラメータを増やしたときは、ここにも1行足すこと。
-//   （ParticleParamTable.h / ParticleAsset / EmitterData / HLSL と合わせて5か所）
-//
-// 位置・モード・トリガ・emitBase / emitCount・emitterVel は
-// ランタイムが管理するので、ここでは触らない。
-//------------------------------------------------------------------------------
 #include "ParticleAsset.h"
 
 template<typename E>
@@ -125,15 +113,6 @@ void ApplyAssetToEmitter(const ParticleAsset& a, E& e)
 	e._padD = e._padE = 0.0f;
 }
 
-//------------------------------------------------------------------------------
-// EmitterData / EP_EmitterData → ParticleAsset （保存用の逆変換）
-//
-// エディタは EP_EmitterData を直接編集するので、保存するときだけこれを通す。
-// ランタイム専用の項目（pos / active / mode / emitTrigger / emitBase /
-// emitCount / emitterVel / textureIndex / typeId）は書き戻さない。
-//
-// ★パラメータを増やしたときは、ApplyAssetToEmitter と対で1行足すこと。
-//------------------------------------------------------------------------------
 template<typename E>
 void ExtractAssetFromEmitter(const E& e, ParticleAsset& a)
 {

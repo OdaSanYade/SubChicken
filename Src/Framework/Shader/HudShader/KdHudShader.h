@@ -64,8 +64,8 @@ public:
 	static constexpr float kHealthPadX = 0.75f;
 	static constexpr float kHealthPadY = 0.45f;
 
-	static constexpr float kEnemyBarExpandX = 1.45f;
-	static constexpr float kEnemyBarExpandY = 2.60f;
+	static constexpr float kEnemyBarExpandX = 1.1f;
+	static constexpr float kEnemyBarExpandY = 1.6f;
 
 	// HLSL側の HudInstance と1バイトも違わないこと
 	struct Instance

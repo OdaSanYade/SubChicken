@@ -5,9 +5,9 @@ struct ParticleAsset
 	std::string name = "particle";
 
 	// テクスチャの決め方
-	std::string textureType = "builtin";   // "builtin" | "effect" | "image"
-	std::string effectName = "";           // type=effect のとき
-	std::string imagePath = "";            // type=image のとき
+	std::string textureType = "builtin"; 
+	std::string effectName = "";
+	std::string imagePath = "";
 
 	// ---- 基本 ----
 	float gravity = 1.5f;
@@ -33,7 +33,7 @@ struct ParticleAsset
 	float cSeek = 0.0f, cWave = 0.0f, cSpiral = 0.0f, cConverge = 0.0f;
 	float targetX = 0.0f, targetY = 0.0f, targetZ = 0.0f;
 
-	// ---- Phase1（カーブ・回転・カールノイズ・速度連動・初速ランダム） ----
+	// ---- カーブ・回転・カールノイズ・速度連動・初速ランダム ----
 	float sizeBegin = 1.0f, sizeMid = 1.0f, sizeEnd = 1.0f;
 	float speedRandom = 0.0f;
 	float fadeIn = 0.0f, fadeOut = 0.0f;
@@ -41,28 +41,28 @@ struct ParticleAsset
 	float curlStrength = 0.0f, curlScale = 0.5f, curlSpeed = 0.0f;
 	float velColorScale = 0.0f, velSizeScale = 0.0f;
 
-	// ---- Phase8c（サイズ／アルファのカーブ。0=従来のBegin/Mid/EndやfadeIn/Outのまま。エディタと同じ） ----
+	// ---- サイズ／アルファのカーブ ----
 	static const int kMaxCurvePoints = 8;
 	int   sizeCurveOn = 0;
 	float sizeCurve[kMaxCurvePoints] = { 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
 	int   sizeCurvePointCount = 3;
-	int   sizeCurveInterp = 0;      // 0=Linear 1=Smooth（Catmull-Rom）
+	int   sizeCurveInterp = 0;
 	int   alphaCurveOn = 0;
 	float alphaCurve[kMaxCurvePoints] = { 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
 	int   alphaCurvePointCount = 4;
 	int   alphaCurveInterp = 0;
 
-	// ---- Phase2a（ストレッチビルボード・発生形状） ----
+	// ---- ストレッチビルボード・発生形状 ----
 	int   stretchOn = 0;
 	float stretchScale = 0.5f;
-	int   shapeType = 0;          // 0=Point 1=Sphere 2=Box 3=Circle 4=Cone
+	int   shapeType = 0;
 	float shapeRadius = 0.0f;
 	float shapeHeight = 0.0f;
 	int   shapeSurfaceOnly = 0;
 
-	// ---- Form（粒そのものの形） ----
+	// ---- Form ----
 	int   formOn = 0;
-	float formSides = 0.0f;       // 0〜2=円, 3=三角, 4=四角 …（小数で中間形状）
+	float formSides = 0.0f;
 	float formRound = 0.0f;
 	float formSpike = 0.0f;
 	float formAspect = 1.0f;
@@ -73,23 +73,23 @@ struct ParticleAsset
 	float formShear = 0.0f;
 	float formRipple = 0.0f;
 	float formRippleFreq = 6.0f;
-	float formBulge = 1.0f;       // 1.0で直線の辺
-	float formArc = 1.0f;         // 1.0で全周
+	float formBulge = 1.0f;
+	float formArc = 1.0f;
 	float formDissolve = 0.0f;
 	float formCore = 0.0f;
 
-	// ---- Trail（残像 / リボン） ----
+	// ---- Trail ----
 	int   trailOn = 0;
 	float trailFade = 0.6f;
 	float trailWidth = 0.3f;
-	int   trailMode = 0;          // 0=Billboard(残像) 1=Ribbon(帯)
+	int   trailMode = 0;
 
-	// ---- Color（グラデーション＋粒ごとのばらつき） ----
-	int   colorMode = 0;          // 0=単色 1=グラデーション
+	// ---- Color ----
+	int   colorMode = 0;
 	float hueJitter = 0.0f, satJitter = 0.0f, valJitter = 0.0f;
 	float sizeRandom = 0.0f;
 	int   colorKeyCount = 2;
-	// rgb + 位置 を4キー分（16要素）
+	// rgb + 位置 を4キー分
 	float colorKeys[16] = {
 		1.0f, 0.5f, 0.1f, 0.0f,
 		1.0f, 0.5f, 0.1f, 1.0f,
@@ -97,12 +97,12 @@ struct ParticleAsset
 		0.0f, 0.0f, 0.0f, 1.0f };
 
 	// ---- Simulation ----
-	int   simSpace = 0;           // 0=World 1=Local
+	int   simSpace = 0;
 	float inheritVel = 0.0f;
 
-	// ---- Timing（CPU側で処理。GPUには送らない） ----
+	// ---- Timing ----
 	float delay = 0.0f;
-	float duration = 0.0f;        // 0 = 無限
+	float duration = 0.0f;    
 	int   looping = 1;
 	float prewarm = 0.0f;
 

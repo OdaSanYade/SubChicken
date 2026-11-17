@@ -402,6 +402,7 @@
     <ClInclude Include="Src\Application\Resource\Resources\ResourceListLoader.h" />
     <ClInclude Include="Src\Application\Resource\Resources\DataList\JsonUtil.h" />
     <ClInclude Include="Src\Application\GameObject\Camera\CameraTuning.h" />
+    <ClInclude Include="Src\Application\GameSystem\ShaderSystem\GhostRender\OverlayModelRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">

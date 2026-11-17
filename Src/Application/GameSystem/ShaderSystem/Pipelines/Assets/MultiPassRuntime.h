@@ -1,16 +1,20 @@
 ﻿#pragma once
 #include "LightData.h"
 
+using namespace DirectX;
+using namespace Microsoft::WRL;
+
 class MultiPassRuntime
 {
 public:
-	template<typename T> using ComPtr = Microsoft::WRL::ComPtr<T>;
+
+	// 描画用コールバック
 	using DrawMeshCallback = std::function<void()>;
 
-	// 入力の種類（g_input0,1,2... が何を指すか）
+	// 入力の種類
 	struct InputBinding
 	{
-		std::string kind;       // テクスチャの種類,前パステクスチャか指定パステクスチャかそれ以外か
+		std::string kind;       // テクスチャの種類（前パス,MRTの名前付きバッファなど）
 		std::string key;        // パス名やテクスチャ名など
 		std::shared_ptr<KdTexture> texture;
 		ComPtr<ID3D11ShaderResourceView> textureSRV;  // textureのとき、ロード済みSRV
@@ -22,7 +26,7 @@ public:
 		DirectX::XMFLOAT4   cascadeDist;        // xyz=各段の距離上限, w=未使用
 	};
 
-	// パラメータ
+	// パラメータ全パラメータfloat4として登録
 	struct ParamRuntime
 	{
 		std::string name;
@@ -31,7 +35,7 @@ public:
 		float minVal = 0.0f, maxVal = 1.0f;
 	};
 
-	// 1パス
+	// 1パス分の情報
 	struct PassRuntime
 	{
 		std::string name;
@@ -40,26 +44,25 @@ public:
 		std::string outputName;
 		bool isMaterial = false;
 
+		// シェーダ群
 		ComPtr<ID3D11PixelShader>  ps;
-		ComPtr<ID3D11VertexShader> vs;        // isMaterial時
+		ComPtr<ID3D11VertexShader> vs;
 		ComPtr<ID3D11InputLayout>  inputLayout;
+		// スキンメッシュ
+		ComPtr<ID3D11VertexShader> vsSkinned;
+		ComPtr<ID3D11InputLayout>  inputLayoutSkinned;
 
 		std::vector<ParamRuntime> params;
-		std::vector<InputBinding> inputs;     // g_input0,1,2...
+		std::vector<InputBinding> inputs;
 
 		int targetCount = 1;
-		std::vector<std::string> targetNames; // MRT
+		std::vector<std::string> targetNames; 
 		bool usesPrevPass = false;
 		std::vector<std::string> namedBufferRefs;
 
 		std::vector<DXGI_FORMAT> targetFormats;
-
-		ComPtr<ID3D11VertexShader> vsSkinned;
-		ComPtr<ID3D11InputLayout>  inputLayoutSkinned;
 		bool hasSkinnedVS = false;
 	};
-
-	
 
 	MultiPassRuntime() = default;
 	~MultiPassRuntime() { Release(); };
@@ -69,12 +72,16 @@ public:
 	// pipeline.json を読み込む
 	bool LoadPipeline(const std::string& jsonText);
 
+	//　特定パラメータの変更
 	void SetParam(const std::string& paramName, float x, float y = 0, float z = 0, float w = 0);
 
+	// ライト情報の格納
 	void SetLights(const std::vector<PointLightData>& lights);
 
 	//最終出力SRV
 	ID3D11ShaderResourceView* GetFinalResultSRV();
+
+	// そのパスのパラメータ群
 	std::vector<std::array<float, 4>> GetPassParamValues(const PassRuntime& pass)
 	{
 		std::vector<std::array<float, 4>> vals;
@@ -82,21 +89,8 @@ public:
 			vals.push_back(p.value);
 		return vals;
 	}
-	static bool IsPostEffectJson(const std::string& jsonText)
-	{
-		try {
-			auto j = nlohmann::json::parse(jsonText);
-			if (j.contains("passes") && !j["passes"].empty())
-				return j["passes"][0].value("usesPrevPass", false);
-		}
-		catch (...) {}
-		return false;
-	}
 
-	// ゲーム画面をキャプチャして、その SRV を返す（ポストエフェクト入力用）
-	ID3D11ShaderResourceView* CaptureScreen();
-
-	// Execute に外部入力（ゲーム画面）を渡せるよう拡張
+	// Execute に外部入力（ゲーム画面）を渡せる
 	void Execute(float time, float bass, float mid, float treble,
 		const DirectX::XMMATRIX& wvp, const DirectX::XMMATRIX& worldView, 
 		const DirectX::XMMATRIX& world = DirectX::XMMatrixIdentity(),
@@ -122,7 +116,7 @@ public:
 	void SetPresetsPath(const std::string& path) { m_presetsPath = path; }
 	void DeletePreset(const std::string& presetName);
 
-	void SaveLastParams();   // 現在値を "__last__" として保存
+	void SaveLastParams();   // 現在のパラメータ値を "__last__" として保存
 	void LoadLastParams();   // "__last__" を復元
 
 	// 既定値：LoadPipeline 成功時の値（起動時は "__last__" を当てた後の値）を覚えておき、
@@ -193,23 +187,25 @@ private:
 	int m_poolScreenW = 0, m_poolScreenH = 0;
 	static constexpr uint32_t kPoolEvictFrames = 120;
 
+	//　初期化用
 	bool CreateFullscreenVS();
 	bool CreateConstantBuffers();
 	bool CreateSamplerState();
 	bool CreateRasterizerState();
 
+	//定数バッファ更新
 	void UpdateWVPCB(const DirectX::XMMATRIX& wvp,
 		const DirectX::XMMATRIX& worldView,const DirectX::XMMATRIX& world);
-	void UpdateEffectCB(float time, float bass, float mid, float treble,
+	void UpdateParameterCB(float time, float bass, float mid, float treble,
 		const std::vector<std::array<float, 4>>& params);
 
+	// 文字列コンパイル
 	bool CompilePS(const std::string& code, ComPtr<ID3D11PixelShader>& outPS);
 	bool CompileVS(const std::string& code, ComPtr<ID3D11VertexShader>& outVS,
 		std::vector<char>& outBytecode);
 	void BuildMaterialLayout(PassRuntime& pass, const std::vector<char>& vsBytecode);
 	void BuildMaterialLayoutSkinned(PassRuntime& pass,
 		const std::vector<char>& vsBytecode);
-	ComPtr<ID3D11Buffer> m_cbBones;
 
 	ID3D11Device* m_device = nullptr;
 	ID3D11DeviceContext* m_context = nullptr;
@@ -218,14 +214,21 @@ private:
 	std::vector<PooledDepth> m_depthPool;
 
 	ComPtr<ID3D11VertexShader> m_fullscreenVS;
-	ComPtr<ID3D11Buffer> m_cbTime;    // b0
-	ComPtr<ID3D11Buffer> m_cbWVP;	  // b1
-	ComPtr<ID3D11Buffer> m_cbParams;  // b2
-	size_t m_paramCapacity = 0;
 	ComPtr<ID3D11SamplerState> m_sampler;
 	ComPtr<ID3D11RasterizerState> m_rsCullNone;
 
+	size_t m_paramCapacity = 0;
 	std::vector<PassRuntime> m_passes;
+
+	//定数バッファ群
+	ComPtr<ID3D11Buffer> m_cbTime;    // b0
+	ComPtr<ID3D11Buffer> m_cbWVP;	  // b1
+	ComPtr<ID3D11Buffer> m_cbParams;  // b2
+	ComPtr<ID3D11Buffer> m_cbLights;  // b3
+	ComPtr<ID3D11Buffer> m_cbMaterial;// b4
+	ComPtr<ID3D11Buffer> m_cbShadowLighting; // b5
+	ComPtr<ID3D11Buffer> m_cbCamera; // b6
+	ComPtr<ID3D11Buffer> m_cbBones;
 
 	// SetParam 用：名前 → 該当パラメータ（m_passes を作り直したら作り直す）
 	std::unordered_map<std::string, std::vector<ParamRuntime*>> m_paramIndex;
@@ -240,7 +243,8 @@ private:
 	static constexpr int kNamedBufferBaseSlot = 9;
 
 	std::vector<std::vector<int>> m_passResults;   // 各パスの結果RTインデックス
-	void RenderPass(PassRuntime& pass, const std::vector<int>& rtIndices,
+	void RenderPass(
+		PassRuntime& pass, const std::vector<int>& rtIndices,
 		ID3D11ShaderResourceView* prevSRV,
 		const std::vector<ID3D11ShaderResourceView*>& namedSRVs,
 		bool meshMode, DrawMeshCallback drawMesh);
@@ -251,13 +255,6 @@ private:
 	ComPtr<ID3D11BlendState> m_alphaBlend;
 	bool CreateBlendState();
 
-	// 画面キャプチャ用RT
-	ComPtr<ID3D11Texture2D> m_captureTex;
-	ComPtr<ID3D11ShaderResourceView> m_captureSRV;
-	UINT m_captureW = 0, m_captureH = 0;
-	DXGI_FORMAT m_captureFormat = DXGI_FORMAT_UNKNOWN;
-	void EnsureCaptureRT(const D3D11_TEXTURE2D_DESC& srcDesc);
-
 	float m_lastTime,m_lastBass,m_lastMid,m_lastTreble;
 
 	struct Preset {
@@ -267,14 +264,7 @@ private:
 	std::vector<Preset> m_presets;
 	std::string m_presetsPath;
 	char m_presetNameBuf[64] = "";
-	ComPtr<ID3D11Buffer> m_cbLights;
-
-	ComPtr<ID3D11Buffer> m_cbMaterial;
 	void CreateMaterialCB();
-
-	ComPtr<ID3D11Buffer> m_cbShadowLighting;
-
-	ComPtr<ID3D11Buffer> m_cbCamera;
 
 	PassRuntime* m_currentMeshPass = nullptr;
 	std::unordered_map<std::string, ID3D11ShaderResourceView*> m_namedBufferSRVs;

@@ -17,34 +17,6 @@ GPUParticleSystem::GPUParticleSystem()
 GPUParticleSystem::~GPUParticleSystem()
 {}
 
-// 正規直交基底 (X,Y,Z) を、その基底のローカル軸まわりに回す
-static void RotateEmitAxes(const DirectX::XMFLOAT3& inX,
-	const DirectX::XMFLOAT3& inY,
-	const DirectX::XMFLOAT3& inZ,
-	const DirectX::XMFLOAT3& eulerDeg,
-	DirectX::XMFLOAT3& outX,
-	DirectX::XMFLOAT3& outY,
-	DirectX::XMFLOAT3& outZ)
-{
-	using namespace DirectX;
-
-	const float k = XM_PI / 180.0f;
-	XMMATRIX rot = XMMatrixRotationRollPitchYaw(
-		eulerDeg.x * k, eulerDeg.y * k, eulerDeg.z * k);
-
-	XMMATRIX basis = XMMatrixIdentity();
-	basis.r[0] = XMVectorSet(inX.x, inX.y, inX.z, 0.0f);
-	basis.r[1] = XMVectorSet(inY.x, inY.y, inY.z, 0.0f);
-	basis.r[2] = XMVectorSet(inZ.x, inZ.y, inZ.z, 0.0f);
-
-	// ローカルで回してからワールドへ送る
-	XMMATRIX m = rot * basis;
-
-	XMStoreFloat3(&outX, XMVector3Normalize(m.r[0]));
-	XMStoreFloat3(&outY, XMVector3Normalize(m.r[1]));
-	XMStoreFloat3(&outZ, XMVector3Normalize(m.r[2]));
-}
-
 bool GPUParticleSystem::Init()
 {
 	// エミッタ配列を64個ぶん、全部無効で初期化
@@ -69,7 +41,7 @@ bool GPUParticleSystem::Init()
 		{ "TrailShader",     &GPUParticleSystem::CreateTrailShader },
 		{ "BlendState",      &GPUParticleSystem::CreateBlendState },
 		{ "RenderStates",    &GPUParticleSystem::CreateRenderStates },
-		{ "ParticleTexture", &GPUParticleSystem::CreateParticleTexture },
+		{ "ParticleTexture", &GPUParticleSystem::CreateSampler },
 		{ "ListBuffers",     &GPUParticleSystem::CreateListBuffers },
 	};
 	for (const auto& step : kSteps)
@@ -81,23 +53,15 @@ bool GPUParticleSystem::Init()
 		}
 	}
 
-	CreateBuiltinTexture(0, m_texCircle);
-	CreateBuiltinTexture(1, m_texStar);
-	CreateBuiltinTexture(2, m_texRing);
-
-	m_textureSlots[0] = m_texCircle.Get();
-	m_textureSlots[1] = m_texStar.Get();
-	m_textureSlots[2] = m_texRing.Get();
-
 	return true;
 }
 
-// 巨大パーティクルバッファ（65536粒）
+// 巨大パーティクルバッファ
 bool GPUParticleSystem::CreateParticleBuffer()
 {
 	ID3D11Device* device = KdDirect3D::Instance().WorkDev();
 
-	// 全部 life=0（死亡）で初期化
+	// 全部 life=0で初期化
 	std::vector<GPUParticle> initData(kTotalParticles);
 	for (auto& p : initData)
 	{
@@ -391,53 +355,9 @@ bool GPUParticleSystem::CreateRenderStates()
 	return true;
 }
 
-bool GPUParticleSystem::CreateParticleTexture()
+bool GPUParticleSystem::CreateSampler()
 {
 	ID3D11Device* device = KdDirect3D::Instance().WorkDev();
-
-	const int TEX = 64;
-	std::vector<uint32_t> pixels(TEX * TEX);
-
-	for (int y = 0; y < TEX; ++y)
-	{
-		for (int x = 0; x < TEX; ++x)
-		{
-			float fx = (x + 0.5f) / TEX - 0.5f;
-			float fy = (y + 0.5f) / TEX - 0.5f;
-			float d = sqrtf(fx * fx + fy * fy) * 2.0f;
-
-			float a = 1.0f - d;
-			if (a < 0.0f) a = 0.0f;
-			a = a * a;
-
-			uint8_t alpha = (uint8_t)(a * 255.0f);
-			pixels[y * TEX + x] =
-				(alpha << 24) | (255 << 16) | (255 << 8) | 255;
-		}
-	}
-
-	D3D11_TEXTURE2D_DESC desc = {};
-	desc.Width = TEX;
-	desc.Height = TEX;
-	desc.MipLevels = 1;
-	desc.ArraySize = 1;
-	// 画素データは 1 画素 4 バイト（uint32_t）なので、形式も 4 バイトのものにする。
-	// 以前の R16G16B16A16_FLOAT（8 バイト）だと、作成時にデータの範囲外を読んでいた
-	desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	desc.SampleDesc.Count = 1;
-	desc.Usage = D3D11_USAGE_DEFAULT;
-	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-
-	D3D11_SUBRESOURCE_DATA srd = {};
-	srd.pSysMem = pixels.data();
-	srd.SysMemPitch = TEX * 4;
-
-	Microsoft::WRL::ComPtr<ID3D11Texture2D> tex;
-	if (FAILED(device->CreateTexture2D(&desc, &srd, &tex)))
-		return false;
-
-	if (FAILED(device->CreateShaderResourceView(tex.Get(), nullptr, &m_particleSRVTex)))
-		return false;
 
 	D3D11_SAMPLER_DESC sd = {};
 	sd.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
@@ -552,8 +472,7 @@ EmitterData* GPUParticleSystem::GetEmitter(int id)
 	return &m_emitters[id];
 }
 
-// タイミング制御（Delay / Duration / Looping / ワンショット回収）
-//    active==1 放出中 / active==2 生きているが放出しない / active==0 空き
+// タイミング制御
 void GPUParticleSystem::UpdateEmitterTiming(float dt)
 {
 	for (int i = 0; i < kMaxEmitters; ++i)
@@ -599,7 +518,7 @@ void GPUParticleSystem::UpdateEmitterTiming(float dt)
 	}
 }
 
-// エミッタの移動速度（Inherit Velocity 用）。★転送より前に求めること
+// エミッタの移動速度
 void GPUParticleSystem::UpdateEmitterVelocity(float dt)
 {
 	if (m_emitterPrevPos.size() != m_emitters.size())
@@ -625,8 +544,6 @@ void GPUParticleSystem::UpdateEmitterVelocity(float dt)
 }
 
 // 動いているエミッタの一覧を作る
-//  ・放出中／停止中（active != 0）のもの
-//  ・空きに戻ってから、残った粒が寿命を迎えるまでのもの
 void GPUParticleSystem::BuildActiveLists(float dt)
 {
 	m_activeList.clear();
@@ -705,8 +622,8 @@ void GPUParticleSystem::Update(float dt, float time, const DirectX::XMMATRIX& vi
 	// 動かすエミッタの一覧
 	BuildActiveLists(dt);
 
-	// エミッタ配列を GPU に転送（DYNAMIC + Map）
-	//    一覧の最大番号までだけ送る（後ろの空きは送らない）
+	// エミッタ配列を GPU に転送
+	// 一覧の最大番号までだけ送る
 	if (!m_activeList.empty())
 	{
 		const size_t count = (size_t)m_activeList.back() + 1;
@@ -747,15 +664,15 @@ void GPUParticleSystem::Update(float dt, float time, const DirectX::XMMATRIX& vi
 	cb.trailWrite = trailWrite;
 
 	m_lastCB = cb;
-	m_lastCB.collisionOn = 0;   // Prewarm では衝突させない
+	m_lastCB.collisionOn = 0;
 	m_lastTime = time;
 	m_lastNearZ = nearZ;
 	m_lastFarZ = farZ;
 
-	// CS 実行（動いているエミッタだけ）
+	// CS 実行
 	DispatchSimulation(m_activeListSRV.Get(), (int)m_activeList.size(), cb, sceneWorldPos);
 
-	// ワンショットの発火フラグを消費（1フレームで消す）
+	// ワンショットの発火フラグを消費
 	for (auto& e : m_emitters)
 		e.emitTrigger = 0;
 }
@@ -769,23 +686,6 @@ void GPUParticleSystem::Render(ID3D11RenderTargetView* rtv,
 	const DirectX::XMFLOAT3& camPos)
 {
 	ID3D11DeviceContext* context = KdDirect3D::Instance().WorkDevContext();
-
-	// エフェクトスロット更新
-	if (m_runtime)
-	{
-		for (int s = 0; s < kMaxTextures; ++s)
-		{
-			EffectSlot& es = m_effectSlots[s];
-			if (es.active && !es.effectName.empty() &&
-				m_runtime->HasEffect(es.effectName))
-			{
-				m_runtime->ApplyEffect(es.effectName, context,
-					nullptr, 0, es.rtv.Get(),
-					m_effectTexSize, m_effectTexSize);
-				m_textureSlots[s] = es.srv.Get();
-			}
-		}
-	}
 
 	// ---- 退避 ----
 	ID3D11RenderTargetView* oldRTV = nullptr;
@@ -803,7 +703,7 @@ void GPUParticleSystem::Render(ID3D11RenderTargetView* rtv,
 	UINT oldStencilRef = 0;
 	context->OMGetDepthStencilState(&oldDS, &oldStencilRef);
 
-	// ---- 適用（rtv に直接描く）----
+	// ---- 適用 ----
 	context->RSSetState(m_rasterState.Get());
 	context->OMSetDepthStencilState(m_depthState.Get(), 0);
 	context->OMSetRenderTargets(1, &rtv, nullptr); 
@@ -836,11 +736,7 @@ void GPUParticleSystem::Render(ID3D11RenderTargetView* rtv,
 	context->VSSetConstantBuffers(0, 1, m_cbDraw.GetAddressOf());
 	context->PSSetConstantBuffers(0, 1, m_cbDraw.GetAddressOf());
 
-	ID3D11ShaderResourceView* slots[kMaxTextures];
-	for (int s = 0; s < kMaxTextures; ++s)
-		slots[s] = m_textureSlots[s] ? m_textureSlots[s] : m_particleSRVTex.Get();
-	context->PSSetShaderResources(0, kMaxTextures, slots);
-	context->PSSetShaderResources(8, 1, &gbufferC);
+	context->PSSetShaderResources(0, 1, &gbufferC);
 	context->PSSetSamplers(0, 1, m_sampler.GetAddressOf());
 
 	context->IASetVertexBuffers(0, 0, nullptr, nullptr, nullptr);
@@ -878,9 +774,7 @@ void GPUParticleSystem::Render(ID3D11RenderTargetView* rtv,
 	ID3D11ShaderResourceView* nullSRV = nullptr;
 	ID3D11ShaderResourceView* nullVSSRVs[4] = { nullptr, nullptr, nullptr, nullptr };
 	context->VSSetShaderResources(0, 4, nullVSSRVs);
-	ID3D11ShaderResourceView* nullSRVs[kMaxTextures] = {};
-	context->PSSetShaderResources(0, kMaxTextures, nullSRVs);
-	context->PSSetShaderResources(8, 1, &nullSRV);
+	context->PSSetShaderResources(0, 1, &nullSRV);
 
 	// ---- 復元 ----
 	context->OMSetRenderTargets(1, &oldRTV, oldDSV);
@@ -915,7 +809,6 @@ void GPUParticleSystem::Release()
 	m_additiveBlend.Reset();
 	m_rasterState.Reset();
 	m_depthState.Reset();
-	m_particleSRVTex.Reset();
 	m_sampler.Reset();
 	m_alphaBlend.Reset();
 	m_activeListBuffer.Reset();
@@ -1013,41 +906,6 @@ void GPUParticleSystem::PrewarmEmitters(const std::vector<int>& ids, float secon
 	m_lastPrewarmSteps = steps;
 }
 
-void GPUParticleSystem::SetTextureSlot(int slot, ID3D11ShaderResourceView* srv)
-{
-	if (slot < 0 || slot >= kMaxTextures) return;
-	m_textureSlots[slot] = srv;
-}
-
-bool GPUParticleSystem::SetEffectSlot(int slot, const std::string& effectName)
-{
-	if (slot < 0 || slot >= kMaxTextures) return false;
-
-	EffectSlot& es = m_effectSlots[slot];
-
-	// 専用RTがまだ無ければ作る
-	if (!es.rtv)
-	{
-		ID3D11Device* device = KdDirect3D::Instance().WorkDev();
-		D3D11_TEXTURE2D_DESC desc = {};
-		desc.Width = m_effectTexSize;
-		desc.Height = m_effectTexSize;
-		desc.MipLevels = 1; desc.ArraySize = 1;
-		desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-		desc.SampleDesc.Count = 1;
-		desc.Usage = D3D11_USAGE_DEFAULT;
-		desc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
-
-		if (FAILED(device->CreateTexture2D(&desc, nullptr, &es.tex))) return false;
-		if (FAILED(device->CreateRenderTargetView(es.tex.Get(), nullptr, &es.rtv))) return false;
-		if (FAILED(device->CreateShaderResourceView(es.tex.Get(), nullptr, &es.srv))) return false;
-	}
-
-	es.effectName = effectName;
-	es.active = true;
-	return true;
-}
-
 void GPUParticleSystem::ApplyAssetFromString(const std::string& jsonStr)
 {
 	ParticleEffect fx;
@@ -1056,7 +914,7 @@ void GPUParticleSystem::ApplyAssetFromString(const std::string& jsonStr)
 		OutputDebugStringA("[particle] parse FAILED\n");
 		return;
 	}
-	// フォルダから読んだエフェクトは "サブフォルダ/名前" で登録されているので、
+
 	// 名前だけで届いたときは末尾が "/名前" のものを探して、そのキーで差し替える
 	if (m_effectTypes.find(fx.name) == m_effectTypes.end())
 	{
@@ -1078,7 +936,7 @@ void GPUParticleSystem::ApplyAssetFromString(const std::string& jsonStr)
 
 	m_effectTypes[fx.name] = fx;
 
-	// 旧API（LoadType / SpawnEmitter）との互換：先頭レイヤーを種類として登録
+	//レイヤーを持っていない場合
 	if (!fx.layers.empty())
 	{
 		ParticleAsset a = fx.layers[0].asset;
@@ -1121,7 +979,7 @@ void GPUParticleSystem::ApplyAssetFromString(const std::string& jsonStr)
 		inst.radius = old.radius;
 	}
 
-	// 旧API で出しているエミッタも更新（位置・モードは保持）
+	// 出しているエミッタも更新
 	if (!fx.layers.empty())
 	{
 		for (int i = 0; i < kMaxEmitters; ++i)
@@ -1255,6 +1113,7 @@ std::vector<std::string> GPUParticleSystem::GetEffectNames() const
 
 int GPUParticleSystem::SpawnEffect(const std::string& name, const DirectX::XMFLOAT3& pos,const DirectX::XMFLOAT3& angle)
 {
+	// エフェクトの情報を獲得
 	auto it = m_effectTypes.find(name);
 	if (it == m_effectTypes.end()) return -1;
 	const ParticleEffect& fx = it->second;
@@ -1263,15 +1122,18 @@ int GPUParticleSystem::SpawnEffect(const std::string& name, const DirectX::XMFLO
 	int index = -1;
 	for (size_t i = 0; i < m_effectInstances.size(); ++i)
 		if (!m_effectInstances[i].active) { index = (int)i; break; }
+
+	// 空きスロットが見つからない場合
+	// 最後尾にエフェクトインスタンスを追加する
 	if (index < 0)
 	{
 		if ((int)m_effectInstances.size() >= kMaxEffectInstances) return -1;
 		m_effectInstances.push_back(EffectInstance{});
 		index = (int)m_effectInstances.size() - 1;
 	}
-
 	EffectInstance& inst = m_effectInstances[index];
-	// 再利用のたびに世代を進める
+
+	// 再利用のたびに世代を進めそのエフェクトの枠の情報を埋める
 	const uint16_t nextGen = (uint16_t)((inst.generation % 0x7FFF) + 1);
 	inst = EffectInstance{};
 	inst.generation = nextGen;
@@ -1280,14 +1142,11 @@ int GPUParticleSystem::SpawnEffect(const std::string& name, const DirectX::XMFLO
 	inst.origin = pos;
 	inst.maxLife = fx.TotalDuration();
 	inst.angle = angle;
-	RotateEmitAxes({ 1,0,0 }, { 0,1,0 }, { 0,0,1 }, angle,
-		inst.axisX, inst.axisY, inst.axisZ);
-
 	inst.layers.resize(fx.layers.size());
-
 	float prewarmMax = 0.0f;
 	std::vector<int> prewarmIds;
 
+	// レイヤーから受け取ったエフェクトの情報をいれる
 	for (size_t li = 0; li < fx.layers.size(); ++li)
 	{
 		const ParticleLayer& L = fx.layers[li];
@@ -1295,7 +1154,8 @@ int GPUParticleSystem::SpawnEffect(const std::string& name, const DirectX::XMFLO
 
 		EmitterData e = MakeEmitterFromAsset(L.asset);
 		e.pos = { pos.x + L.offset.x, pos.y + L.offset.y, pos.z + L.offset.z };
-		// バーストを持つレイヤーは mode 2（窓で出す）、持たなければ継続放出
+
+		// バーストを持つレイヤー
 		e.mode = L.bursts.empty() ? 0 : 2;
 
 		int id = AddEmitter(e);
@@ -1305,6 +1165,7 @@ int GPUParticleSystem::SpawnEffect(const std::string& name, const DirectX::XMFLO
 		inst.layers[li].nextBurst = 0;
 		m_emitterTypeNames[id] = name;
 
+		// タイミング情報
 		EmitterRuntime& rt = m_emitterRuntimes[id];
 		rt.isOneShot = false;
 		rt.elapsed = 0.0f;
@@ -1397,103 +1258,7 @@ void GPUParticleSystem::StopEffect(int handle)
 	inst.maxLife = 3.0f;
 }
 
-void GPUParticleSystem::SetEffectTransform(int handle,
-	const DirectX::XMFLOAT3& pos, const DirectX::XMFLOAT3& forward,
-	const DirectX::XMFLOAT3& up, float scale)
-{
-	EffectInstance* pInst = ResolveHandle(handle);
-	if (!pInst) return;
-	EffectInstance& inst = *pInst;
-
-	inst.origin = pos;
-	inst.scale = (scale > 0.0001f) ? scale : 1.0f;
-
-	auto norm = [](float x, float y, float z, DirectX::XMFLOAT3& o)
-		{
-			float len = sqrtf(x * x + y * y + z * z);
-			if (len < 1e-5f) { o = { 0, 1, 0 }; return; }
-			o = { x / len, y / len, z / len };
-		};
-	auto cross = [](const DirectX::XMFLOAT3& a, const DirectX::XMFLOAT3& b)
-		{
-			return DirectX::XMFLOAT3{ a.y * b.z - a.z * b.y,
-									  a.z * b.x - a.x * b.z,
-									  a.x * b.y - a.y * b.x };
-		};
-
-	// Y = forward（cUpward の向き）
-	DirectX::XMFLOAT3 axisY;
-	norm(forward.x, forward.y, forward.z, axisY);
-
-	DirectX::XMFLOAT3 upn;
-	norm(up.x, up.y, up.z, upn);
-
-	// forward と up が平行なら別の軸を選ぶ
-	float d = axisY.x * upn.x + axisY.y * upn.y + axisY.z * upn.z;
-	if (fabsf(d) > 0.999f)
-		upn = (fabsf(axisY.x) < 0.9f) ? DirectX::XMFLOAT3{ 1, 0, 0 }
-	: DirectX::XMFLOAT3{ 0, 0, 1 };
-
-	DirectX::XMFLOAT3 axisX, axisZ;
-	DirectX::XMFLOAT3 t = cross(upn, axisY);
-	norm(t.x, t.y, t.z, axisX);
-	axisZ = cross(axisX, axisY);
-
-	inst.axisX = axisX;
-	inst.axisY = axisY;
-	inst.axisZ = axisZ;
-
-	RotateEmitAxes(inst.axisX, inst.axisY, inst.axisZ, inst.angle,
-		inst.axisX, inst.axisY, inst.axisZ);
-}
-void GPUParticleSystem::PlayEffectAt(const std::string& name,
-	const DirectX::XMFLOAT3& pos, const DirectX::XMFLOAT3& forward,
-	const DirectX::XMFLOAT3& up, float scale)
-{
-	int h = SpawnEffect(name, pos);
-	if (h < 0) return;
-
-	SetEffectTransform(h, pos, forward, up, scale);
-	if (EffectInstance* inst = ResolveHandle(h)) inst->oneShot = true;
-}
-void GPUParticleSystem::PlayBeam(const std::string& name,
-	const DirectX::XMFLOAT3& from, const DirectX::XMFLOAT3& to, float travelTime)
-{
-	DirectX::XMFLOAT3 dir = { to.x - from.x, to.y - from.y, to.z - from.z };
-
-	int h = SpawnEffect(name, from);
-	if (h < 0) return;
-
-	SetEffectTransform(h, from, dir, { 0, 1, 0 });
-
-	// path を「原点 → 終点」に差し替える。エミッタが動いてトレイルが伸びる
-	if (EffectInstance* inst = ResolveHandle(h))
-	{
-		inst->overridePath = true;
-		inst->pathEnd = { 0.0f, sqrtf(dir.x * dir.x + dir.y * dir.y + dir.z * dir.z), 0.0f };
-		inst->pathTime = (travelTime > 0.01f) ? travelTime : 0.01f;
-		inst->oneShot = true;
-	}
-}
-int GPUParticleSystem::SpawnRing(const std::string& name,
-	const DirectX::XMFLOAT3& center, float radius, const DirectX::XMFLOAT3& up)
-{
-	int h = SpawnEffect(name, center);
-	if (h < 0) return -1;
-	SetEffectTransform(h, center, up, { 1, 0, 0 });   // ★円の法線 = up
-	SetEffectRadius(h, radius);
-	return h;
-}
-
-void GPUParticleSystem::SetEffectRadius(int handle, float radius)
-{
-	EffectInstance* inst = ResolveHandle(handle);
-	if (!inst) return;
-
-	inst->overrideRadius = true;
-	inst->radius = radius;
-}
-// 毎フレーム：レイヤーの位置（オフセット＋パス）とバーストを解決する
+// 毎フレームの更新
 void GPUParticleSystem::UpdateEffects(float dt)
 {
 	for (auto& inst : m_effectInstances)
@@ -1514,7 +1279,7 @@ void GPUParticleSystem::UpdateEffects(float dt)
 			const ParticleLayer& L = fx.layers[li];
 			EmitterData& e = m_emitters[id];
 
-			// 位置：オフセット＋パス＋回転＋スケール
+			// 位置
 			e.emitAxisX = inst.axisX;
 			e.emitAxisY = inst.axisY;
 			e.emitAxisZ = inst.axisZ;
@@ -1574,60 +1339,4 @@ void GPUParticleSystem::UpdateEffects(float dt)
 			inst.active = false;
 		}
 	}
-}
-
-// pattern: 0=丸, 1=星, 2=リング
-bool GPUParticleSystem::CreateBuiltinTexture(int pattern,
-	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>& outSRV)
-{
-	ID3D11Device* device = KdDirect3D::Instance().WorkDev();
-	const int TEX = 64;
-	std::vector<uint32_t> pixels(TEX * TEX);
-
-	for (int y = 0; y < TEX; ++y)
-		for (int x = 0; x < TEX; ++x)
-		{
-			float fx = (x + 0.5f) / TEX - 0.5f;
-			float fy = (y + 0.5f) / TEX - 0.5f;
-			float d = sqrtf(fx * fx + fy * fy) * 2.0f;
-			float a = 0.0f;
-
-			if (pattern == 0)        // 丸
-			{
-				a = 1.0f - d; if (a < 0) a = 0; a = a * a;
-			}
-			else if (pattern == 1)   // 星（十字）
-			{
-				float core = 1.0f - d; if (core < 0) core = 0; core = core * core;
-				float rayH = 1.0f - fabsf(fy) * 12.0f; if (rayH < 0) rayH = 0;
-				float rayV = 1.0f - fabsf(fx) * 12.0f; if (rayV < 0) rayV = 0;
-				float fo = 1.0f - d; if (fo < 0) fo = 0;
-				a = core + (rayH + rayV) * fo * fo; if (a > 1) a = 1;
-			}
-			else                     // リング
-			{
-				float ring = 1.0f - fabsf(d - 0.5f) * 4.0f; if (ring < 0) ring = 0;
-				a = ring * ring;
-			}
-
-			uint8_t alpha = (uint8_t)(a * 255.0f);
-			pixels[y * TEX + x] = (alpha << 24) | (255 << 16) | (255 << 8) | 255;
-		}
-
-	D3D11_TEXTURE2D_DESC desc = {};
-	desc.Width = TEX; desc.Height = TEX;
-	desc.MipLevels = 1; desc.ArraySize = 1;
-	desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	desc.SampleDesc.Count = 1;
-	desc.Usage = D3D11_USAGE_DEFAULT;
-	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-
-	D3D11_SUBRESOURCE_DATA srd = {};
-	srd.pSysMem = pixels.data();
-	srd.SysMemPitch = TEX * 4;
-
-	Microsoft::WRL::ComPtr<ID3D11Texture2D> tex;
-	if (FAILED(device->CreateTexture2D(&desc, &srd, &tex))) return false;
-	if (FAILED(device->CreateShaderResourceView(tex.Get(), nullptr, &outSRV))) return false;
-	return true;
 }

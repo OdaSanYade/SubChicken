@@ -938,34 +938,11 @@ inline void CombatHud::PushEnemyBar(const Math::Vector2& _p, const EnemyInfo& _e
 		? std::max(_e.frozenRemain, 0.15f) : 0.0f;
 
 	inst.params = { _e.healthRatio, _e.poiseRatio, frozen, _e.breakFlash };
-	const float now = std::floor(std::clamp(_e.healthValue, 0.0f, 999.0f));
-	const float mx = std::floor(std::clamp(_e.healthMax, 0.0f, 999.0f));
-	const float packedHp = (mx > 0.0f) ? (now * 1000.0f + mx) : 0.0f;
 
 	inst.extra = { _locked ? 1.0f : 0.0f,
 				   _e.staggered ? std::max(_e.staggerRemain, 0.15f) : 0.0f,
-				   _e.deathFlash, packedHp };
+				   _e.deathFlash, 0.0f };
 
-	m_instances.push_back(inst);
-}
-
-inline void CombatHud::PushWarn(const Math::Vector2& _p, float _radius,
-	float _progress, float _flash, bool _unblockable, float _power)
-{
-	KdHudShader::Instance inst;
-	inst.kind = KdHudShader::Warn;
-	inst.center = _p;
-
-	// 衝撃波が外へ抜けるぶんクアッドを広く取る
-	const float quad = _radius * m_cfg.warn.quadScale;
-	inst.halfSize = { quad, quad };
-
-	inst.color = Tint(m_cfg.color.alert);
-	inst.subColor = Tint(m_cfg.color.alertHi);
-	inst.params = { _progress, _radius, _flash, _unblockable ? 1.0f : 0.0f };
-
-	// 攻撃力の目安。リングの太さで示す。
-	inst.extra = { _power, 0.0f, 0.0f, 0.0f };
 	m_instances.push_back(inst);
 }
 
@@ -1218,11 +1195,9 @@ inline void CombatHud::PushCombo(const Math::Vector2& _screen)
 	inst.params = { static_cast<float>(c), remain, m_comboPop, rank };
 
 	// x=落下量 y=累計ダメージ
-	// 落下量は 0(通常)→1(落ち切る)。途切れていなければ常に0。
 	const float drop = dropping ? (1.0f - m_comboDrop) : 0.0f;
 
-	// 崩れ始め。猶予が閾値を切ると、切れる前から傾いて震え出す。
-	// 切れてから動き出すと、見る前に消えてしまう。
+	// 崩れ始め
 	const float warnLine = m_cfg.fx.comboWarnLine;
 	const float crumble = (!dropping && remain < warnLine && remain > 0.0f)
 		? (1.0f - remain / warnLine) : (dropping ? 1.0f : 0.0f);
@@ -1286,11 +1261,11 @@ inline void CombatHud::PushScore(const Math::Vector2& _screen, const StageInfo& 
 						  safeY + h + Px(m_cfg.score.marginY) }, _screen);
 	inst.halfSize = { w, h };
 
-	// 撃破の瞬間だけ濃く。平常時は沈めて視界を空ける。
+	// 撃破の瞬間だけ濃く
 	const float alpha = m_cfg.score.idleAlpha
 		+ (1.0f - m_cfg.score.idleAlpha) * m_killFlash;
 
-	// 主色=撃破数、副色=総数と時間。役割で色を分けて単調さを避ける。
+	// 主色=撃破数、副色=総数と時間
 	inst.color = Tint(m_cfg.color.score);
 	inst.subColor = Tint(m_cfg.color.scoreSub);
 	inst.color.w *= alpha;
@@ -1335,9 +1310,7 @@ inline void CombatHud::PushGuide(const Math::Vector2& _screen, const PlayerInfo&
 		{ "Cry",         KdHudShader::ActCry,    cryState },
 	};
 
-	// 1枚の札。アイコンが上、キーが下。
-	// アイコンの軌跡や放射が外へ出るので、余白を広めに取る。
-	// 詰めるとクアッドの縁で切れる。
+	// 1枚の札
 	const float cardW = Px(m_cfg.guide.cardW);
 	const float cardH = Px(m_cfg.guide.cardH);
 	const float gap = Px(m_cfg.guide.gap);
@@ -1346,7 +1319,7 @@ inline void CombatHud::PushGuide(const Math::Vector2& _screen, const PlayerInfo&
 	const int count = std::min(static_cast<int>(std::size(entries)), kGuideRowMax);
 	const int rowCount = (count + cols - 1) / cols;
 
-	// 右下に寄せる。安全余白のぶんだけ内側へ入れる。
+	// 右下に寄せる。安全余白のぶんだけ内側へ入れる
 	const float safeX = _screen.x * m_cfg.safeAreaPercent;
 	const float safeY = _screen.y * m_cfg.safeAreaPercent;
 	const float right = _screen.x - safeX;
@@ -1366,13 +1339,11 @@ inline void CombatHud::PushGuide(const Math::Vector2& _screen, const PlayerInfo&
 		Math::Vector3 codes = { -1.0f, -1.0f, -1.0f };
 		Math::Vector4 padCol = m_cfg.color.keycap;
 
-		// 今使っているデバイスの割り当てを優先する。
-		// そちらに無ければもう一方へ落とす。
-		// パッド専用/キーボード専用のアクションが消えるのを防ぐため。
+		// 今使っているデバイスの割り当てを優先する
 		bool ok = hud_detail::PickSymbol(bind, m_usingGamepad, shape, codes, padCol);
 		if (!ok) ok = hud_detail::PickSymbol(bind, !m_usingGamepad, shape, codes, padCol);
 
-		// どちらにも割り当てが無ければ出さない。空の枠だけ出ても意味がない。
+		// どちらにも割り当てが無ければ出さない
 		if (!ok) continue;
 
 		//------------------------------------------
@@ -1397,9 +1368,7 @@ inline void CombatHud::PushGuide(const Math::Vector2& _screen, const PlayerInfo&
 		inst.color = Tint(m_cfg.color.plume);
 		inst.subColor = Tint(padCol);
 		inst.params = { static_cast<float>(shape), codes.x, codes.y, codes.z };
-		// Extra.w は正で押下の波紋、負で殲滅の余韻。
-		// 符号で分けることで、チャンネルを増やさずに2つの一発演出を載せる。
-		// 殲滅中は押下より優先する。戦闘は終わっているので押下を見せる意味がない。
+		// Extra.w は正で押下の波紋、負で殲滅の余韻
 		const float pulse = (m_victoryDip > 0.001f)
 			? -(m_victoryDip * m_cfg.fx.victoryDipAmount)
 			: m_guideRipple[i];
@@ -1570,8 +1539,6 @@ inline void CombatHud::Draw()
 					dirPoint = screenCenter - (mirrored - screenCenter);
 				}
 
-				// 敵のコンパスは出さない(ひよこのインジケータに置き換え済み)。
-
 				// 攻撃予兆は画面端にも出す
 				if (m_cfg.visible.warn && e.windup)
 				{
@@ -1625,14 +1592,6 @@ inline void CombatHud::Draw()
 				lift += lockRadius + quadH + Px(m_cfg.enemyBar.lockedGap);
 			}
 
-			// 溜め中と、攻撃が出た直後の閃光
-			//if (m_cfg.visible.warn && (e.windup || e.strikeFlash > 0.001f))
-			//{
-			//	PushWarn(Math::Vector2(sp.x, sp.y - lift - Px(m_cfg.warn.offsetY)),
-			//		Px(m_cfg.warn.radius), e.windupProgress, e.strikeFlash,
-			//		e.unblockable, e.attackPower);
-			//}
-
 			c.screen = Math::Vector2(sp.x, sp.y - lift);
 			c.dist = dist;
 			c.alpha = alpha;
@@ -1664,7 +1623,7 @@ inline void CombatHud::Draw()
 		{
 			if (static_cast<int>(placed.size()) >= m_cfg.enemyBar.maxVisible) break;
 
-			// 爆散中は間引かない。倒した手応えを消してしまう。
+			// 爆散中は間引かない
 			if (!c.locked && c.info.deathFlash <= 0.0f)
 			{
 				bool tooClose = false;
@@ -1695,8 +1654,7 @@ inline void CombatHud::Draw()
 			const Math::Vector2 sp = front
 				? hud_detail::ToScreen(clip, screen) : Math::Vector2::Zero;
 
-			// 画面内なら、そのひよこの頭上から真下へ矢印を刺す。
-			// 消えるのは追従中だけ(提供側で除外済み)。
+			// 画面内なら、そのひよこの頭上から真下へ矢印を刺す
 			if (front && hud_detail::IsOnScreen(sp, screen))
 			{
 				// 上下にゆっくり揺らして、刺さっているのを目で追えるようにする
@@ -1767,7 +1725,7 @@ inline void CombatHud::Draw()
 				? m_cfg.fx.desatOnCounter : 0.0f;
 			m_desat = Damp::Value(m_desat, wantDesat, 10.0f, m_fadeDelta);
 
-			// 死亡。HUD全体が崩れ落ちる。
+			// 死亡
 			const float wantDeath = pl.dead ? 1.0f : 0.0f;
 			m_deathT = Damp::Value(m_deathT, wantDeath,
 				1.0f / std::max(m_cfg.fx.deathCollapseSec, 0.01f),
@@ -1787,14 +1745,6 @@ inline void CombatHud::Draw()
 					PushWave(hud_detail::ToScreen(clip, screen), r, pl.cryWaveRatio, pl.cryWasFull);
 				}
 			}
-
-			// ジャスト回避の集中演出。
-			// 猶予中と受付中に立ち上げ、途切れたら自然に閉じる。
-			//const float want = pl.parryWindow ? 1.0f : 0.0f;
-			//m_focus = Damp::Value(m_focus, want, kFocusLambda, m_fadeDelta);
-
-			//if (m_cfg.visible.focus && (m_focus > 0.01f || m_counterHitFlash > 0.01f))
-			//	PushFocus(screen, pl.counterRatio);
 		}
 	}
 
@@ -1824,7 +1774,7 @@ inline void CombatHud::Draw()
 		Math::Vector4 clip;
 		if (hud_detail::ToClip(m_lockTargetPos, viewProj, clip))
 		{
-			// 踏み込みが届くか。届かない相手をロックしていると空振りする。
+			// 踏み込みが届くか
 			const bool inRange = (m_lockPlayerDist <= m_stepRange);
 
 			PushLock(hud_detail::ToScreen(clip, screen), lockRadius, inRange);

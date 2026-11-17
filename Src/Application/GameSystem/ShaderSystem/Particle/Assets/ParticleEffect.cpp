@@ -55,11 +55,6 @@ float ParticleEffect::TotalDuration() const
 	return longest;
 }
 
-//------------------------------------------------------------------------------
-// 1レイヤーぶんの読み書き
-//   params / texture の中身は ParticleAsset に丸投げする。
-//   そのため「レイヤー1つぶんのJSON」は旧形式とまったく同じ構造になる。
-//------------------------------------------------------------------------------
 static void LayerFromJson(const nlohmann::json& j, ParticleLayer& L)
 {
 	L.name = j.value("name", L.name);
@@ -135,7 +130,6 @@ bool ParticleEffect::LoadFromString(const std::string& jsonStr)
 
 		if (j.contains("layers") && j["layers"].is_array())
 		{
-			// 新形式
 			for (const auto& lj : j["layers"])
 			{
 				ParticleLayer L;
@@ -145,7 +139,6 @@ bool ParticleEffect::LoadFromString(const std::string& jsonStr)
 		}
 		else
 		{
-			// ★旧形式（params がルートにある1エミッタ形式）
 			ParticleLayer L;
 			L.name = name;
 			L.asset.LoadFromString(jsonStr);

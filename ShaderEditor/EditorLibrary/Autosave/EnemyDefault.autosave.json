@@ -1,0 +1,892 @@
+{
+ "document": {
+  "exportDir": "C:\\3DGameProject\\SubChicken\\Asset\\Data\\Shader\\Material",
+  "passes": [
+   {
+    "graph": {
+     "comments": [],
+     "groups": [],
+     "links": [
+      {
+       "endPinId": 900200,
+       "id": 100182,
+       "startPinId": 900179
+      },
+      {
+       "endPinId": 900201,
+       "id": 100183,
+       "startPinId": 900203
+      },
+      {
+       "endPinId": 900204,
+       "id": 100185,
+       "startPinId": 900202
+      },
+      {
+       "endPinId": 900205,
+       "id": 100186,
+       "startPinId": 900209
+      },
+      {
+       "endPinId": 900206,
+       "id": 100187,
+       "startPinId": 900210
+      },
+      {
+       "endPinId": 900207,
+       "id": 100188,
+       "startPinId": 900211
+      },
+      {
+       "endPinId": 900186,
+       "id": 100189,
+       "startPinId": 900208
+      },
+      {
+       "endPinId": 900316,
+       "id": 100195,
+       "startPinId": 900208
+      },
+      {
+       "endPinId": 900318,
+       "id": 100196,
+       "startPinId": 900188
+      },
+      {
+       "endPinId": 900322,
+       "id": 100198,
+       "startPinId": 900323
+      },
+      {
+       "endPinId": 900320,
+       "id": 100200,
+       "startPinId": 900197
+      }
+     ],
+     "nodes": [
+      {
+       "audioPath": "",
+       "boundaryName": "",
+       "bufferName": "",
+       "bypass": false,
+       "colorMode": true,
+       "customCode": "",
+       "customHelpers": "",
+       "customInputs": [],
+       "customOutputName": "Result",
+       "customOutputType": 3,
+       "id": 1,
+       "inputPins": [
+        {
+         "dataType": 3,
+         "defaultValue": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+         ],
+         "id": 10000,
+         "name": "Color"
+        }
+       ],
+       "mrtOutputName": "",
+       "outputPinInfo": [],
+       "outputPins": [],
+       "paramMax": 1.0,
+       "paramMin": 0.0,
+       "paramName": "",
+       "posX": 1037.0,
+       "posY": 695.0,
+       "showPreview": false,
+       "subGraphName": "SubGraph",
+       "targetIndex": 0,
+       "texturePath": "",
+       "type": 26,
+       "typeId": "PassOutput",
+       "values": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+       ],
+       "varName": "",
+       "videoPath": ""
+      },
+      {
+       "audioPath": "",
+       "boundaryName": "",
+       "bufferName": "",
+       "bypass": false,
+       "colorMode": true,
+       "customCode": "",
+       "customHelpers": "",
+       "customInputs": [],
+       "customOutputName": "Result",
+       "customOutputType": 3,
+       "id": 3,
+       "inputPins": [
+        {
+         "dataType": 2,
+         "defaultValue": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+         ],
+         "id": 10006,
+         "name": "Pos Offset"
+        }
+       ],
+       "mrtOutputName": "",
+       "outputPinInfo": [],
+       "outputPins": [],
+       "paramMax": 1.0,
+       "paramMin": 0.0,
+       "paramName": "",
+       "posX": 1037.0,
+       "posY": 595.0,
+       "showPreview": false,
+       "subGraphName": "SubGraph",
+       "targetIndex": 0,
+       "texturePath": "",
+       "type": 33,
+       "typeId": "VertexOutput",
+       "values": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+       ],
+       "varName": "",
+       "videoPath": ""
+      },
+      {
+       "audioPath": "",
+       "boundaryName": "",
+       "bufferName": "",
+       "bypass": false,
+       "colorMode": true,
+       "customCode": "",
+       "customHelpers": "",
+       "customInputs": [],
+       "customOutputName": "Result",
+       "customOutputType": 3,
+       "id": 82,
+       "inputPins": [
+        {
+         "dataType": 1,
+         "defaultValue": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+         ],
+         "id": 900178,
+         "name": "UV"
+        }
+       ],
+       "mrtOutputName": "",
+       "outputPinInfo": [
+        {
+         "dataType": 3,
+         "name": "Color"
+        }
+       ],
+       "outputPins": [
+        900179
+       ],
+       "paramMax": 1.0,
+       "paramMin": 0.0,
+       "paramName": "",
+       "posX": 300.3017578125,
+       "posY": 229.32513427734375,
+       "showPreview": false,
+       "subGraphName": "SubGraph",
+       "targetIndex": 0,
+       "texturePath": "",
+       "type": 84,
+       "typeId": "ModelBaseColor",
+       "values": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+       ],
+       "varName": "",
+       "videoPath": ""
+      },
+      {
+       "audioPath": "",
+       "boundaryName": "",
+       "bufferName": "",
+       "bypass": false,
+       "colorMode": true,
+       "customCode": "",
+       "customHelpers": "",
+       "customInputs": [],
+       "customOutputName": "Result",
+       "customOutputType": 3,
+       "id": 85,
+       "inputPins": [
+        {
+         "dataType": 3,
+         "defaultValue": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+         ],
+         "id": 900186,
+         "name": "Color"
+        },
+        {
+         "dataType": 0,
+         "defaultValue": [
+          0.029999999329447746,
+          0.0,
+          0.0,
+          0.0
+         ],
+         "id": 900187,
+         "name": "Strength"
+        },
+        {
+         "dataType": 0,
+         "defaultValue": [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+         ],
+         "id": 900324,
+         "name": "Radius"
+        },
+        {
+         "dataType": 0,
+         "defaultValue": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+         ],
+         "id": 900325,
+         "name": "FlipG"
+        },
+        {
+         "dataType": 0,
+         "defaultValue": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+         ],
+         "id": 900326,
+         "name": "MipBias"
+        },
+        {
+         "dataType": 0,
+         "defaultValue": [
+          15.0,
+          0.0,
+          0.0,
+          0.0
+         ],
+         "id": 900327,
+         "name": "FadeStart"
+        },
+        {
+         "dataType": 0,
+         "defaultValue": [
+          25.0,
+          0.0,
+          0.0,
+          0.0
+         ],
+         "id": 900328,
+         "name": "FadeRange"
+        }
+       ],
+       "mrtOutputName": "",
+       "outputPinInfo": [
+        {
+         "dataType": 2,
+         "name": "WorldNormal"
+        },
+        {
+         "dataType": 2,
+         "name": "TangentNormal"
+        }
+       ],
+       "outputPins": [
+        900188,
+        900189
+       ],
+       "paramMax": 1.0,
+       "paramMin": 0.0,
+       "paramName": "",
+       "posX": 825.22021484375,
+       "posY": 654.5999145507813,
+       "showPreview": false,
+       "subGraphName": "SubGraph",
+       "targetIndex": 0,
+       "texturePath": "",
+       "type": 97,
+       "typeId": "NormalFromHeight",
+       "values": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+       ],
+       "varName": "",
+       "videoPath": ""
+      },
+      {
+       "audioPath": "",
+       "boundaryName": "",
+       "bufferName": "",
+       "bypass": false,
+       "colorMode": true,
+       "customCode": "",
+       "customHelpers": "",
+       "customInputs": [],
+       "customOutputName": "Result",
+       "customOutputType": 3,
+       "id": 89,
+       "inputPins": [],
+       "mrtOutputName": "",
+       "outputPinInfo": [
+        {
+         "dataType": 3,
+         "name": "Value"
+        }
+       ],
+       "outputPins": [
+        900197
+       ],
+       "paramMax": 1.0,
+       "paramMin": 0.0,
+       "paramName": "",
+       "posX": 808.0,
+       "posY": 997.0,
+       "showPreview": false,
+       "subGraphName": "SubGraph",
+       "targetIndex": 0,
+       "texturePath": "",
+       "type": 4,
+       "typeId": "ConstantFloat4",
+       "values": [
+        0.1071428656578064,
+        0.07478475570678711,
+        0.044005103409290314,
+        1.0
+       ],
+       "varName": "",
+       "videoPath": ""
+      },
+      {
+       "audioPath": "",
+       "boundaryName": "",
+       "bufferName": "",
+       "bypass": false,
+       "colorMode": true,
+       "customCode": "static const float3 LumCoeff = float3(0.2126, 0.7152, 0.0722);\n\nfloat luminance = dot(color.rgb, LumCoeff);\nfloat3 grayColor = float3(luminance, luminance, luminance);\n\nfloat3 result = lerp(grayColor, color.rgb, saturation);\nreturn float4(result, color.a);",
+       "customHelpers": "",
+       "customInputs": [
+        {
+         "name": "color",
+         "type": 3
+        },
+        {
+         "name": "saturation",
+         "type": 0
+        }
+       ],
+       "customOutputName": "Result",
+       "customOutputType": 3,
+       "id": 90,
+       "inputPins": [
+        {
+         "dataType": 3,
+         "defaultValue": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+         ],
+         "id": 900200,
+         "name": "color"
+        },
+        {
+         "dataType": 0,
+         "defaultValue": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+         ],
+         "id": 900201,
+         "name": "saturation"
+        }
+       ],
+       "mrtOutputName": "",
+       "outputPinInfo": [
+        {
+         "dataType": 3,
+         "name": "Result"
+        }
+       ],
+       "outputPins": [
+        900202
+       ],
+       "paramMax": 1.0,
+       "paramMin": 0.0,
+       "paramName": "",
+       "posX": 492.0,
+       "posY": 231.0,
+       "showPreview": false,
+       "subGraphName": "SubGraph",
+       "targetIndex": 0,
+       "texturePath": "",
+       "type": 25,
+       "typeId": "CustomHLSL",
+       "values": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+       ],
+       "varName": "",
+       "videoPath": ""
+      },
+      {
+       "audioPath": "",
+       "boundaryName": "",
+       "bufferName": "",
+       "bypass": false,
+       "colorMode": true,
+       "customCode": "",
+       "customHelpers": "",
+       "customInputs": [],
+       "customOutputName": "Result",
+       "customOutputType": 3,
+       "id": 91,
+       "inputPins": [],
+       "mrtOutputName": "",
+       "outputPinInfo": [
+        {
+         "dataType": 0,
+         "name": "Value"
+        }
+       ],
+       "outputPins": [
+        900203
+       ],
+       "paramMax": 1.0,
+       "paramMin": 0.0,
+       "paramName": "",
+       "posX": 288.8179931640625,
+       "posY": 341.74249267578125,
+       "showPreview": false,
+       "subGraphName": "SubGraph",
+       "targetIndex": 0,
+       "texturePath": "",
+       "type": 2,
+       "typeId": "ConstantFloat",
+       "values": [
+        0.7900000214576721,
+        0.0,
+        0.0,
+        0.0
+       ],
+       "varName": "",
+       "videoPath": ""
+      },
+      {
+       "audioPath": "",
+       "boundaryName": "",
+       "bufferName": "",
+       "bypass": false,
+       "colorMode": true,
+       "customCode": "",
+       "customHelpers": "",
+       "customInputs": [],
+       "customOutputName": "Result",
+       "customOutputType": 3,
+       "id": 92,
+       "inputPins": [
+        {
+         "dataType": 3,
+         "defaultValue": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+         ],
+         "id": 900204,
+         "name": "Scene"
+        },
+        {
+         "dataType": 2,
+         "defaultValue": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+         ],
+         "id": 900205,
+         "name": "LightDir"
+        },
+        {
+         "dataType": 0,
+         "defaultValue": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+         ],
+         "id": 900206,
+         "name": "Strength"
+        },
+        {
+         "dataType": 0,
+         "defaultValue": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+         ],
+         "id": 900207,
+         "name": "HeightScale"
+        }
+       ],
+       "mrtOutputName": "",
+       "outputPinInfo": [
+        {
+         "dataType": 3,
+         "name": "Result"
+        }
+       ],
+       "outputPins": [
+        900208
+       ],
+       "paramMax": 1.0,
+       "paramMin": 0.0,
+       "paramName": "",
+       "posX": 818.0000610351563,
+       "posY": 455.0,
+       "showPreview": false,
+       "subGraphName": "SubGraph",
+       "targetIndex": 0,
+       "texturePath": "",
+       "type": 101,
+       "typeId": "SelfShadow",
+       "values": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+       ],
+       "varName": "",
+       "videoPath": ""
+      },
+      {
+       "audioPath": "",
+       "boundaryName": "",
+       "bufferName": "",
+       "bypass": false,
+       "colorMode": true,
+       "customCode": "",
+       "customHelpers": "",
+       "customInputs": [],
+       "customOutputName": "Result",
+       "customOutputType": 3,
+       "id": 93,
+       "inputPins": [],
+       "mrtOutputName": "",
+       "outputPinInfo": [
+        {
+         "dataType": 3,
+         "name": "Value"
+        }
+       ],
+       "outputPins": [
+        900209
+       ],
+       "paramMax": 1.0,
+       "paramMin": 0.0,
+       "paramName": "LightColor",
+       "posX": 576.0,
+       "posY": 523.0,
+       "showPreview": false,
+       "subGraphName": "SubGraph",
+       "targetIndex": 0,
+       "texturePath": "",
+       "type": 22,
+       "typeId": "ParameterFloat4",
+       "values": [
+        0.19642573595046997,
+        0.706250011920929,
+        0.1235937625169754,
+        1.0
+       ],
+       "varName": "",
+       "videoPath": ""
+      },
+      {
+       "audioPath": "",
+       "boundaryName": "",
+       "bufferName": "",
+       "bypass": false,
+       "colorMode": true,
+       "customCode": "",
+       "customHelpers": "",
+       "customInputs": [],
+       "customOutputName": "Result",
+       "customOutputType": 3,
+       "id": 94,
+       "inputPins": [],
+       "mrtOutputName": "",
+       "outputPinInfo": [
+        {
+         "dataType": 0,
+         "name": "Value"
+        }
+       ],
+       "outputPins": [
+        900210
+       ],
+       "paramMax": 1.0,
+       "paramMin": 0.0,
+       "paramName": "",
+       "posX": 597.0,
+       "posY": 694.0,
+       "showPreview": false,
+       "subGraphName": "SubGraph",
+       "targetIndex": 0,
+       "texturePath": "",
+       "type": 2,
+       "typeId": "ConstantFloat",
+       "values": [
+        0.30000001192092896,
+        0.0,
+        0.0,
+        0.0
+       ],
+       "varName": "",
+       "videoPath": ""
+      },
+      {
+       "audioPath": "",
+       "boundaryName": "",
+       "bufferName": "",
+       "bypass": false,
+       "colorMode": true,
+       "customCode": "",
+       "customHelpers": "",
+       "customInputs": [],
+       "customOutputName": "Result",
+       "customOutputType": 3,
+       "id": 95,
+       "inputPins": [],
+       "mrtOutputName": "",
+       "outputPinInfo": [
+        {
+         "dataType": 0,
+         "name": "Value"
+        }
+       ],
+       "outputPins": [
+        900211
+       ],
+       "paramMax": 1.0,
+       "paramMin": 0.0,
+       "paramName": "",
+       "posX": 597.0,
+       "posY": 813.0,
+       "showPreview": false,
+       "subGraphName": "SubGraph",
+       "targetIndex": 0,
+       "texturePath": "",
+       "type": 2,
+       "typeId": "ConstantFloat",
+       "values": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+       ],
+       "varName": "",
+       "videoPath": ""
+      },
+      {
+       "audioPath": "",
+       "boundaryName": "",
+       "bufferName": "",
+       "bypass": false,
+       "colorMode": true,
+       "customCode": "",
+       "customHelpers": "",
+       "customInputs": [],
+       "customOutputName": "Result",
+       "customOutputType": 3,
+       "id": 98,
+       "inputPins": [
+        {
+         "dataType": 2,
+         "defaultValue": [
+          0.800000011920929,
+          0.800000011920929,
+          0.800000011920929,
+          0.0
+         ],
+         "id": 900316,
+         "name": "Albedo"
+        },
+        {
+         "dataType": 0,
+         "defaultValue": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+         ],
+         "id": 900317,
+         "name": "Metallic"
+        },
+        {
+         "dataType": 2,
+         "defaultValue": [
+          0.0,
+          1.0,
+          0.0,
+          0.0
+         ],
+         "id": 900318,
+         "name": "Normal"
+        },
+        {
+         "dataType": 0,
+         "defaultValue": [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+         ],
+         "id": 900319,
+         "name": "Roughness"
+        },
+        {
+         "dataType": 2,
+         "defaultValue": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+         ],
+         "id": 900320,
+         "name": "Emissive"
+        },
+        {
+         "dataType": 3,
+         "defaultValue": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+         ],
+         "id": 900321,
+         "name": "Mask"
+        },
+        {
+         "dataType": 0,
+         "defaultValue": [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+         ],
+         "id": 900322,
+         "name": "BloomGain"
+        }
+       ],
+       "mrtOutputName": "",
+       "outputPinInfo": [],
+       "outputPins": [],
+       "paramMax": 1.0,
+       "paramMin": 0.0,
+       "paramName": "",
+       "posX": 1236.0,
+       "posY": 893.0,
+       "showPreview": false,
+       "subGraphName": "SubGraph",
+       "targetIndex": 0,
+       "texturePath": "",
+       "type": 88,
+       "typeId": "GBufferOutput",
+       "values": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+       ],
+       "varName": "",
+       "videoPath": ""
+      },
+      {
+       "audioPath": "",
+       "boundaryName": "",
+       "bufferName": "",
+       "bypass": false,
+       "colorMode": true,
+       "customCode": "",
+       "customHelpers": "",
+       "customInputs": [],
+       "customOutputName": "Result",
+       "customOutputType": 3,
+       "id": 99,
+       "inputPins": [],
+       "mrtOutputName": "",
+       "outputPinInfo": [
+        {
+         "dataType": 0,
+         "name": "Value"
+        }
+       ],
+       "outputPins": [
+        900323
+       ],
+       "paramMax": 1.0,
+       "paramMin": 0.0,
+       "paramName": "",
+       "posX": 891.207275390625,
+       "posY": 1175.03173828125,
+       "showPreview": false,
+       "subGraphName": "SubGraph",
+       "targetIndex": 0,
+       "texturePath": "",
+       "type": 2,
+       "typeId": "ConstantFloat",
+       "values": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+       ],
+       "varName": "",
+       "videoPath": ""
+      }
+     ]
+    },
+    "id": 1,
+    "name": "Scene",
+    "outputName": "Scene",
+    "scaleFactor": 1.0,
+    "type": 0
+   }
+  ],
+  "version": 3
+ },
+ "originalPath": "C:\\3DGameProject\\SubChicken\\ShaderEditor\\EditorLibrary\\MyShaders\\EnemyDefault.json",
+ "savedAt": 1794886062
+}

@@ -6,11 +6,6 @@
 //===================================================
 // 種別ごとの描画
 //===================================================
-
-// ロックオン = 4枚の羽根が対象を囲む。
-// 捕捉した瞬間だけ速く回り、すぐ落ち着く。
-// 常時同じ速さで回っていると「今ロックした」が伝わらない。
-// Params : x=捕捉からの経過(0→1) y=線の太さ z=回転角
 float4 DrawLock(VSOutput In)
 {
 	const float R = min(In.HalfSize.x, In.HalfSize.y) * 0.9f;
@@ -22,8 +17,7 @@ float4 DrawLock(VSOutput In)
 
 	float2 p = Rotate(In.Local, In.Params.z);
 
-	// 開閉。閉じている間は羽根が中心へ寄り、開くと外へ展開する。
-	// 一瞬で切り替わるより、動きがあった方が「捕捉した」が伝わる。
+	// 開閉
 	const float spread = lerp(0.05f, 0.42f, EaseOutBack(open));
 	const float scale = lerp(0.45f, 1.0f, open);
 
@@ -88,14 +82,10 @@ float4 DrawLock(VSOutput In)
 	return float4(col, a * In.Color.a);
 }
 
-// 敵のHP/体幹ゲージ。
-// 面は敷かず、二重の縁取りと両端の鉤で範囲を示す。
-// 頭上は背景が最も雑多なので、他のUIより濃いめに出す。
-// Params : x=HP y=体幹 z=特殊状態(凍結など)
+// 敵のHP/体幹ゲージ
 float4 DrawEnemyBar(VSOutput In)
 {
-	// クアッドは数値を置くぶん広げてある。帯の寸法へ戻す。
-	// ★C++側の kEnemyBarExpand* と対で扱うこと。
+	// クアッドは数値を置くぶん広げてある。帯の寸法へ戻す
 	const float2 b = In.HalfSize / float2(HUD_ENEMYBAR_EXPAND_X, HUD_ENEMYBAR_EXPAND_Y);
 
 	const float hp = saturate(In.Params.x);
@@ -104,12 +94,7 @@ float4 DrawEnemyBar(VSOutput In)
 	const float breakFlash = saturate(In.Params.w); // 崩した瞬間(1→0)
 
 	const float locked = saturate(In.Extra.x); // ロック中
-	// Extra.w に「現在HP * 1000 + 最大HP」を詰めてある。
-	// 空きチャンネルが無いので、2値を1つに畳んで運ぶ。
-	// ★C++側と対で扱うこと。どちらも0〜999の想定。
-	const int hpPacked = (int) In.Extra.w;
-	const int hpNow = hpPacked / 1000;
-	const int hpMax = hpPacked % 1000;
+	
 	const float stagger = saturate(In.Extra.y); // 硬直・ダウンの残り(0〜1)
 	const float death = saturate(In.Extra.z); // 撃破の爆散(1→0)
 
@@ -119,8 +104,7 @@ float4 DrawEnemyBar(VSOutput In)
 	// 凍結中はゆっくり上下する。止まっていることが動きで伝わる。
 	P.y -= special * sin(g_time * 1.3f) * b.y * 0.12f;
 
-	// 崩した瞬間はゲージ本体が一度縮んで戻る。
-	// 破片がクアッドの外へ出ないよう、本体側を小さくして余白を作る。
+	// 崩した瞬間はゲージ本体が一度縮んで戻る
 	P *= (1.0f + breakFlash * 0.22f);
 
 	// 爆散中は破片が外まで飛ぶので、本体側を縮めて余白を作る。
@@ -129,8 +113,6 @@ float4 DrawEnemyBar(VSOutput In)
 	//------------------------------------------
 	// 帯の形
 	//------------------------------------------
-	// 頭上は一瞬しか見ないので、細いと読めない。
-	// HPは太く、体幹はその下に少し細く並べる。
 	const float hpY = -b.y * 0.30f;
 	const float hpH = b.y * 0.34f;
 	const float2 hbp = SkewBar(P - float2(0.0f, hpY), hpH);
@@ -196,9 +178,6 @@ float4 DrawEnemyBar(VSOutput In)
 	//------------------------------------------
 	// 撃破の爆散
 	//------------------------------------------
-	// 倒した瞬間、ゲージが破片になって飛び散る。
-	// 消えるだけだと、頭上に手応えが何も残らない。
-	// 1体につき1回しか訪れない場面なので、派手にしていい。
 	float burst = 0.0f;
 	float burstWhite = 0.0f;
 
@@ -240,31 +219,8 @@ float4 DrawEnemyBar(VSOutput In)
 	const float alive = 1.0f - death;
 
 	//------------------------------------------
-	// 残量の数値(右上)
-	//------------------------------------------
-	// 帯の長さだけでは「あと何発で倒せるか」が読めない。
-	// 小さく添えるだけでいいので、帯の外の右上に置く。
-	float hpText = 0.0f;
-	float2 hpTextEdge = float2(0.0f, 0.0f);
-
-	if (hpMax > 0)
-	{
-		// 帯の上に空けた領域を使う。
-		// 「現在 / 最大」を詰めて1つの塊にし、帯の右端に右詰めする。
-		// 箱に収める方式だと、桁が減ったときに位置が飛ぶ。
-		const float th2 = b.y * HUD_ENEMYBAR_TEXT; // 字の半高
-		const float ty = -b.y * 1.72f;
-
-		const float d = sdRatioText(P - float2(b.x * 0.92f, ty), hpNow, hpMax, th2, 1.0f);
-
-		hpText = Cover(d);
-		hpTextEdge = OutlineDual(d, HUD_EDGE_DARK * 0.85f, HUD_EDGE_HALO * 0.7f);
-	}
-
-	//------------------------------------------
 	// ロック中の強調
 	//------------------------------------------
-	// 狙っている相手だけ枠が閉じる。他と一目で区別できる。
 	float lockFrame = 0.0f;
 	if (locked > 0.5f)
 	{
@@ -279,14 +235,9 @@ float4 DrawEnemyBar(VSOutput In)
 	//------------------------------------------
 	// 硬直中の印
 	//------------------------------------------
-	// 「今なら安全に殴れる」を伝える。
-	// のけぞりやダウンは攻めどきなので、見逃すと機会を失う。
 	float stunMark = 0.0f;
 	if (stagger > 0.001f)
 	{
-		// ゲージの上で回る3つの点。気絶の記号。
-		// 残り時間が減るほど回転が遅くなり、点も小さくなる。
-		// いつ動き出すかが読めれば、攻めを何段まで入れるか決められる。
 		const float sp = g_time * (1.0f + stagger * 2.0f);
 
 		[unroll]
@@ -314,9 +265,6 @@ float4 DrawEnemyBar(VSOutput In)
 	//------------------------------------------
 	// 崩した瞬間
 	//------------------------------------------
-	// 体幹ゲージが弾け飛ぶ。
-	// 静かに0へ戻るだけだと、体幹ゲージを作った目的そのものが伝わらない。
-	// 色を足すのではなく、形とサイズを変えて気付かせる。
 	float shatter = 0.0f;
 	float shatterWhite = 0.0f;
 
@@ -364,7 +312,7 @@ float4 DrawEnemyBar(VSOutput In)
 	float frost = 0.0f;
 	if (special > 0.01f)
 	{
-		// 残り時間が減るほど結晶が短くなる。解ける時が読める。
+		// 残り時間が減るほど結晶が短くなる
 		const float grow = (0.7f + sin(g_time * 1.9f) * 0.3f) * (0.35f + special * 0.65f);
 		[unroll]
 		for (int i = 0; i < 6; ++i)
@@ -380,14 +328,11 @@ float4 DrawEnemyBar(VSOutput In)
 	//------------------------------------------
 	// 合成
 	//------------------------------------------
-	// 体幹は彩度の高い橙。崩れる寸前で白熱する。
-	// くすんだ色だと「あと何発で崩せるか」が読めない。
 	const float3 poiseCol = (poise > 0.8f)
 		? lerp(float3(1.00f, 0.86f, 0.30f), float3(1, 1, 1), (poise - 0.8f) / 0.2f)
 		: float3(1.00f, 0.62f, 0.06f);
 
-	// 凍結中はHPが氷色へ寄る。
-	// 「殴っても怯まない代わりに無防備」という状態を色で示す。
+	// 凍結中はHPが氷色へ寄る
 	const float3 iceCol = float3(0.42f, 0.82f, 1.00f);
 	const float3 hpCol = lerp(In.Color.rgb, iceCol, special * 0.85f);
 
@@ -404,11 +349,8 @@ float4 DrawEnemyBar(VSOutput In)
 	col = lerp(col, In.Color.rgb * 0.9f, max(ticks, rivet) * 0.5f);
 	col = lerp(col, float3(1.00f, 0.92f, 0.55f), lockFrame);
 	col = lerp(col, float3(1.00f, 0.95f, 0.70f), stunMark);
-	col = lerp(col, float3(1, 1, 1), hpText * 0.85f);
 	col = lerp(col, float3(1, 1, 1), max(burstWhite, burst * 0.35f));
-
-	// 頭上は背景が最も雑多なので、他のUIより濃いめに出す。
-	// 薄いと戦闘中に残量が読めず、情報として機能しない。
+	
 	float a = 0.0f;
 
 	// 生きている間の表示。爆散中は消す。
@@ -430,8 +372,6 @@ float4 DrawEnemyBar(VSOutput In)
 		live = max(live, frost * 0.9f);
 		live = max(live, lockFrame * 0.9f);
 		live = max(live, stunMark * 0.95f);
-		live = max(live, hpText * 0.95f);
-		live = max(live, max(hpTextEdge.x, hpTextEdge.y * 0.4f) * 0.7f);
 
 		a = live * alive;
 	}
@@ -443,11 +383,7 @@ float4 DrawEnemyBar(VSOutput In)
 	return float4(col, a);
 }
 
-// 攻撃予兆。
-// 外周のリングが内へ収束し、閉じ切った瞬間が発生。
-// 「いつ来るか」を角度ではなく半径で読ませるので、視界の端でも分かる。
-// Params : x=溜めの進捗(0→1) y=リング半径(px) z=発生の閃光(1→0)
-// ※クアッドは衝撃波が伸びるぶん広く取るので、半径はHalfSizeではなくparamsで受ける。
+// 攻撃予兆
 float4 DrawWarn(VSOutput In)
 {
 	const float R = In.Params.y;

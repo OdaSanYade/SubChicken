@@ -4,8 +4,6 @@
 
 #include "../../Shaders/ShaderSystemHelper.h"
 
-using Microsoft::WRL::ComPtr;
-
 using json = nlohmann::json;
 
 namespace
@@ -13,8 +11,6 @@ namespace
 	// ------------------------------------------------------------
 	// シェーダバイトコードのディスクキャッシュ
 	// ------------------------------------------------------------
-
-	// FNV-1a。std::hash は実装依存で実行環境が変わると値が変わるため自前で持つ
 	uint64_t ShaderHash(const std::string& _code, const char* _target)
 	{
 		uint64_t h = 14695981039346656037ull;
@@ -33,7 +29,7 @@ namespace
 		return h;
 	}
 
-	const char* kShaderCacheDir = "Cache/Shader";
+	const char* kShaderCacheDir = "Asset/Cache/Shader";
 
 	std::string ShaderCachePath(uint64_t _hash, const char* _target)
 	{
@@ -67,20 +63,22 @@ namespace
 	}
 }
 
+// リソースの初期化
 bool MultiPassRuntime::Init(ID3D11Device* device, ID3D11DeviceContext* context)
 {
 	m_device = device;
 	m_context = context;
 
-	if (!CreateFullscreenVS())    return false;
-	if (!CreateConstantBuffers()) return false;
-	if (!CreateSamplerState())    return false;
-	if (!CreateRasterizerState()) return false;
-	if (!CreateCopyPS())          return false;
-	if (!CreateBlendState()) return false;
+	if (!CreateFullscreenVS())    return false; // フルスクリーン描画用のVSを作る
+	if (!CreateConstantBuffers()) return false; // 定数バッファを作る
+	if (!CreateSamplerState())    return false; // サンプラーステートを作る
+	if (!CreateRasterizerState()) return false; // ラスタライザーステートを作る
+	if (!CreateCopyPS())          return false; // コピー用のPSを作る
+	if (!CreateBlendState()) return false;      // ブレンドステートを作る
 	return true;
 }
 
+// リソース解放
 void MultiPassRuntime::Release()
 {
 	m_passes.clear();
@@ -94,8 +92,6 @@ void MultiPassRuntime::Release()
 	m_cbTime.Reset();
 	m_copyPS.Reset();
 	m_alphaBlend.Reset();
-	m_captureTex.Reset();
-	m_captureSRV.Reset();
 	m_fullscreenVS.Reset();
 }
 
@@ -107,7 +103,7 @@ int MultiPassRuntime::AcquireRT(int width, int height,
 	for (int i = 0; i < (int)m_rtPool.size(); ++i)
 	{
 		auto& rt = m_rtPool[i];
-		if (!rt.inUse && rt.width == width && rt.height == height && rt.format == format)   // ★format一致も条件に
+		if (!rt.inUse && rt.width == width && rt.height == height && rt.format == format)
 		{
 			rt.inUse = true;
 			rt.lastUsedFrame = m_poolFrame;
@@ -142,9 +138,10 @@ void MultiPassRuntime::ResetRTPool()
 
 void MultiPassRuntime::TrimPools(int screenW, int screenH)
 {
-	++m_poolFrame;
+	++m_poolFrame; //フレームごと行う
 
 	// 画面サイズが変わったら、前のサイズの RT は全部捨てる
+	// 新規画面サイズに変更
 	const bool resized = (m_poolScreenW != 0 &&
 		(m_poolScreenW != screenW || m_poolScreenH != screenH));
 	m_poolScreenW = screenW;
@@ -157,9 +154,13 @@ void MultiPassRuntime::TrimPools(int screenW, int screenH)
 
 	const size_t rtBefore = m_rtPool.size();
 	const size_t dsBefore = m_depthPool.size();
+
+	// 古い RT を削除
 	m_rtPool.erase(std::remove_if(m_rtPool.begin(), m_rtPool.end(),
 		[&](const PooledRT& rt) { return !rt.inUse && stale(rt.lastUsedFrame); }),
 		m_rtPool.end());
+
+	// 古い Depth を削除
 	m_depthPool.erase(std::remove_if(m_depthPool.begin(), m_depthPool.end(),
 		[&](const PooledDepth& d) { return !d.inUse && stale(d.lastUsedFrame); }),
 		m_depthPool.end());
@@ -175,8 +176,10 @@ void MultiPassRuntime::TrimPools(int screenW, int screenH)
 	}
 }
 
+//フルスクリーン用VS作成
 bool MultiPassRuntime::CreateFullscreenVS()
 {
+	// フルスクリーン描画用の VSコード
 	static const char* kVSSource = R"(
 struct VS_OUT
 {
@@ -196,6 +199,8 @@ VS_OUT main(uint id : SV_VertexID)
     return o;
 }
 )";
+
+	//文字列コンパイル
 	ComPtr<ID3DBlob> blob, err;
 	if (FAILED(D3DCompile(kVSSource, strlen(kVSSource), "FSVS", nullptr, nullptr,
 		"main", "vs_5_0", 0, 0, &blob, &err)))
@@ -206,6 +211,7 @@ VS_OUT main(uint id : SV_VertexID)
 		blob->GetBufferPointer(), blob->GetBufferSize(), nullptr, &m_fullscreenVS));
 }
 
+// 定数バッファ作成
 bool MultiPassRuntime::CreateConstantBuffers()
 {
 	D3D11_BUFFER_DESC desc = {};
@@ -213,16 +219,17 @@ bool MultiPassRuntime::CreateConstantBuffers()
 	desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 
-	// b0: time(4) + audio(12... 実際は4+4+4+4=16) + params[16]*16 = 16 + 256 = 272
-	desc.ByteWidth = 16 + 16 * 16;   // ★272バイト（time/audio 16 + params 256）
+	
+	desc.ByteWidth = 16 + 16 * 16;   // 272バイト（time/audio 16 + params 256）,時間やパラメータ用
 	if (FAILED(m_device->CreateBuffer(&desc, nullptr, &m_cbTime))) return false;
 
-	desc.ByteWidth = sizeof(DirectX::XMFLOAT4X4) * 3;
+	desc.ByteWidth = sizeof(DirectX::XMFLOAT4X4) * 3; // 16 * 3 = 48バイト。World, View, Projection の 3つの行列
 	if (FAILED(m_device->CreateBuffer(&desc, nullptr, &m_cbWVP))) return false;
 
 	return true;
 }
 
+// サンプラーステート作成
 bool MultiPassRuntime::CreateSamplerState()
 {
 	D3D11_SAMPLER_DESC desc = {};
@@ -234,6 +241,7 @@ bool MultiPassRuntime::CreateSamplerState()
 	return SUCCEEDED(m_device->CreateSamplerState(&desc, &m_sampler));
 }
 
+// ラスタライザーステート作成
 bool MultiPassRuntime::CreateRasterizerState()
 {
 	D3D11_RASTERIZER_DESC desc = {};
@@ -243,20 +251,21 @@ bool MultiPassRuntime::CreateRasterizerState()
 	return SUCCEEDED(m_device->CreateRasterizerState(&desc, &m_rsCullNone));
 }
 
-
+// 画面のWVPを更新
 void MultiPassRuntime::UpdateWVPCB(const DirectX::XMMATRIX& wvp,
 	const DirectX::XMMATRIX& worldView,
 	const DirectX::XMMATRIX& world)
 {
 	struct CBData {
-		DirectX::XMFLOAT4X4 wvp;
-		DirectX::XMFLOAT4X4 worldView;
-		DirectX::XMFLOAT4X4 world;
+		DirectX::XMFLOAT4X4 wvp;       //Projection * View * World
+		DirectX::XMFLOAT4X4 worldView; //View * World
+		DirectX::XMFLOAT4X4 world;     //World
 	} data;
 	DirectX::XMStoreFloat4x4(&data.wvp, wvp);
 	DirectX::XMStoreFloat4x4(&data.worldView, worldView);
 	DirectX::XMStoreFloat4x4(&data.world, world);
 
+	// 書き込み
 	D3D11_MAPPED_SUBRESOURCE m;
 	if (SUCCEEDED(m_context->Map(m_cbWVP.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &m)))
 	{
@@ -264,16 +273,19 @@ void MultiPassRuntime::UpdateWVPCB(const DirectX::XMMATRIX& wvp,
 		m_context->Unmap(m_cbWVP.Get(), 0);
 	}
 }
-void MultiPassRuntime::UpdateEffectCB(float time, float bass, float mid, float treble,
+
+// 時間やパラメータなどの定数バッファの更新
+void MultiPassRuntime::UpdateParameterCB(float time, float bass, float mid, float treble,
 	const std::vector<std::array<float, 4>>& params)
 {
-	// b0 のレイアウト: time, bass, mid, treble, then float4 params[16]
+	// その他パラメータfloat4を16個まで格納可能
 	struct CBData {
 		float time, bass, mid, treble;
 		float params[16][4];
 	} data = {};
 	data.time = time; data.bass = bass; data.mid = mid; data.treble = treble;
 
+	// パラメータをコピー
 	for (int i = 0; i < (int)params.size() && i < 16; ++i)
 	{
 		data.params[i][0] = params[i][0];
@@ -282,6 +294,7 @@ void MultiPassRuntime::UpdateEffectCB(float time, float bass, float mid, float t
 		data.params[i][3] = params[i][3];
 	}
 
+	// 書き込む
 	D3D11_MAPPED_SUBRESOURCE m;
 	if (SUCCEEDED(m_context->Map(m_cbTime.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &m)))
 	{
@@ -326,12 +339,14 @@ void MultiPassRuntime::ResetDepthPool()
 	for (auto& d : m_depthPool) d.inUse = false;
 }
 
+// Jsonアセットからの情報を読み込む
 bool MultiPassRuntime::LoadPipeline(const std::string& jsonText)
 {
 	json root;
 
 	try { root = json::parse(jsonText); }
 	catch (...) {
+		// JSON パース失敗
 		OutputDebugStringA("LoadPipeline: JSON parse failed\n");
 		return false;
 	}
@@ -339,16 +354,17 @@ bool MultiPassRuntime::LoadPipeline(const std::string& jsonText)
 	if (!root.contains("passes") || !root["passes"].is_array())
 		return false;
 
+	// G-Bufferのフォーマット一覧
 	auto parseFormat = [](const std::string& s) -> DXGI_FORMAT {
-		if (s == "R8G8B8A8_UNORM")      return DXGI_FORMAT_R8G8B8A8_UNORM;
-		if (s == "R16G16B16A16_FLOAT")  return DXGI_FORMAT_R16G16B16A16_FLOAT;
-		if (s == "R32G32B32A32_FLOAT")  return DXGI_FORMAT_R32G32B32A32_FLOAT;
-		if (s == "R32_FLOAT")           return DXGI_FORMAT_R32_FLOAT;
-		if (s == "R16G16_FLOAT")        return DXGI_FORMAT_R16G16_FLOAT;
-		return DXGI_FORMAT_R8G8B8A8_UNORM;
+		if (s == "R8G8B8A8_UNORM")      return DXGI_FORMAT_R8G8B8A8_UNORM;		//Buffer A アルベド値 + 金属度
+		if (s == "R16G16B16A16_FLOAT")  return DXGI_FORMAT_R16G16B16A16_FLOAT;  //Buffer B 法線 + 粗さ
+		if (s == "R32G32B32A32_FLOAT")  return DXGI_FORMAT_R32G32B32A32_FLOAT;  //Buffer C 位置
+		if (s == "R32_FLOAT")           return DXGI_FORMAT_R32_FLOAT;           //Buffer D エミッシブ
+		if (s == "R16G16_FLOAT")        return DXGI_FORMAT_R16G16_FLOAT;        //Buffer E マスク情報
+		return DXGI_FORMAT_R8G8B8A8_UNORM;                                      //それ以外のバッファフォーマット
 		};
 
-	// ★パース後の構築も try で守る
+	// パース後の構築も try で守る
 	std::vector<PassRuntime> newPasses;
 
 	try
@@ -357,27 +373,32 @@ bool MultiPassRuntime::LoadPipeline(const std::string& jsonText)
 		{
 			if (!pj.is_object()) continue;   // 壊れたパスはスキップ
 
+			// パスの情報を取得
 			PassRuntime pass;
-			pass.name = pj.value("name", "");
-			pass.passType = pj.value("passType", 0);
-			pass.scaleFactor = pj.value("scaleFactor", 1.0f);
-			pass.outputName = pj.value("outputName", "");
-			pass.isMaterial = pj.value("isMaterial", false);
-			pass.targetCount = pj.value("targetCount", 1);
-			pass.usesPrevPass = pj.value("usesPrevPass", false);
+			pass.name = pj.value("name", "");					// パス名
+			pass.passType = pj.value("passType", 0);			// パス種別（0:起点パス, 1:マルチパス）
+			pass.scaleFactor = pj.value("scaleFactor", 1.0f);   // 解像度スケール
+			pass.outputName = pj.value("outputName", "");       // 出力先の名前付きバッファ名
+			pass.isMaterial = pj.value("isMaterial", false);    // マテリアルパスかどうか
+			pass.targetCount = pj.value("targetCount", 1);      // 出力ターゲット数(G-Buffer)
+			pass.usesPrevPass = pj.value("usesPrevPass", false);// 前のパスの出力を使用するか
 
 			// targetNames
+			// 作ったテクスチャの名前の一覧
 			if (pj.contains("targetNames"))
 				for (const auto& tn : pj["targetNames"])
 					pass.targetNames.push_back(tn.get<std::string>());
 
 			// namedBufferRefs
+			// 参照する名前付きバッファの一覧
 			if (pj.contains("namedBufferRefs"))
 				for (const auto& nb : pj["namedBufferRefs"])
 					pass.namedBufferRefs.push_back(nb.get<std::string>());
 
 			if (pj.contains("targetFormats"))
 			{
+				// targetFormats
+				// 作ったテクスチャのフォーマットの一覧
 				for (auto& f : pj["targetFormats"])
 					pass.targetFormats.push_back(parseFormat(f.get<std::string>()));
 			}
@@ -388,20 +409,23 @@ bool MultiPassRuntime::LoadPipeline(const std::string& jsonText)
 				for (const auto& paramJson : pj["params"])
 				{
 					ParamRuntime pr;
-					pr.name = paramJson.value("name", "");
-					pr.type = paramJson.value("type", "float");
-					pr.minVal = paramJson.value("min", 0.0f);
-					pr.maxVal = paramJson.value("max", 1.0f);
+					pr.name = paramJson.value("name", "");		// パラメータ名
+					pr.type = paramJson.value("type", "float"); // パラメータ型（float,float4）
+					pr.minVal = paramJson.value("min", 0.0f);   // 最小値
+					pr.maxVal = paramJson.value("max", 1.0f);   // 最大値
 
-					// default（数値 or 配列）
+					// default
 					if (paramJson.contains("default"))
 					{
 						const auto& d = paramJson["default"];
+
+						// float4
 						if (d.is_array())
 						{
 							for (int i = 0; i < 4 && i < (int)d.size(); ++i)
 								pr.value[i] = d[i].get<float>();
 						}
+						// float
 						else
 						{
 							pr.value[0] = d.get<float>();
@@ -411,7 +435,7 @@ bool MultiPassRuntime::LoadPipeline(const std::string& jsonText)
 				}
 			}
 
-			// ---- 入力（g_input0,1,2...）----
+			// ---- 入力 ----
 			if (pj.contains("inputs"))
 			{
 				for (const auto& inJson : pj["inputs"])
@@ -437,18 +461,22 @@ bool MultiPassRuntime::LoadPipeline(const std::string& jsonText)
 				}
 			}
 
+			//=============================================
+			//　シェーダコンパイル
+			//  D3DCompileFromFile で 文字列のHLSL をコンパイする
+			//=============================================
+
 			// ---- PS コンパイル ----
-			std::string psCode = pj.value("ps", "");
+			std::string psCode = pj.value("ps", ""); // ピクセルシェーダコード
 			if (!CompilePS(psCode, pass.ps))
 			{
 				OutputDebugStringA(("PS compile FAILED: " + pass.name + "\n").c_str());
-				// コンパイル失敗パスも積む（実行時にnullチェックで弾く）
 			}
 
 			// ---- VS コンパイル（マテリアル）----
 			if (pass.isMaterial)
 			{
-				std::string vsCode = pj.value("vs", "");
+				std::string vsCode = pj.value("vs", ""); // 頂点シェーダコード
 				std::vector<char> vsBytecode;
 				if (CompileVS(vsCode, pass.vs, vsBytecode))
 				{
@@ -459,8 +487,8 @@ bool MultiPassRuntime::LoadPipeline(const std::string& jsonText)
 					OutputDebugStringA(("VS compile FAILED: " + pass.name + "\n").c_str());
 				}
 
-				// ★スキンVSもコンパイル（あれば）
-				std::string vsSkinnedCode = pj.value("vsSkinned", "");
+				// スキンVSもコンパイル
+				std::string vsSkinnedCode = pj.value("vsSkinned", ""); // スキン頂点シェーダコード
 				if (!vsSkinnedCode.empty())
 				{
 					std::vector<char> vsSkinnedBytecode;
@@ -476,15 +504,18 @@ bool MultiPassRuntime::LoadPipeline(const std::string& jsonText)
 				}
 			}
 
+			//　このパスの情報を追加
 			newPasses.push_back(std::move(pass));
 		}
 	}
 	catch (const std::exception& e)
 	{
+		// JSON パース中に例外が発生した場合
 		OutputDebugStringA(("LoadPipeline: build failed: "
 			+ std::string(e.what()) + "\n").c_str());
 		return false;
 	}
+
 	m_passes = std::move(newPasses);
 	m_paramIndexDirty = true;
 	CaptureDefaults();
@@ -531,12 +562,13 @@ void MultiPassRuntime::RestoreDefaults()
 		for (ParamRuntime* p : it->second)
 			p->value = value;
 	}
-	// "__last__" は起動時に一度だけ当てて既定値に取り込んでいる（PipelineSystem::LoadDefaults）
 }
 
+
+// ポイントライトセット
 void MultiPassRuntime::SetLights(const std::vector<PointLightData>& lights)
 {
-	// cbLights を作る（初回）
+	// cbLights を作る
 	if (!m_cbLights)
 	{
 		D3D11_BUFFER_DESC bd = {};
@@ -556,6 +588,7 @@ void MultiPassRuntime::SetLights(const std::vector<PointLightData>& lights)
 	for (int i = 0; i < data.count; ++i)
 		data.lights[i] = lights[i];
 
+	// 書き込み
 	D3D11_MAPPED_SUBRESOURCE m;
 	if (SUCCEEDED(m_context->Map(m_cbLights.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &m)))
 	{
@@ -564,6 +597,7 @@ void MultiPassRuntime::SetLights(const std::vector<PointLightData>& lights)
 	}
 }
 
+// 最終出力
 ID3D11ShaderResourceView* MultiPassRuntime::GetFinalResultSRV()
 {
 	if (m_passResults.empty()) return nullptr;
@@ -601,12 +635,13 @@ void MultiPassRuntime::Execute(float time, float bass, float mid, float treble,
 
 	std::unordered_map<std::string, ID3D11ShaderResourceView*> bufferMap;
 
-	// TAA: 前フレームの履歴を
+	// 前フレームの履歴を
 	if (!m_historyTex)
 		EnsureHistoryRT(screenW, screenH, m_historyFormat);
 	if (m_historySRV)
 		bufferMap["History"] = m_historySRV.Get();
 
+	// 各パスごとに描画
 	for (int i = 0; i < (int)m_passes.size(); ++i)
 	{
 		PassRuntime& pass = m_passes[i];
@@ -615,6 +650,7 @@ void MultiPassRuntime::Execute(float time, float bass, float mid, float treble,
 		int h = (int)(screenH * pass.scaleFactor);
 		if (w < 1) w = 1;
 		if (h < 1) h = 1;
+
 
 		int targetCount = (pass.targetCount > 0) ? pass.targetCount : 1;
 		std::vector<int> rtIndices;
@@ -630,10 +666,12 @@ void MultiPassRuntime::Execute(float time, float bass, float mid, float treble,
 
 		// PrevPass = 直前パスの target0
 		ID3D11ShaderResourceView* prevSRV = nullptr;
+		// 最初のパス
 		if (i == 0)
 		{
-			prevSRV = externalInput;   // 最初のパスはゲーム画面
+			prevSRV = externalInput; 
 		}
+		// その後のパス
 		else if (!m_passResults[i - 1].empty())
 		{
 			int pr = m_passResults[i - 1][0];
@@ -641,7 +679,7 @@ void MultiPassRuntime::Execute(float time, float bass, float mid, float treble,
 				prevSRV = m_rtPool[pr].srv.Get();
 		}
 
-		// NamedBuffer
+		// NamedBuffer群
 		std::vector<ID3D11ShaderResourceView*> namedSRVs;
 		for (const auto& name : pass.namedBufferRefs)
 		{
@@ -649,9 +687,10 @@ void MultiPassRuntime::Execute(float time, float bass, float mid, float treble,
 			namedSRVs.push_back(it != bufferMap.end() ? it->second : nullptr);
 		}
 
-		// meshMode: マテリアルパス（モデルを描く）
+		// マテリアルパス
 		bool meshMode = pass.isMaterial && pass.vs && pass.inputLayout;
 
+		// パス描画
 		RenderPass(pass, rtIndices, prevSRV, namedSRVs, meshMode, drawMesh);
 		m_passResults.push_back(rtIndices);
 
@@ -673,7 +712,7 @@ void MultiPassRuntime::Execute(float time, float bass, float mid, float treble,
 
 	m_namedBufferSRVs = bufferMap;
 
-	// TAA: 最終パスの結果を、履歴にコピー（次フレーム用）
+	// 最終パスの結果を、履歴にコピー（次フレーム用）
 	{
 		ID3D11ShaderResourceView* finalSRV = GetFinalResultSRV();
 		if (!finalSRV)
@@ -690,8 +729,7 @@ void MultiPassRuntime::Execute(float time, float bass, float mid, float treble,
 			finalSRV->GetResource(&srcRes);
 			if (srcRes)
 			{
-				// CopyResource はサイズと形式が完全に同じでないと失敗する（デバッグレイヤーでエラー）
-				// 違うときは履歴を最終結果に合わせて作り直してからコピーする
+				// CopyResource はサイズと形式が完全に同じでないと失敗する
 				ID3D11Texture2D* srcTex = nullptr;
 				srcRes->QueryInterface(IID_PPV_ARGS(&srcTex));
 				bool canCopy = false;
@@ -734,6 +772,7 @@ void MultiPassRuntime::Execute(float time, float bass, float mid, float treble,
 	if (oldRS) oldRS->Release();
 }
 
+// アセットPSコンパイル
 bool MultiPassRuntime::CompilePS(const std::string& code,
 	ComPtr<ID3D11PixelShader>& outPS)
 {
@@ -750,22 +789,27 @@ bool MultiPassRuntime::CompilePS(const std::string& code,
 		{
 			return true;
 		}
-		// 壊れたキャッシュだった場合は通常のコンパイルへ落とす
 	}
 
+	// コンパイル
 	ComPtr<ID3DBlob> blob, err;
 	if (FAILED(D3DCompile(code.c_str(), code.size(), nullptr, nullptr, nullptr,
 		"main", kTarget, 0, 0, &blob, &err)))
 	{
+		// コンパイル失敗
 		if (err) OutputDebugStringA((char*)err->GetBufferPointer());
 		return false;
 	}
 
+	// キャッシュに保存
 	SaveShaderCache(hash, kTarget, blob->GetBufferPointer(), blob->GetBufferSize());
 
+	// PS 作成
 	return SUCCEEDED(m_device->CreatePixelShader(
 		blob->GetBufferPointer(), blob->GetBufferSize(), nullptr, &outPS));
 }
+
+// アセットVSコンパイル
 bool MultiPassRuntime::CompileVS(const std::string& code,
 	ComPtr<ID3D11VertexShader>& outVS, std::vector<char>& outBytecode)
 {
@@ -774,6 +818,7 @@ bool MultiPassRuntime::CompileVS(const std::string& code,
 	const char* kTarget = "vs_5_0";
 	const uint64_t hash = ShaderHash(code, kTarget);
 
+	// キャッシュにあればコンパイルを丸ごと省く
 	if (auto cached = LoadShaderCache(hash, kTarget); !cached.empty())
 	{
 		if (SUCCEEDED(m_device->CreateVertexShader(
@@ -785,29 +830,35 @@ bool MultiPassRuntime::CompileVS(const std::string& code,
 		}
 	}
 
+	// コンパイル
 	ComPtr<ID3DBlob> blob, err;
 	if (FAILED(D3DCompile(code.c_str(), code.size(), nullptr, nullptr, nullptr,
 		"main", kTarget, 0, 0, &blob, &err)))
 	{
+		// コンパイル失敗
 		if (err) OutputDebugStringA((char*)err->GetBufferPointer());
 		return false;
 	}
 
+	// キャッシュに保存
+	SaveShaderCache(hash, kTarget, blob->GetBufferPointer(), blob->GetBufferSize());
+
+	// VS 作成
 	if (FAILED(m_device->CreateVertexShader(
 		blob->GetBufferPointer(), blob->GetBufferSize(), nullptr, &outVS)))
 		return false;
 
-	SaveShaderCache(hash, kTarget, blob->GetBufferPointer(), blob->GetBufferSize());
-
+	// 入力レイアウト作成にバイトコードを使うので必ず返す
 	outBytecode.resize(blob->GetBufferSize());
 	memcpy(outBytecode.data(), blob->GetBufferPointer(), blob->GetBufferSize());
 	return true;
 }
 
+//　静的オブジェクト用
 void MultiPassRuntime::BuildMaterialLayout(PassRuntime& pass,
 	const std::vector<char>& vsBytecode)
 {
-	// KdMeshVertex: Pos@0, UV@12, Color@20(4B), Normal@24
+	// フレームワークは,UVと法線の間に4BのColor情報を持たせているのでoffsetを4B分ずらす
 	D3D11_INPUT_ELEMENT_DESC layout[] =
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
@@ -815,15 +866,17 @@ void MultiPassRuntime::BuildMaterialLayout(PassRuntime& pass,
 		{ "NORMAL",   0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "TANGENT",  0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 36, D3D11_INPUT_PER_VERTEX_DATA, 0 }, 
 	};
+
+	// 入力レイアウト作成
 	m_device->CreateInputLayout(layout, 4,
 		vsBytecode.data(), vsBytecode.size(), &pass.inputLayout);
 }
 
+//スキンメッシュ用
 void MultiPassRuntime::BuildMaterialLayoutSkinned(PassRuntime& pass,
 	const std::vector<char>& vsBytecode)
 {
-	// KdMeshVertex: Pos@0, UV@12, Color@20(4B), Normal@24, Tangent@36,
-	//               SkinIndex@48(short4=8B), SkinWeight@56(float4=16B)
+	// フレームワークは,UVと法線の間に4BのColor情報を持たせているのでoffsetを4B分ずらす
 	D3D11_INPUT_ELEMENT_DESC layout[] =
 	{
 		{ "POSITION",   0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
@@ -833,21 +886,26 @@ void MultiPassRuntime::BuildMaterialLayoutSkinned(PassRuntime& pass,
 		{ "SKININDEX",  0, DXGI_FORMAT_R16G16B16A16_UINT, 0, 48, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "SKINWEIGHT", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 56, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
-	m_device->CreateInputLayout(layout, ARRAYSIZE(layout),
+
+	// 入力レイアウト作成
+	m_device->CreateInputLayout(layout, 6,
 		vsBytecode.data(), vsBytecode.size(), &pass.inputLayoutSkinned);
 }
 
+// ボーンの設定
 void MultiPassRuntime::SetBones(const DirectX::XMFLOAT4X4* bones, int count)
 {
 	if (!m_cbBones)
 	{
 		D3D11_BUFFER_DESC bd = {};
-		bd.ByteWidth = sizeof(DirectX::XMFLOAT4X4) * 300;   // 300ボーン
+		bd.ByteWidth = sizeof(DirectX::XMFLOAT4X4) * 300;
 		bd.Usage = D3D11_USAGE_DYNAMIC;
 		bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 		bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 		m_device->CreateBuffer(&bd, nullptr, &m_cbBones);
 	}
+
+	// ボーン行列を転送
 	int n = (count < 300) ? count : 300;
 	D3D11_MAPPED_SUBRESOURCE m;
 	if (SUCCEEDED(m_context->Map(m_cbBones.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &m)))
@@ -857,6 +915,7 @@ void MultiPassRuntime::SetBones(const DirectX::XMFLOAT4X4* bones, int count)
 	}
 }
 
+// 各パスの描画
 void MultiPassRuntime::RenderPass(PassRuntime& pass, const std::vector<int>& rtIndices,
 	ID3D11ShaderResourceView* prevSRV,
 	const std::vector<ID3D11ShaderResourceView*>& namedSRVs,
@@ -866,7 +925,7 @@ void MultiPassRuntime::RenderPass(PassRuntime& pass, const std::vector<int>& rtI
 
 	PooledRT& target = m_rtPool[rtIndices[0]];
 
-	UpdateEffectCB(m_lastTime, m_lastBass, m_lastMid, m_lastTreble,
+	UpdateParameterCB(m_lastTime, m_lastBass, m_lastMid, m_lastTreble,
 		GetPassParamValues(pass));
 
 	// クリア
@@ -892,6 +951,7 @@ void MultiPassRuntime::RenderPass(PassRuntime& pass, const std::vector<int>& rtI
 		m_context->VSSetSamplers(0, 4, samplers);
 	}
 
+	// 定数バッファにバインド
 	m_context->PSSetConstantBuffers(0, 1, m_cbTime.GetAddressOf());
 	if (m_cbParams)
 		m_context->PSSetConstantBuffers(2, 1, m_cbParams.GetAddressOf());
@@ -899,9 +959,12 @@ void MultiPassRuntime::RenderPass(PassRuntime& pass, const std::vector<int>& rtI
 		m_context->PSSetConstantBuffers(3, 1, m_cbCamera.GetAddressOf());
 	if (m_cbLights)
 		m_context->PSSetConstantBuffers(4, 1, m_cbLights.GetAddressOf());
+	if(m_cbMaterial)
+		m_context->PSSetConstantBuffers(5, 1, m_cbMaterial.GetAddressOf());
 	if (m_cbShadowLighting)
 		m_context->PSSetConstantBuffers(6, 1, m_cbShadowLighting.GetAddressOf());
-	// 入力を t0 から連番でバインド（inputs の順）
+
+	// 入力を連番でバインド
 	std::vector<ID3D11ShaderResourceView*> inputSRVs;
 	int namedIdx = 0;
 	for (const auto& in : pass.inputs)
@@ -916,6 +979,7 @@ void MultiPassRuntime::RenderPass(PassRuntime& pass, const std::vector<int>& rtI
 		inputSRVs.push_back(srv);
 	}
 
+	// SRVセット
 	if (!inputSRVs.empty())
 	{
 		m_context->PSSetSamplers(0, 1, m_sampler.GetAddressOf());
@@ -925,26 +989,27 @@ void MultiPassRuntime::RenderPass(PassRuntime& pass, const std::vector<int>& rtI
 			m_context->VSSetSamplers(0, 1, m_sampler.GetAddressOf());
 			m_context->VSSetShaderResources(0, (UINT)inputSRVs.size(), inputSRVs.data());
 		}
+	}
 
-		if (ShaderHelper::irradianceSRV)
-			m_context->PSSetShaderResources(20, 1, ShaderHelper::irradianceSRV.GetAddressOf());
-		if (ShaderHelper::prefilterSRV)
-			m_context->PSSetShaderResources(21, 1, ShaderHelper::prefilterSRV.GetAddressOf());
-		if (ShaderHelper::brdfLutSRV)
-			m_context->PSSetShaderResources(22, 1, ShaderHelper::brdfLutSRV.GetAddressOf());
-		if (ShaderHelper::cascadeSRV[0])
-		{
-			ID3D11ShaderResourceView* csrvs[3] = {
-				ShaderHelper::cascadeSRV[0].Get(),
-				ShaderHelper::cascadeSRV[1].Get(),
-				ShaderHelper::cascadeSRV[2].Get() };
-			m_context->PSSetShaderResources(23, 3, csrvs);
-		}
+	if (ShaderHelper::irradianceSRV)
+		m_context->PSSetShaderResources(20, 1, ShaderHelper::irradianceSRV.GetAddressOf());
+	if (ShaderHelper::prefilterSRV)
+		m_context->PSSetShaderResources(21, 1, ShaderHelper::prefilterSRV.GetAddressOf());
+	if (ShaderHelper::brdfLutSRV)
+		m_context->PSSetShaderResources(22, 1, ShaderHelper::brdfLutSRV.GetAddressOf());
+	if (ShaderHelper::cascadeSRV[0])
+	{
+		ID3D11ShaderResourceView* csrvs[3] = {
+			ShaderHelper::cascadeSRV[0].Get(),
+			ShaderHelper::cascadeSRV[1].Get(),
+			ShaderHelper::cascadeSRV[2].Get() };
+		m_context->PSSetShaderResources(23, 3, csrvs);
 	}
 
 	std::vector<ID3D11RenderTargetView*> rtvs;
 	for (int idx : rtIndices) rtvs.push_back(m_rtPool[idx].rtv.Get());
 
+	// モデルを描く場合
 	if (meshMode)
 	{
 		int depthIndex = AcquireDepth(target.width, target.height);
@@ -981,7 +1046,7 @@ void MultiPassRuntime::RenderPass(PassRuntime& pass, const std::vector<int>& rtI
 	}
 	else
 	{
-		// フルスクリーン（既存）
+		// フルスクリーン
 		m_context->OMSetRenderTargets((UINT)rtvs.size(), rtvs.data(), nullptr);
 		m_context->OMSetDepthStencilState(nullptr, 0);
 		m_context->OMSetBlendState(nullptr, nullptr, 0xFFFFFFFF);
@@ -991,10 +1056,10 @@ void MultiPassRuntime::RenderPass(PassRuntime& pass, const std::vector<int>& rtI
 		m_context->Draw(3, 0);
 	}
 
-	// クリーンアップ
-	ID3D11ShaderResourceView* nullSRVs[16] = {};
-	m_context->PSSetShaderResources(0, 16, nullSRVs);
-	m_context->VSSetShaderResources(0, 16, nullSRVs);
+	// 後始末
+	ID3D11ShaderResourceView* nullSRVs[26] = {};
+	m_context->PSSetShaderResources(0, 26, nullSRVs);
+	m_context->VSSetShaderResources(0, 26, nullSRVs);
 	ID3D11RenderTargetView* nullRTVs[8] = {};
 	m_context->OMSetRenderTargets((UINT)rtvs.size(), nullRTVs, nullptr);
 }
@@ -1021,6 +1086,7 @@ float4 main(PS_IN In) : SV_Target0
 		blob->GetBufferPointer(), blob->GetBufferSize(), nullptr, &m_copyPS));
 }
 
+// ブレンドステートを作成
 bool MultiPassRuntime::CreateBlendState()
 {
 	D3D11_BLEND_DESC desc = {};
@@ -1035,87 +1101,19 @@ bool MultiPassRuntime::CreateBlendState()
 	return SUCCEEDED(m_device->CreateBlendState(&desc, &m_alphaBlend));
 }
 
-ID3D11ShaderResourceView* MultiPassRuntime::CaptureScreen()
-{
-	// 現在バインドされているRTVを取得
-	ID3D11RenderTargetView* curRTV = nullptr;
-	ID3D11DepthStencilView* curDSV = nullptr;
-	m_context->OMGetRenderTargets(1, &curRTV, &curDSV);
-	if (!curRTV)
-	{
-		if (curDSV) curDSV->Release();
-		return nullptr;
-	}
-
-	// RTV から元リソース・テクスチャを取得
-	ID3D11Resource* srcRes = nullptr;
-	curRTV->GetResource(&srcRes);
-
-	ID3D11Texture2D* srcTex = nullptr;
-	if (srcRes) srcRes->QueryInterface(IID_PPV_ARGS(&srcTex));
-
-	ID3D11ShaderResourceView* result = nullptr;
-	if (srcTex)
-	{
-		D3D11_TEXTURE2D_DESC srcDesc = {};
-		srcTex->GetDesc(&srcDesc);
-
-		EnsureCaptureRT(srcDesc);
-
-		if (m_captureTex)
-		{
-			m_context->CopyResource(m_captureTex.Get(), srcRes);
-			result = m_captureSRV.Get();
-		}
-	}
-
-	if (srcTex) srcTex->Release();
-	if (srcRes) srcRes->Release();
-	if (curRTV) curRTV->Release();
-	if (curDSV) curDSV->Release();
-
-	return result;
-}
-
-void MultiPassRuntime::EnsureCaptureRT(const D3D11_TEXTURE2D_DESC& srcDesc)
-{
-	// 既に同じサイズ・フォーマットなら作り直さない
-	if (m_captureTex &&
-		m_captureW == srcDesc.Width &&
-		m_captureH == srcDesc.Height &&
-		m_captureFormat == srcDesc.Format)
-		return;
-
-	m_captureTex.Reset();
-	m_captureSRV.Reset();
-
-	D3D11_TEXTURE2D_DESC desc = {};
-	desc.Width = srcDesc.Width;
-	desc.Height = srcDesc.Height;
-	desc.MipLevels = 1;
-	desc.ArraySize = 1;
-	desc.Format = srcDesc.Format;       // ★ソースと同じフォーマット
-	desc.SampleDesc.Count = 1;
-	desc.Usage = D3D11_USAGE_DEFAULT;
-	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-
-	if (FAILED(m_device->CreateTexture2D(&desc, nullptr, &m_captureTex))) return;
-	if (FAILED(m_device->CreateShaderResourceView(
-		m_captureTex.Get(), nullptr, &m_captureSRV)))
-	{
-		m_captureTex.Reset();
-		return;
-	}
-
-	m_captureW = srcDesc.Width;
-	m_captureH = srcDesc.Height;
-	m_captureFormat = srcDesc.Format;
-}
-
+// マテリアル値の変更
 void MultiPassRuntime::SetMaterialParams(const DirectX::XMFLOAT4& baseColor,
 	float metallic, float roughness)
 {
-	if (!m_cbMaterial) CreateMaterialCB();
+	if (!m_cbMaterial)
+	{
+		D3D11_BUFFER_DESC bd = {};
+		bd.ByteWidth = 32;
+		bd.Usage = D3D11_USAGE_DYNAMIC;
+		bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+		bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		m_device->CreateBuffer(&bd, nullptr, &m_cbMaterial);
+	}
 
 	struct MatCB {
 		DirectX::XMFLOAT4 baseColor;
@@ -1129,17 +1127,16 @@ void MultiPassRuntime::SetMaterialParams(const DirectX::XMFLOAT4& baseColor,
 	data.roughness = roughness;
 	data.hasNormalMap = 0.0f;
 
+	// 転送
 	D3D11_MAPPED_SUBRESOURCE m;
 	if (SUCCEEDED(m_context->Map(m_cbMaterial.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &m)))
 	{
 		memcpy(m.pData, &data, sizeof(data));
 		m_context->Unmap(m_cbMaterial.Get(), 0);
 	}
-
-	// b5 にバインド（PS）
-	m_context->PSSetConstantBuffers(5, 1, m_cbMaterial.GetAddressOf());
 }
 
+// シャドウ用
 void MultiPassRuntime::SetShadowViewProj(const DirectX::XMMATRIX& lightViewProj)
 {
 	if (!m_cbShadowLighting) 
@@ -1151,17 +1148,20 @@ void MultiPassRuntime::SetShadowViewProj(const DirectX::XMMATRIX& lightViewProj)
 		bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 		m_device->CreateBuffer(&bd, nullptr, &m_cbShadowLighting);
 	}
+
+	DirectX::XMFLOAT4X4 mat;
+	DirectX::XMStoreFloat4x4(&mat, lightViewProj);
+
+	// 転送
 	D3D11_MAPPED_SUBRESOURCE m;
 	if (SUCCEEDED(m_context->Map(m_cbShadowLighting.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &m)))
 	{
-		DirectX::XMFLOAT4X4 mat;
-		DirectX::XMStoreFloat4x4(&mat, lightViewProj);
 		memcpy(m.pData, &mat, sizeof(mat));
 		m_context->Unmap(m_cbShadowLighting.Get(), 0);
 	}
-	m_context->PSSetConstantBuffers(6, 1, m_cbShadowLighting.GetAddressOf());
 }
 
+// カメラ情報
 void MultiPassRuntime::SetCamera(const DirectX::XMFLOAT3& camPos,
 	const DirectX::XMMATRIX& viewProj)
 {
@@ -1188,6 +1188,7 @@ void MultiPassRuntime::SetCamera(const DirectX::XMFLOAT3& camPos,
 	XMStoreFloat4x4(&data.invViewProj, invVP);
 	XMStoreFloat4x4(&data.viewProj, viewProj);
 
+	// 転送
 	D3D11_MAPPED_SUBRESOURCE m;
 	if (SUCCEEDED(m_context->Map(m_cbCamera.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &m)))
 	{
@@ -1195,23 +1196,19 @@ void MultiPassRuntime::SetCamera(const DirectX::XMFLOAT3& camPos,
 		m_context->Unmap(m_cbCamera.Get(), 0);
 	}
 }
-void MultiPassRuntime::CreateMaterialCB()
-{
-	D3D11_BUFFER_DESC bd = {};
-	bd.ByteWidth = 32;
-	bd.Usage = D3D11_USAGE_DYNAMIC;
-	bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	m_device->CreateBuffer(&bd, nullptr, &m_cbMaterial);
-}
 
+// TAAの前フレーム情報
 void MultiPassRuntime::EnsureHistoryRT(int width, int height, DXGI_FORMAT format)
 {
-	if (m_historyTex && m_historyW == width && m_historyH == height && m_historyFormat == format)
-		return;
+	// 過去テクスチャがありサイズとフォーマットが同じなら何もしない
+	if (m_historyTex && m_historyW == width && m_historyH == height && m_historyFormat == format)return;
+
+	// 古い過去テクスチャを破棄
 	m_historyTex.Reset();
 	m_historySRV.Reset();
 	m_historyRTV.Reset();
+
+	//　新規の過去テクスチャを作る
 	D3D11_TEXTURE2D_DESC desc = {};
 	desc.Width = width; desc.Height = height;
 	desc.MipLevels = 1; desc.ArraySize = 1;
@@ -1232,6 +1229,10 @@ void MultiPassRuntime::EnsureHistoryRT(int width, int height, DXGI_FORMAT format
 	m_context->ClearRenderTargetView(m_historyRTV.Get(), clr);
 }
 
+
+//============== VSの更新 ======================
+
+// 静的オブジェクト用VS
 void MultiPassRuntime::UseStaticVS()
 {
 	if (!m_currentMeshPass) return;
@@ -1239,19 +1240,27 @@ void MultiPassRuntime::UseStaticVS()
 	m_context->IASetInputLayout(m_currentMeshPass->inputLayout.Get());
 }
 
+// スキニング用VSに切り替え
+// UseStaticVSの上書き
 void MultiPassRuntime::UseSkinnedVS()
 {
 	if (!m_currentMeshPass) return;
-	if (!m_currentMeshPass->hasSkinnedVS) return;   // スキンVSがなければ何もしない
+	if (!m_currentMeshPass->hasSkinnedVS) return;
 	m_context->VSSetShader(m_currentMeshPass->vsSkinned.Get(), nullptr, 0);
 	m_context->IASetInputLayout(m_currentMeshPass->inputLayoutSkinned.Get());
-	// cbBones を b2 にバインド
+
+	// b10にボーンの情報を渡す
+	// スキニングメッシュしかこの情報は使わないので、スキニング用VSの時だけセットする
 	if (m_cbBones)
 		m_context->VSSetConstantBuffers(10, 1, m_cbBones.GetAddressOf());
 }
 
+// ==========================================
+
+// 最終描画
 void MultiPassRuntime::DrawToScreen(int screenW, int screenH)
 {
+	//最終出力SRVを取得(これを描画する)
 	ID3D11ShaderResourceView* finalSRV = GetFinalResultSRV();
 	if (!finalSRV) return;
 
@@ -1261,17 +1270,19 @@ void MultiPassRuntime::DrawToScreen(int screenW, int screenH)
 	m_context->RSSetViewports(1, &vp);
 
 	m_context->RSSetState(m_rsCullNone.Get());
-	m_context->OMSetBlendState(m_alphaBlend.Get(), nullptr, 0xFFFFFFFF);  // ★アルファ合成
+	m_context->OMSetBlendState(m_alphaBlend.Get(), nullptr, 0xFFFFFFFF);
 	m_context->OMSetDepthStencilState(nullptr, 0);
 	m_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	m_context->IASetInputLayout(nullptr);
 	m_context->IASetVertexBuffers(0, 0, nullptr, nullptr, nullptr);
 
+	// フルスクリーン描画用のシェーダ
 	m_context->VSSetShader(m_fullscreenVS.Get(), nullptr, 0);
 	m_context->PSSetShader(m_copyPS.Get(), nullptr, 0);
 	m_context->PSSetSamplers(0, 1, m_sampler.GetAddressOf());
 	m_context->PSSetShaderResources(0, 1, &finalSRV);
 
+	//　描画
 	m_context->Draw(3, 0);
 
 	// ブレンドを戻す
@@ -1282,18 +1293,21 @@ void MultiPassRuntime::DrawToScreen(int screenW, int screenH)
 
 void MultiPassRuntime::DrawParamUI(const char* uiId)
 {
-	ImGui::PushID(uiId);   // ★このUI全体をスコープ化
+	ImGui::PushID(uiId); 
 
 	// ============ プリセット ============
 	if (ImGui::CollapsingHeader("Presets", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ImGui::Indent(8.0f);
 
+		// プリセット一覧
 		ImGui::TextDisabled("Save current values as:");
 		ImGui::SetNextItemWidth(160);
 		ImGui::InputTextWithHint("##presetname", "preset name...",
 			m_presetNameBuf, sizeof(m_presetNameBuf));
 		ImGui::SameLine();
+
+		// プリセットをセーブ
 		bool canSave = (strlen(m_presetNameBuf) > 0);
 		if (!canSave) ImGui::BeginDisabled();
 		if (ImGui::Button("Save", ImVec2(60, 0)))
@@ -1306,10 +1320,14 @@ void MultiPassRuntime::DrawParamUI(const char* uiId)
 		ImGui::Spacing();
 
 		auto names = GetPresetNames();
+
+		// プリセットがない場合
 		if (names.empty())
 		{
 			ImGui::TextDisabled("  (no presets yet)");
 		}
+
+		// プリセットがある場合その一覧を表示
 		else
 		{
 			ImGui::TextDisabled("Saved presets:");
@@ -1339,7 +1357,8 @@ void MultiPassRuntime::DrawParamUI(const char* uiId)
 	ImGui::Separator();
 	ImGui::Spacing();
 
-	// ============ パラメータ ============
+	// 各パラメータ
+	// パスごとのパラメータを一覧表示する
 	ImGui::TextDisabled("Parameters");
 	ImGui::Spacing();
 
@@ -1350,6 +1369,7 @@ void MultiPassRuntime::DrawParamUI(const char* uiId)
 		if (pass.params.empty()) continue;
 		anyParams = true;
 
+		// パス名を表示
 		std::string header = pass.name + "##pass" + std::to_string(pi);
 		if (ImGui::CollapsingHeader(header.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
 		{
@@ -1357,6 +1377,8 @@ void MultiPassRuntime::DrawParamUI(const char* uiId)
 			ImGui::PushItemWidth(-80.0f);
 			for (auto& p : pass.params)
 			{
+				// float ...スライダー
+				// float4... Color
 				std::string label = p.name + "##" + std::to_string(pi);
 				if (p.type == "float")
 					ImGui::SliderFloat(label.c_str(), &p.value[0], p.minVal, p.maxVal);
@@ -1372,29 +1394,36 @@ void MultiPassRuntime::DrawParamUI(const char* uiId)
 		}
 	}
 
+	// パラメータが1つもない場合はその旨を表示
 	if (!anyParams)
 		ImGui::TextDisabled("  (no parameters in this pipeline)");
 
-	ImGui::PopID();   // ★スコープ終了
+	ImGui::PopID();
 }
 
+//　指定パスのパイプラインアッセットを取得
 bool MultiPassRuntime::LoadPipelineFromFile(const std::string& path)
 {
 	std::ifstream f(path);
 	if (!f)
 	{
-		OutputDebugStringA(("Pipeline file not found: " + path + "\n").c_str());
+		// ファイルが開けなかった
+		OutputDebugStringA(("[Pipeline] : Pipeline file not found: " + path + "\n").c_str());
 		return false;
 	}
+
+	//　パイプラインアセットがあるならそのjsonをロードする
 	std::string jsonText((std::istreambuf_iterator<char>(f)),
 		std::istreambuf_iterator<char>());
 	return LoadPipeline(jsonText);
 }
 
+// プリセットを適応
 void MultiPassRuntime::ApplyPreset(const std::string& presetName)
 {
 	for (auto& preset : m_presets)
 	{
+		// 押されたプリセットボタンを探す
 		if (preset.name != presetName) continue;
 
 		// 各パラメータに、名前が一致する値を書き戻す
@@ -1402,6 +1431,7 @@ void MultiPassRuntime::ApplyPreset(const std::string& presetName)
 		{
 			for (auto& p : pass.params)
 			{
+				// パラメータを書き込み
 				auto it = preset.values.find(p.name);
 				if (it != preset.values.end())
 					p.value = it->second;
@@ -1411,6 +1441,7 @@ void MultiPassRuntime::ApplyPreset(const std::string& presetName)
 	}
 }
 
+// プリセットの名前の一覧を獲得
 std::vector<std::string> MultiPassRuntime::GetPresetNames() const
 {
 	std::vector<std::string> names;
@@ -1418,6 +1449,7 @@ std::vector<std::string> MultiPassRuntime::GetPresetNames() const
 	return names;
 }
 
+// プリセットを外部ファイル(json)に保存
 bool MultiPassRuntime::SavePresetsToFile(const std::string& path)
 {
 	nlohmann::json root;
@@ -1440,6 +1472,7 @@ bool MultiPassRuntime::SavePresetsToFile(const std::string& path)
 	return true;
 }
 
+// プリセットのロード
 bool MultiPassRuntime::LoadPresetsFromFile(const std::string& path)
 {
 	std::ifstream f(path);
@@ -1467,10 +1500,12 @@ bool MultiPassRuntime::LoadPresetsFromFile(const std::string& path)
 	return true;
 }
 
+// プリセットの内部セーブ
 void MultiPassRuntime::SavePreset(const std::string& presetName)
 {
 	Preset preset;
 	preset.name = presetName;
+
 	for (auto& pass : m_passes)
 		for (auto& p : pass.params)
 			preset.values[p.name] = p.value;
@@ -1488,6 +1523,7 @@ void MultiPassRuntime::SavePreset(const std::string& presetName)
 	if (!replaced)
 		m_presets.push_back(preset);
 
+	// 外部ファイルにプリセットを保存
 	if (!m_presetsPath.empty())
 		SavePresetsToFile(m_presetsPath);
 }
@@ -1505,7 +1541,7 @@ void MultiPassRuntime::DeletePreset(const std::string& presetName)
 
 void MultiPassRuntime::SaveLastParams()
 {
-	SavePreset("__last__");   // 既存のSavePresetを使う（ファイルにも保存される）
+	SavePreset("__last__");   // __last__というプリセットを生成（これが実質デフォルトのパラメータ）
 }
 
 void MultiPassRuntime::LoadLastParams()
@@ -1521,6 +1557,7 @@ void MultiPassRuntime::LoadLastParams()
 	}
 }
 
+// パイプラインで作成したバッファを取得
 ID3D11ShaderResourceView* MultiPassRuntime::GetNamedBufferSRV(const std::string& name)
 {
 	auto it = m_namedBufferSRVs.find(name);
@@ -1533,14 +1570,14 @@ void MultiPassRuntime::OverrideMaterialPS(ID3D11PixelShader* ps,
 	if (!m_currentMeshPass) return;
 	if (ps) m_context->PSSetShader(ps, nullptr, 0);
 	if (params)
-		UpdateEffectCB(m_lastTime, m_lastBass, m_lastMid, m_lastTreble, *params);
+		UpdateParameterCB(m_lastTime, m_lastBass, m_lastMid, m_lastTreble, *params);
 }
 
 void MultiPassRuntime::RestoreMaterialPS()
 {
 	if (!m_currentMeshPass) return;
 	m_context->PSSetShader(m_currentMeshPass->ps.Get(), nullptr, 0);
-	UpdateEffectCB(m_lastTime, m_lastBass, m_lastMid, m_lastTreble,
+	UpdateParameterCB(m_lastTime, m_lastBass, m_lastMid, m_lastTreble,
 		GetPassParamValues(*m_currentMeshPass));
 }
 
@@ -1589,15 +1626,16 @@ ID3D11BlendState* MultiPassRuntime::GetWriteMaskBlend(unsigned int mask)
 	return bs.Get();
 }
 
+// マテリアル上書き用
 void MultiPassRuntime::BeginOverlay(ID3D11PixelShader* ps, unsigned int writeMask,
 	const std::vector<std::array<float, 4>>* params)
 {
 	if (!m_currentMeshPass) return;
 	if (ps) m_context->PSSetShader(ps, nullptr, 0);
 	if (params)
-		UpdateEffectCB(m_lastTime, m_lastBass, m_lastMid, m_lastTreble, *params);
+		UpdateParameterCB(m_lastTime, m_lastBass, m_lastMid, m_lastTreble, *params);
 
-	// 深度: LESS_EQUAL・書き込みなし（同じ面をもう一度通す）
+	// 深度: LESS_EQUAL
 	if (!m_overlayDepth)
 	{
 		D3D11_DEPTH_STENCIL_DESC dd = {};
@@ -1616,7 +1654,7 @@ void MultiPassRuntime::EndOverlay()
 {
 	if (!m_currentMeshPass) return;
 	m_context->PSSetShader(m_currentMeshPass->ps.Get(), nullptr, 0);
-	UpdateEffectCB(m_lastTime, m_lastBass, m_lastMid, m_lastTreble,
+	UpdateParameterCB(m_lastTime, m_lastBass, m_lastMid, m_lastTreble,
 		GetPassParamValues(*m_currentMeshPass));
 	m_context->OMSetDepthStencilState(nullptr, 0);
 	m_context->OMSetBlendState(nullptr, nullptr, 0xFFFFFFFF);

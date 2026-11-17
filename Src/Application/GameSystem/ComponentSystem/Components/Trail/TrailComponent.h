@@ -19,15 +19,13 @@ enum class TrailWidthMode : int
 {
 	Billboard = 0,   // 進行方向とカメラから幅方向を決める（従来）
 	UpVector = 1,    // ups[i] を正規化して幅方向に使う。幅は width 固定
-	RootTip = 2,     // ★ups[i] を「半幅ベクトル」として使う（正規化しない）
-	//   root = points[i] - ups[i] / tip = points[i] + ups[i]
-	//   幅がノードごとに変わるので、剣の根元と先端をそのまま渡せる
+	RootTip = 2,     // ups[i] を「半幅ベクトル」として使う（正規化しない）
 };
 
 // 点をどこから取るか
 enum class TrailSource : int
 {
-	Transform = 0,   // TransformComponent の位置から打つ（従来）
+	Transform = 0,   // TransformComponent の位置から打つ
 	External = 1,    // 外から与えられた根元/先端を打つ
 };
 

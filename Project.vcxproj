@@ -303,6 +303,7 @@
     <ClInclude Include="Src\Application\GameSystem\Combat\BreathGauge.h" />
     <ClInclude Include="Src\Application\GameSystem\Combat\CombatFx.h" />
     <ClInclude Include="Src\Application\GameSystem\InputSystem\Inputs\KdInputMouseLock.h" />
+    <ClInclude Include="Src\Application\GameSystem\ShaderSystem\GhostRender\OverlayModelRenderer.h" />
     <ClInclude Include="Src\Application\GameSystem\ShaderSystem\X-RayRender\X-RayRender.h" />
     <ClInclude Include="Src\Application\Resource\Resources\DataList\JsonUtil.h" />
     <ClInclude Include="Src\Application\Resource\Resources\ResourceListLoader.h" />

@@ -51,7 +51,6 @@ bool ParticleAsset::LoadFromString(const std::string& jsonStr)
 			targetY = p.value("targetY", targetY);
 			targetZ = p.value("targetZ", targetZ);
 
-			// ---- Phase1 ----
 			sizeBegin = p.value("sizeBegin", sizeBegin);
 			sizeMid = p.value("sizeMid", sizeMid);
 			sizeEnd = p.value("sizeEnd", sizeEnd);
@@ -66,7 +65,6 @@ bool ParticleAsset::LoadFromString(const std::string& jsonStr)
 			velColorScale = p.value("velColorScale", velColorScale);
 			velSizeScale = p.value("velSizeScale", velSizeScale);
 
-			// ---- Phase8c（エディタのカーブ）----
 			sizeCurveOn = p.value("sizeCurveOn", sizeCurveOn);
 			if (p.contains("sizeCurve") && p["sizeCurve"].is_array())
 			{
@@ -86,7 +84,6 @@ bool ParticleAsset::LoadFromString(const std::string& jsonStr)
 			alphaCurvePointCount = p.value("alphaCurvePointCount", alphaCurvePointCount);
 			alphaCurveInterp = p.value("alphaCurveInterp", alphaCurveInterp);
 
-			// ---- Phase2a ----
 			stretchOn = p.value("stretchOn", stretchOn);
 			stretchScale = p.value("stretchScale", stretchScale);
 			shapeType = p.value("shapeType", shapeType);
@@ -94,7 +91,6 @@ bool ParticleAsset::LoadFromString(const std::string& jsonStr)
 			shapeHeight = p.value("shapeHeight", shapeHeight);
 			shapeSurfaceOnly = p.value("shapeSurfaceOnly", shapeSurfaceOnly);
 
-			// ---- Form ----
 			formOn = p.value("formOn", formOn);
 			formSides = p.value("formSides", formSides);
 			formRound = p.value("formRound", formRound);

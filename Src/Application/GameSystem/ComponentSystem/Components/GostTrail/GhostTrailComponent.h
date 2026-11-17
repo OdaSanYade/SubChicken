@@ -33,8 +33,8 @@ struct GhostTrailComponent
 	DirectX::XMFLOAT4X4 bonePoses[kMaxFrames][kMaxBones] = {};
 
 	DirectX::XMFLOAT4 color = { 0.4f, 0.7f, 1.0f, 1.0f };
-	DirectX::XMFLOAT3 rimColor = { 1.0f, 1.0f, 1.0f };   // ★輪郭色(2トーン用)
-	float             hitPulse = 0.0f;                    // ★ヒット演出パルス(0~1、時間で減衰)
+	DirectX::XMFLOAT3 rimColor = { 1.0f, 1.0f, 1.0f };
+	float             hitPulse = 0.0f;
 	DirectX::XMFLOAT4 params[4] = {};
 };
 
@@ -60,7 +60,7 @@ inline void ClearGhostTrail(GhostTrailComponent& g)
 	g.head = 0;
 }
 
-// ★攻撃ヒットなど、外部から呼んで一瞬派手にするためのトリガー
+// 攻撃ヒットなど、外部から呼んで一瞬派手にするためのトリガー
 inline void TriggerGhostHitBurst(GhostTrailComponent& g)
 {
 	g.hitPulse = 1.0f;
