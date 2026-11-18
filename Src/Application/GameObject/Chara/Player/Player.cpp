@@ -403,8 +403,7 @@ void Player::ApplyGroundedMotion(float deltaTime, float speed)
 	const float lambda = (speed > m_currentSpeed) ? m_tuning.speedLambda : m_tuning.stopLambda;
 	m_currentSpeed = Damp::Value(m_currentSpeed, speed, lambda, deltaTime);
 
-	// ダッシュに入った瞬間だけ前へ押し出す。
-	// 補間だけだと「速くなった」瞬間が分からないので、頭に段差を作る。
+	// ダッシュに入った瞬間だけ前へ押し出す
 	const bool dashing = IsDashing();
 	if (dashing && !m_prevDashing && moveDir.LengthSquared() > 0.0f)
 		m_currentSpeed += m_tuning.dashKickSpeed;

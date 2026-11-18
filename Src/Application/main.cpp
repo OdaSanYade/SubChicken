@@ -67,9 +67,6 @@ void Application::KdBeginUpdate()
 // ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// /////
 void Application::KdPostUpdate()
 {
-	// 3DSoundListnerの行列を更新
-	KdAudioManager::Instance().SetListnerMatrix(KdShaderManager::Instance().GetCameraCB().mView.Invert());
-
 }
 
 // ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// /////
@@ -112,26 +109,26 @@ void Application::KdPostDraw()
 	// 現在のシーンのデバッグ描画
 
 	KdDebugGUI::Instance().StartGui();
-	ImGui::Begin("Debug Window");
+	//ImGui::Begin("Debug Window");
 
-	if (ImGui::BeginTabBar("MyTabBar")) {
-
-
-		SM_MGR.DrawImGuiAll();
-
-		KdDebugGUI::Instance().GuiProcess();
-		Time::Instance().renderPerformanceOverlay();
-		SceneManager::Instance().DrawDebug();
+	//if (ImGui::BeginTabBar("MyTabBar")) {
 
 
-		static bool showDebug = true;
-		static bool showKeyConfig = true;
-		KdInputDebugUI::DrawDebugWindow(&showDebug);
-		KdInputDebugUI::DrawKeyConfigWindow(&showKeyConfig);
+	//	SM_MGR.DrawImGuiAll();
 
-		ImGui::EndTabBar();
-	}
-	ImGui::End();
+	//	KdDebugGUI::Instance().GuiProcess();
+	//	Time::Instance().renderPerformanceOverlay();
+	//	SceneManager::Instance().DrawDebug();
+
+
+	//	static bool showDebug = true;
+	//	static bool showKeyConfig = true;
+	//	KdInputDebugUI::DrawDebugWindow(&showDebug);
+	//	KdInputDebugUI::DrawKeyConfigWindow(&showKeyConfig);
+
+	//	ImGui::EndTabBar();
+	//}
+	//ImGui::End();
 
 	KdDebugGUI::Instance().EndGui();
 	// BackBuffer -> 画面表示
@@ -177,7 +174,7 @@ bool Application::Init(int w, int h)
 	//===================================================================
 	// ウィンドウ作成
 	//===================================================================
-	if (m_window.Create(w, h, "3D GameProgramming", "Window") == false) {
+	if (m_window.Create(w, h, "BreaveChicken", "Window") == false) {
 		MessageBoxA(nullptr, "ウィンドウ作成に失敗", "エラー", MB_OK);
 		return false;
 	}
@@ -230,20 +227,9 @@ bool Application::Init(int w, int h)
 	KdShaderManager::Instance().Init();
 
 	//===================================================================
-	// オーディオ初期化
-	//===================================================================
-	KdAudioManager::Instance().Init();
-
-	//===================================================================
-	// フォント初期化
-	//===================================================================
-	KdFontManager::Instance().Init(GetWindowHandle());
-
-	//===================================================================
 	// ロード画面
 	//===================================================================
 	m_loadingScreen.Init(w, h);
-	m_loadingScreen.Warmup(BootTasks::GetTable(), BootTasks::GetCount());
 
 	KdMouseLock::Instance().Init(m_window.GetWndHandle());
 
@@ -382,13 +368,9 @@ void Application::Release()
 
 	RES_MGR.Release();
 
-	KdFontManager::Instance().Release();
-
 	KdInputManager::Instance().Release();
 
 	KdShaderManager::Instance().Release();
-
-	KdAudioManager::Instance().Release();
 
 	KdDirect3D::Instance().Release();
 

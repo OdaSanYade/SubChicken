@@ -15,8 +15,6 @@
 #include "Utility/KdFPSController.h"
 #include "Utility/KdRandom.h"
 
-// 音関連
-#include "Audio/KdAudio.h"
 
 // バッファ
 #include "Direct3D/KdBuffer.h"
@@ -59,24 +57,13 @@
 // 入力関連
 #include "Input/KdInput.h"
 
-// レンダーターゲット切替
-#include "Shader/KdRenderTargetChange.h"
+// 音関連
+#include "Audio/AudioManager.h"
 
 // シェーダ
-#include "Shader/KdAmbientController.h"
 #include "Shader/KdShaderManager.h"
 
 // デバッグ機能
-#include "Utility/KdDebug/KdDebugWireFrame.h"
 #include "Utility/KdDebug/KdDebugGUI.h"
 
-// ゲームオブジェクト関連
-#include "GameObject/KdGameObject.h"
-#include "GameObject/KdGameObjectFactory.h"
-
-// Effekseer管理クラス
-#include "Effekseer/KdEffekseerManager.h"
-
-// フォント管理クラス
-#include "Font/KdFont.h"
 #include "Font/KdTextEncode.h"

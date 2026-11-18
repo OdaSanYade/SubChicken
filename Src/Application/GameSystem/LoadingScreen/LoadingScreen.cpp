@@ -50,10 +50,6 @@ void LoadingScreen::Init(int _screenW, int _screenH,
 	m_fontNo = _fontNo;
 	m_fontHeight = _fontHeight;
 
-	// フォント名はOSのものをそのまま使うのでAssetManagerに依存しない
-	KdFontManager::Instance().AddFont(m_fontNo,
-		KdText::Utf8ToSjis(_fontName), m_fontHeight);
-
 	// 矩形描画用の白テクスチャ
 	m_whiteTex = std::make_shared<KdTexture>();
 	m_whiteTex->Create(1, 1, DXGI_FORMAT_B8G8R8A8_UNORM);
@@ -71,50 +67,8 @@ void LoadingScreen::Init(int _screenW, int _screenH,
 // ----------------------------------------------------------
 void LoadingScreen::Release()
 {
-	m_cache.clear();
 	m_whiteTex.reset();
 	m_labelUtf8.clear();
-}
-
-// ----------------------------------------------------------
-void LoadingScreen::Warmup(const LoadTask* _tasks, size_t _count)
-{
-	// 全ラベルとパーセント用の文字を1回で焼く
-	// KdFontManager は文字単位でテクスチャをキャッシュするので
-	// ここを通しておけばロード中は既存テクスチャの参照だけになる
-	std::string all;
-
-	for (size_t i = 0; i < _count; ++i)
-	{
-		if (_tasks[i].label) { all += _tasks[i].label; }
-	}
-	all += U8("0123456789%.");
-	all += U8("ロード中");
-
-	KdFontManager::Instance().CreateFontTexture(
-		m_fontNo, KdText::Utf8ToSjis(all), kAntiAlias);
-
-	// ラベルのスプライトも先に作っておく
-	// ロード中は一切の生成を発生させない
-	for (size_t i = 0; i < _count; ++i)
-	{
-		if (_tasks[i].label) { GetSprite(_tasks[i].label); }
-	}
-}
-
-// ----------------------------------------------------------
-std::shared_ptr<KdFontSprite> LoadingScreen::GetSprite(const std::string& _utf8)
-{
-	if (_utf8.empty()) { return nullptr; }
-
-	auto it = m_cache.find(_utf8);
-	if (it != m_cache.end()) { return it->second; }
-
-	auto sprite = KdFontManager::Instance().CreateFontTexture(
-		m_fontNo, KdText::Utf8ToSjis(_utf8), kAntiAlias);
-
-	m_cache[_utf8] = sprite;
-	return sprite;
 }
 
 // ----------------------------------------------------------
@@ -163,61 +117,8 @@ void LoadingScreen::Draw()
 		const int barLeft = left + kMarginX;
 		const int fillW = static_cast<int>(barW * m_viewProgress);
 
-		DrawRect(barLeft, barY, barW, kBarHeight, kColorBarBg);
-		if (fillW > 0)
-		{
-			DrawRect(barLeft, barY, fillW, kBarHeight, kColorBar);
-		}
-
 		// バーの先端を走る(進捗に連動)
 		DrawRunner(barLeft, barY, barW);
-
-		// 左 : 何をしているか
-		// 末尾に点を増減させる。文字が静止していると止まって見える
-		const int labelDots =
-			static_cast<int>(m_elapsed / kLabelDotSec) % 4;
-
-		std::string labelText = m_labelUtf8;
-		labelText.append(static_cast<size_t>(labelDots), '.');
-
-		DrawString(GetSprite(labelText), barLeft, baseY, kColorLabel);
-
-		// 右下 : パーセント
-		// 小数を出しても読めないので整数へ丸める
-		const int percent = static_cast<int>(m_viewProgress * 100.0f);
-
-		auto value = GetSprite(std::to_string(percent) + "%");
-
-		int valueLeft = right - kMarginX;
-		if (value)
-		{
-			valueLeft -= value->GetTotalWidth();
-			DrawString(value, valueLeft, baseY, kColorValue);
-		}
-
-		// パーセントの左で跳ねる点列(時間のみに連動)
-		// 進捗が止まる重いタスクの間も、これだけは動き続ける
-		DrawDots(valueLeft - kMarginX / 2, baseY + m_fontHeight / 3);
-	}
-	else
-	{
-
-		// 点を増減させる
-		// 静止した文字だけだと固まったように見える
-		const int dots = static_cast<int>(m_elapsed * 2.0f) % 4;
-
-		std::string text = U8("ロード中");
-		text.append(static_cast<size_t>(dots), '.');
-
-		auto sprite = GetSprite(text);
-		if (sprite)
-		{
-			// 点の増減で右端が動かないよう、最長の幅で右揃えする
-			auto widest = GetSprite(U8("ロード中..."));
-			const int w = widest ? widest->GetTotalWidth() : sprite->GetTotalWidth();
-
-			DrawString(sprite, right - kMarginX - w, baseY, kColorValue);
-		}
 	}
 }
 
@@ -244,8 +145,6 @@ void LoadingScreen::DrawRunner(int _barLeft, int _barY, int _barW)
 
 	// バーの上に乗せる
 	const int y = _barY + kBarHeight + static_cast<int>(hop);
-
-	DrawRect(x, y, w, h, kColorBar);
 }
 
 // ----------------------------------------------------------
@@ -280,44 +179,5 @@ void LoadingScreen::DrawDots(int _rightX, int _baseY)
 
 		Math::Color color = kColorDot;
 		color.A(color.A() * bright);
-
-		DrawRect(startX + kDotGap * i,
-			_baseY + static_cast<int>(hop),
-			kDotSize, kDotSize, color);
 	}
-}
-
-// ----------------------------------------------------------
-void LoadingScreen::DrawString(const std::shared_ptr<KdFontSprite>& _sprite,
-	int _x, int _y, const Math::Color& _color)
-{
-	if (!_sprite) { return; }
-
-	int cursorX = _x;
-
-	for (auto& data : _sprite->GetTexList())
-	{
-		if (!data || !data->FontTex) { continue; }
-
-		const int w = static_cast<int>(data->FontTex->GetInfo().Width);
-		const int h = static_cast<int>(data->FontTex->GetInfo().Height);
-
-		// pivot{0,0} で (x,y) が矩形の左下になる
-		KdShaderManager::Instance().m_spriteShader.DrawTex(
-			data->FontTex.get(), cursorX, _y, w, h,
-			nullptr, &_color, { 0.0f, 0.0f });
-
-		cursorX += w;
-	}
-}
-
-// ----------------------------------------------------------
-void LoadingScreen::DrawRect(int _x, int _y, int _w, int _h,
-	const Math::Color& _color)
-{
-	if (!m_whiteTex || _w <= 0 || _h <= 0) { return; }
-
-	KdShaderManager::Instance().m_spriteShader.DrawTex(
-		m_whiteTex.get(), _x, _y, _w, _h,
-		nullptr, &_color, { 0.0f, 0.0f });
 }

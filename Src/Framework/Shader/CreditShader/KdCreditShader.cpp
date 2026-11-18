@@ -1,13 +1,5 @@
-﻿#include "Framework/KdFramework.h"
+﻿#include "KdCreditShader.h"
 
-#include "KdCreditShader.h"
-
-// ===========================================================
-// コンパイル済みシェーダ
-//
-// 関数の中で #include するとスタックに載って溢れるので、
-// 名前空間スコープに置く(KdTitleShader と同じ)。
-// ===========================================================
 namespace kdcredit_vs
 {
 #include "KdCreditShader_VS.shaderInc"

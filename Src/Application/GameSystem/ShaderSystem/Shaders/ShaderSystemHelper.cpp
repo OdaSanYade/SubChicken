@@ -35,7 +35,7 @@ namespace ShaderHelper
 		// キューブマップの metadata
 		DirectX::TexMetadata cubeMeta = meta;
 		cubeMeta.arraySize = 6;
-		cubeMeta.miscFlags |= DirectX::TEX_MISC_TEXTURECUBE;   // ★キューブマップ指定
+		cubeMeta.miscFlags |= DirectX::TEX_MISC_TEXTURECUBE; 
 		cubeMeta.dimension = DirectX::TEX_DIMENSION_TEXTURE2D;
 
 		// テクスチャ作成
@@ -49,7 +49,7 @@ namespace ShaderHelper
 		// キューブマップSRV
 		D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
 		srvDesc.Format = cubeMeta.format;
-		srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;   // ★キューブマップビュー
+		srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;
 		srvDesc.TextureCube.MipLevels = 1;
 		srvDesc.TextureCube.MostDetailedMip = 0;
 
@@ -72,12 +72,12 @@ namespace ShaderHelper
 		desc.Width = size;
 		desc.Height = size;
 		desc.MipLevels = 1;
-		desc.ArraySize = 6;                              // ★6面
+		desc.ArraySize = 6;                              // 6面
 		desc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;    // HDR（環境光は明るさ範囲が要る）
 		desc.SampleDesc.Count = 1;
 		desc.Usage = D3D11_USAGE_DEFAULT;
 		desc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
-		desc.MiscFlags = D3D11_RESOURCE_MISC_TEXTURECUBE;   // ★キューブマップ
+		desc.MiscFlags = D3D11_RESOURCE_MISC_TEXTURECUBE;   // キューブマップ
 
 		if (FAILED(device->CreateTexture2D(&desc, nullptr, &outTex)))
 			return false;

@@ -1,5 +1,6 @@
 ﻿#pragma once
 
+// シェーダシステムにおけるグローバルなテクスチャ群
 namespace ShaderHelper 
 {
 	// ヘッダで using namespace を広げないよう、この名前空間の中だけで使う別名
@@ -75,12 +76,11 @@ namespace ShaderHelper
 	extern ComPtr<ID3D11DepthStencilView> shadowMapDSV;
 	extern ComPtr<ID3D11ShaderResourceView> shadowMapSRV;
 
-	// CSM: カスケード3段
 	static const int kCascadeCount = 3;
 	extern ComPtr<ID3D11Texture2D>          cascadeTex[kCascadeCount];
 	extern ComPtr<ID3D11DepthStencilView>   cascadeDSV[kCascadeCount];
 	extern ComPtr<ID3D11ShaderResourceView> cascadeSRV[kCascadeCount];
 
-	// 上のグローバルをすべて解放する。デバイスより先に呼ぶこと（ShaderRender の破棄時に呼ぶ）
+	// 上のグローバルをすべて解放する
 	void ReleaseAll();
 }

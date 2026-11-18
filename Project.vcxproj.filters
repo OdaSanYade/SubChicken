@@ -123,9 +123,6 @@
     <ClInclude Include="Src\Framework\Shader\KdShaderManager.h">
       <Filter>Src\Framework\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Framework\Shader\SpriteShader\KdSpriteShader.h">
-      <Filter>Src\Framework\Shader\SpriteShader</Filter>
-    </ClInclude>
     <ClInclude Include="src\Framework\Utility\KdUtility.h">
       <Filter>Src\Framework\Utility</Filter>
     </ClInclude>
@@ -150,26 +147,14 @@
     <ClInclude Include="Src\Framework\Math\KdAnimation.h">
       <Filter>Src\Framework\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Framework\Audio\KdAudio.h">
-      <Filter>Src\Framework\Audio</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Framework\Direct3D\KdCamera.h">
       <Filter>Src\Framework\Direct3D</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Framework\Shader\PostProcessShader\KdPostProcessShader.h">
-      <Filter>Src\Framework\Shader\PostProcessShader</Filter>
     </ClInclude>
     <ClInclude Include="Src\Framework\Math\KdCollider.h">
       <Filter>Src\Framework\Math</Filter>
     </ClInclude>
     <ClInclude Include="Src\Framework\Math\KdEasing.h">
       <Filter>Src\Framework\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Framework\GameObject\KdGameObject.h">
-      <Filter>Src\Framework\GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Framework\GameObject\KdGameObjectFactory.h">
-      <Filter>Src\Framework\GameObject</Filter>
     </ClInclude>
     <ClInclude Include="Src\Framework\Input\KdInput.h">
       <Filter>Src\Framework\Input</Filter>
@@ -192,23 +177,11 @@
     <ClInclude Include="Src\Framework\Utility\KdDataStorage.h">
       <Filter>Src\Framework\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Framework\Shader\KdAmbientController.h">
-      <Filter>Src\Framework\Shader</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Framework\Math\KdUVAnimation.h">
       <Filter>Src\Framework\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Framework\Shader\KdRenderTargetChange.h">
-      <Filter>Src\Framework\Shader</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Framework\Utility\KdFPSController.h">
       <Filter>Src\Framework\Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Framework\Shader\StandardShader\KdStandardShader.h">
-      <Filter>Src\Framework\Shader\StandardShader</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Framework\Effekseer\KdEffekseerManager.h">
-      <Filter>Src\Framework\Effekseer</Filter>
     </ClInclude>
     <ClInclude Include="Src\Framework\Utility\KdRandom.h">
       <Filter>Src\Framework\Utility</Filter>
@@ -243,13 +216,7 @@
     <ClInclude Include="..\Library\imgui\ja_glyph_ranges.h">
       <Filter>Library\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Framework\Font\KdFont.h">
-      <Filter>Src\Framework\Font</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Framework\Utility\KdDebug\KdDebugGUI.h">
-      <Filter>Src\Framework\Utility\KdDebug</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Framework\Utility\KdDebug\KdDebugWireFrame.h">
       <Filter>Src\Framework\Utility\KdDebug</Filter>
     </ClInclude>
     <ClInclude Include="Src\Application\Scene\SceneManager.h">
@@ -276,7 +243,7 @@
     <ClInclude Include="Src\Application\GameSystem\ShaderSystem\Pipelines\Assets\MultiPassRuntime.h" />
     <ClInclude Include="Src\Application\GameSystem\ShaderSystem\Shaders\ShaderRuntime.h" />
     <ClInclude Include="Src\Application\GameSystem\ShaderSystem\Shaders\Assets\ShaderAsset.h" />
-    <ClInclude Include="Src\Application\GameSystem\Audio\AudioManager.h" />
+    <ClInclude Include="Src\Framework\Audio\AudioManager.h" />
     <ClInclude Include="Src\Application\GameSystem\Collision\Component\CollisionComponent.h" />
     <ClInclude Include="Src\Application\GameSystem\Collision\Const\CollisionTypes.h" />
     <ClInclude Include="Src\Application\GameSystem\Collision\CollisionWorld.h" />
@@ -403,6 +370,7 @@
     <ClInclude Include="Src\Application\Resource\Resources\DataList\JsonUtil.h" />
     <ClInclude Include="Src\Application\GameObject\Camera\CameraTuning.h" />
     <ClInclude Include="Src\Application\GameSystem\ShaderSystem\GhostRender\OverlayModelRenderer.h" />
+    <ClInclude Include="Src\Application\GameSystem\ShaderSystem\Shaders\LiveLinkServer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -426,9 +394,6 @@
     <ClCompile Include="Src\Framework\Shader\KdShaderManager.cpp">
       <Filter>Src\Framework\Shader</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Framework\Shader\SpriteShader\KdSpriteShader.cpp">
-      <Filter>Src\Framework\Shader\SpriteShader</Filter>
-    </ClCompile>
     <ClCompile Include="src\Framework\Window\KdWindow.cpp">
       <Filter>Src\Framework\Window</Filter>
     </ClCompile>
@@ -447,26 +412,14 @@
     <ClCompile Include="Src\Framework\Math\KdAnimation.cpp">
       <Filter>Src\Framework\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Framework\Audio\KdAudio.cpp">
-      <Filter>Src\Framework\Audio</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Framework\Direct3D\KdCamera.cpp">
       <Filter>Src\Framework\Direct3D</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Framework\Shader\PostProcessShader\KdPostProcessShader.cpp">
-      <Filter>Src\Framework\Shader\PostProcessShader</Filter>
     </ClCompile>
     <ClCompile Include="Src\Framework\Math\KdCollider.cpp">
       <Filter>Src\Framework\Math</Filter>
     </ClCompile>
     <ClCompile Include="Src\Framework\Math\KdEasing.cpp">
       <Filter>Src\Framework\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Framework\GameObject\KdGameObject.cpp">
-      <Filter>Src\Framework\GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Framework\GameObject\KdGameObjectFactory.cpp">
-      <Filter>Src\Framework\GameObject</Filter>
     </ClCompile>
     <ClCompile Include="Src\Framework\Input\KdInput.cpp">
       <Filter>Src\Framework\Input</Filter>
@@ -486,23 +439,11 @@
     <ClCompile Include="Src\Framework\Direct3D\Polygon\KdPolygon.cpp">
       <Filter>Src\Framework\Direct3D\Polygon</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Framework\Shader\KdAmbientController.cpp">
-      <Filter>Src\Framework\Shader</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Framework\Math\KdUVAnimation.cpp">
       <Filter>Src\Framework\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Framework\Shader\KdRenderTargetChange.cpp">
-      <Filter>Src\Framework\Shader</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Framework\Utility\KdFPSController.cpp">
       <Filter>Src\Framework\Utility</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Framework\Shader\StandardShader\KdStandardShader.cpp">
-      <Filter>Src\Framework\Shader\StandardShader</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Framework\Effekseer\KdEffekseerManager.cpp">
-      <Filter>Src\Framework\Effekseer</Filter>
     </ClCompile>
     <ClCompile Include="..\Library\imgui\imgui.cpp">
       <Filter>Library\imgui</Filter>
@@ -528,13 +469,7 @@
     <ClCompile Include="..\Library\imgui\imgui_widgets.cpp">
       <Filter>Library\imgui</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Framework\Font\KdFont.cpp">
-      <Filter>Src\Framework\Font</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Framework\Utility\KdDebug\KdDebugGUI.cpp">
-      <Filter>Src\Framework\Utility\KdDebug</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Framework\Utility\KdDebug\KdDebugWireFrame.cpp">
       <Filter>Src\Framework\Utility\KdDebug</Filter>
     </ClCompile>
     <ClCompile Include="Src\Application\Scene\SceneManager.cpp">
@@ -559,7 +494,7 @@
     <ClCompile Include="Src\Application\GameSystem\ShaderSystem\Pipelines\Assets\MultiPassRuntime.cpp" />
     <ClCompile Include="Src\Application\GameSystem\ShaderSystem\Shaders\ShaderRuntime.cpp" />
     <ClCompile Include="Src\Application\GameSystem\ShaderSystem\Shaders\Assets\ShaderAsset.cpp" />
-    <ClCompile Include="Src\Application\GameSystem\Audio\AudioManager.cpp" />
+    <ClCompile Include="Src\Framework\Audio\AudioManager.cpp" />
     <ClCompile Include="Src\Application\GameSystem\Collision\CollisionWorld.cpp" />
     <ClCompile Include="Src\Application\GameSystem\Collision\Stage\StageMesh.cpp" />
     <ClCompile Include="Src\Application\GameSystem\Time\TimeSystem.cpp" />
@@ -620,18 +555,6 @@
     <ClCompile Include="Src\Application\GameSystem\InputSystem\Inputs\KdInputMouseLock.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Src\Framework\Shader\inc_KdCommon.hlsli">
-      <Filter>Src\Framework\Shader</Filter>
-    </None>
-    <None Include="Src\Framework\Shader\SpriteShader\inc_KdSpriteShader.hlsli">
-      <Filter>Src\Framework\Shader\SpriteShader</Filter>
-    </None>
-    <None Include="Src\Framework\Shader\PostProcessShader\inc_KdPostProcessShader.hlsli">
-      <Filter>Src\Framework\Shader\PostProcessShader</Filter>
-    </None>
-    <None Include="Src\Framework\Shader\StandardShader\inc_KdStandardShader.hlsli">
-      <Filter>Src\Framework\Shader\StandardShader</Filter>
-    </None>
     <None Include="Src\Framework\Shader\HudShader\inc_KdHudShader.hlsli" />
     <None Include="Src\Framework\Shader\HudShader\inc_KdHudFont.hlsli" />
     <None Include="Src\Framework\Shader\HudShader\inc_KdHudSdf.hlsli" />
@@ -648,42 +571,6 @@
     <None Include="Src\Framework\Shader\CreditShader\inc_KdCreditShader.hlsli" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Src\Framework\Shader\SpriteShader\KdSpriteShader_PS.hlsl">
-      <Filter>Src\Framework\Shader\SpriteShader</Filter>
-    </FxCompile>
-    <FxCompile Include="Src\Framework\Shader\SpriteShader\KdSpriteShader_VS.hlsl">
-      <Filter>Src\Framework\Shader\SpriteShader</Filter>
-    </FxCompile>
-    <FxCompile Include="Src\Framework\Shader\PostProcessShader\KdPostProcessShader_PS_Blur.hlsl">
-      <Filter>Src\Framework\Shader\PostProcessShader</Filter>
-    </FxCompile>
-    <FxCompile Include="Src\Framework\Shader\PostProcessShader\KdPostProcessShader_VS.hlsl">
-      <Filter>Src\Framework\Shader\PostProcessShader</Filter>
-    </FxCompile>
-    <FxCompile Include="Src\Framework\Shader\PostProcessShader\KdPostProcessShader_PS_DoF.hlsl">
-      <Filter>Src\Framework\Shader\PostProcessShader</Filter>
-    </FxCompile>
-    <FxCompile Include="Src\Framework\Shader\PostProcessShader\KdPostProcessShader_PS_Bright.hlsl">
-      <Filter>Src\Framework\Shader\PostProcessShader</Filter>
-    </FxCompile>
-    <FxCompile Include="Src\Framework\Shader\StandardShader\KdStandardShader_PS_GenDepthMapFromLight.hlsl">
-      <Filter>Src\Framework\Shader\StandardShader</Filter>
-    </FxCompile>
-    <FxCompile Include="Src\Framework\Shader\StandardShader\KdStandardShader_PS_Lit.hlsl">
-      <Filter>Src\Framework\Shader\StandardShader</Filter>
-    </FxCompile>
-    <FxCompile Include="Src\Framework\Shader\StandardShader\KdStandardShader_PS_UnLit.hlsl">
-      <Filter>Src\Framework\Shader\StandardShader</Filter>
-    </FxCompile>
-    <FxCompile Include="Src\Framework\Shader\StandardShader\KdStandardShader_VS_GenDepthMapFromLight.hlsl">
-      <Filter>Src\Framework\Shader\StandardShader</Filter>
-    </FxCompile>
-    <FxCompile Include="Src\Framework\Shader\StandardShader\KdStandardShader_VS_Lit.hlsl">
-      <Filter>Src\Framework\Shader\StandardShader</Filter>
-    </FxCompile>
-    <FxCompile Include="Src\Framework\Shader\StandardShader\KdStandardShader_VS_UnLit.hlsl">
-      <Filter>Src\Framework\Shader\StandardShader</Filter>
-    </FxCompile>
     <FxCompile Include="Src\Application\GameSystem\Collision\Debug\Shader\DebugCol_PS.hlsl" />
     <FxCompile Include="Src\Application\GameSystem\Collision\Debug\Shader\DebugCol_VS.hlsl" />
     <FxCompile Include="Src\Framework\Shader\HudShader\KdHudShader_VS.hlsl" />

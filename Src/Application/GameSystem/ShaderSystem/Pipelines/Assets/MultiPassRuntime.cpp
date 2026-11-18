@@ -87,7 +87,6 @@ void MultiPassRuntime::Release()
 	m_depthPool.clear();
 	m_rsCullNone.Reset();
 	m_sampler.Reset();
-	m_cbParams.Reset();
 	m_cbWVP.Reset();
 	m_cbTime.Reset();
 	m_copyPS.Reset();
@@ -354,7 +353,7 @@ bool MultiPassRuntime::LoadPipeline(const std::string& jsonText)
 	if (!root.contains("passes") || !root["passes"].is_array())
 		return false;
 
-	// G-Bufferのフォーマット一覧
+	// Bufferのフォーマット一覧
 	auto parseFormat = [](const std::string& s) -> DXGI_FORMAT {
 		if (s == "R8G8B8A8_UNORM")      return DXGI_FORMAT_R8G8B8A8_UNORM;		//Buffer A アルベド値 + 金属度
 		if (s == "R16G16B16A16_FLOAT")  return DXGI_FORMAT_R16G16B16A16_FLOAT;  //Buffer B 法線 + 粗さ
@@ -953,8 +952,6 @@ void MultiPassRuntime::RenderPass(PassRuntime& pass, const std::vector<int>& rtI
 
 	// 定数バッファにバインド
 	m_context->PSSetConstantBuffers(0, 1, m_cbTime.GetAddressOf());
-	if (m_cbParams)
-		m_context->PSSetConstantBuffers(2, 1, m_cbParams.GetAddressOf());
 	if (m_cbCamera)
 		m_context->PSSetConstantBuffers(3, 1, m_cbCamera.GetAddressOf());
 	if (m_cbLights)
@@ -1032,8 +1029,6 @@ void MultiPassRuntime::RenderPass(PassRuntime& pass, const std::vector<int>& rtI
 		// VS共通のCB
 		m_context->VSSetConstantBuffers(0, 1, m_cbTime.GetAddressOf());
 		m_context->VSSetConstantBuffers(1, 1, m_cbWVP.GetAddressOf());
-		if (m_cbParams)
-			m_context->VSSetConstantBuffers(2, 1, m_cbParams.GetAddressOf());
 
 		// デフォルトは静的VS（コールバックが切り替える）
 		UseStaticVS();

@@ -2,12 +2,6 @@
 #include "../IObject.h"
 #include "CameraTuning.h"
 
-//==========================================================
-// CameraBase
-// 追従・視点操作・遮蔽・シェイク・フォーカス演出をまとめたカメラの土台。
-// 調整値は CameraTuning.json の "CameraBase" 区画から読む(コンストラクタで1回)。
-// 派生カメラは Init で Set〜 を呼んで自分用の値に上書きする。
-//==========================================================
 class CameraBase : public IObject
 {
 public:
@@ -138,7 +132,7 @@ protected:
 	CameraBaseTuning m_baseTuning;
 
 	// マウス視点(値はコンストラクタで m_baseTuning から入る)
-	float m_mouseSensitivity = 0.0f;	// rad/カウント
+	float m_mouseSensitivity = 0.0f;
 	bool  m_mouseInvertY = false;
 
 	// フォーカス演出
@@ -179,7 +173,7 @@ protected:
 
 	Math::Vector3 m_pivotOffset = Math::Vector3::Zero;
 	float m_occlusionIgnoreDistance = 0.0f;
-	float m_occlusionMaxPullSpeed = 0.0f;	// ※今は遮蔽処理の中で使っていない(解説mdの要確認リスト参照)
+	float m_occlusionMaxPullSpeed = 0.0f;
 	float m_occDistance = 0.0f;
 	bool  m_occInitialized = false;
 };

@@ -564,8 +564,12 @@ void StateMachineSystem::SyncAnimation(StateMachineComponent& sm, Animator& anim
 	auto spAnim = resolve(animName);
 	if (!spAnim)
 	{
+		char str[256];
+		sprintf_s(str, "StateMachineSystem: アニメーションが見つかりません \nAnimName : %s\n", animName);
 		m_missingAnims.insert(animKey);
-		assert(false && "StateMachineSystem: アニメーションが見つかりません");
+		OutputDebugStringA(str);
+
+		assert(false && "NotFoundAnimation");
 
 		// 見つからない場合は何もしない(今のアニメを再生し続ける)。
 		// 無理に何かを再生しようとしない。

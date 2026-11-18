@@ -46,7 +46,7 @@ bool ShaderRuntime::Init(ID3D11Device* device, ID3D11DeviceContext* context)
 		ShaderHelper::shadowMapDSV,
 		ShaderHelper::shadowMapSRV);
 
-	// ★カスケードごとに解像度を変える
+	// カスケードごとに解像度を変える
 	const int kCascadeSize[3] = { 2048, 1024, 512 };
 	for (int c = 0; c < ShaderHelper::kCascadeCount; ++c)
 	{
@@ -1197,12 +1197,12 @@ void ShaderRuntime::RenderShadowMapTo(ID3D11DeviceContext* ctx,
 	D3D11_VIEWPORT oldVP = {};
 	ctx->RSGetViewports(&oldVPCount, &oldVP);
 
-	ctx->ClearDepthStencilView(dsv, D3D11_CLEAR_DEPTH, 1.0f, 0);   // ★引数のdsv
+	ctx->ClearDepthStencilView(dsv, D3D11_CLEAR_DEPTH, 1.0f, 0);   // 引数のdsv
 
 	ID3D11RenderTargetView* nullRTV[1] = { nullptr };
-	ctx->OMSetRenderTargets(1, nullRTV, dsv);                      // ★引数のdsv
+	ctx->OMSetRenderTargets(1, nullRTV, dsv);                      // 引数のdsv
 
-	// ★カスケードSRVを外す（DSVとのハザード防止）
+	// カスケードSRVを外す（DSVとのハザード防止）
 	{
 		ID3D11ShaderResourceView* nulls[3] = { nullptr, nullptr, nullptr };
 		ctx->PSSetShaderResources(23, 3, nulls);
@@ -1228,8 +1228,7 @@ void ShaderRuntime::RenderShadowMapTo(ID3D11DeviceContext* ctx,
 		ctx->PSSetConstantBuffers(1, 1, m_cbShadowClip.GetAddressOf());
 		ctx->PSSetSamplers(0, 1, m_sampler.GetAddressOf());
 
-		// 誰もテクスチャを貼らない描画のために、白を既定で入れておく
-		// （これを忘れると前パスのSRVを読んで全部クリップされる）
+		// 白テクスチャ：誰もテクスチャを貼らない描画のために、白を既定で入れておく
 		ID3D11ShaderResourceView* white =
 			KdDirect3D::Instance().GetWhiteTex()->WorkSRView();
 		ctx->PSSetShaderResources(0, 1, &white);

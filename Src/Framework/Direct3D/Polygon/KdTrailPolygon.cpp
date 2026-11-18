@@ -68,7 +68,7 @@ void KdTrailPolygon::CreateVerticesWithBillboardPattern()
 	if (m_pointList.size() < 2) { return; }
 
 	// カメラの情報
-	Math::Matrix mCam = KdShaderManager::Instance().GetCameraCB().mView.Invert();
+	Math::Matrix mCam = Math::Matrix::Identity;
 
 	// 軌跡画像の分割数
 	float sliceCount = (float)(m_pointList.size() - 1);

@@ -1015,7 +1015,7 @@ void ShaderRender::DrawShadowCulled(const ModelParam& mp, const LightFrustum& lf
 		auto& subsets = node.m_spMesh->GetSubsets();
 		for (int i = 0; i < (int)subsets.size(); ++i)
 		{
-			// ★アルファクリップ用にベースカラーを t0 へ
+			// アルファクリップ用にベースカラーを t0 へ
 			const KdMaterial& mat = materials[subsets[i].MaterialNo];
 			ID3D11ShaderResourceView* baseSRV =
 				mat.m_baseColorTex ? mat.m_baseColorTex->WorkSRView()
@@ -1088,5 +1088,10 @@ void ShaderRender::DrawDebug()
 		}
 	}
 
+	if (m_runtime)
+	{
+		for(const std::string& matName : m_runtime->GetMaterialNames())
+			m_runtime->DrawParamUI(matName);
+	}
 	if (m_pipelines) m_pipelines->DrawDebugUI();
 }

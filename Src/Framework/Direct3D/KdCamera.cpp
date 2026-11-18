@@ -9,20 +9,12 @@
 // ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// /////
 void KdCamera::SetToShader() const
 {
-	// カメラの情報をGPUへ転送
-	KdShaderManager::Instance().WriteCBCamera(m_mCam, m_mProj);
 
 	// ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 	// 被写界深度（DepthOfField）加工に使うの情報も更新
 	float nearClippingDistance = -(m_mProj._43 / m_mProj._33);
 	float farClippingDistance = - (m_mProj._43 / (m_mProj._33 - 1));
 	float viewRange = farClippingDistance - nearClippingDistance;
-
-	// フォーカスを合わせる焦点距離をコピー
-	KdShaderManager::Instance().m_postProcessShader.SetNearClippingDistance(nearClippingDistance);
-	KdShaderManager::Instance().m_postProcessShader.SetFarClippingDistance(farClippingDistance);
-	KdShaderManager::Instance().m_postProcessShader.SetFocusDistance((m_focusDistance - nearClippingDistance) / viewRange);
-	KdShaderManager::Instance().m_postProcessShader.SetFocusRange(m_focusForeRange / viewRange, m_focusBackRange / viewRange);
 }
 
 // ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// /////

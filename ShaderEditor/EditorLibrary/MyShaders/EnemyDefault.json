@@ -1,5 +1,5 @@
 {
-    "exportDir": "C:\\3DGameProject\\3DGameChicken\\Asset\\Data\\Shader\\Material",
+    "exportDir": "C:\\3DGameProject\\SubChicken\\Asset\\Data\\Shader\\Material",
     "passes": [
         {
             "graph": {
@@ -94,8 +94,8 @@
                         "paramMax": 1.0,
                         "paramMin": 0.0,
                         "paramName": "",
-                        "posX": 1037.0,
-                        "posY": 695.0,
+                        "posX": 1234.0,
+                        "posY": 744.0,
                         "showPreview": false,
                         "subGraphName": "SubGraph",
                         "targetIndex": 0,
@@ -142,8 +142,8 @@
                         "paramMax": 1.0,
                         "paramMin": 0.0,
                         "paramName": "",
-                        "posX": 1037.0,
-                        "posY": 595.0,
+                        "posX": 1234.0,
+                        "posY": 644.0,
                         "showPreview": false,
                         "subGraphName": "SubGraph",
                         "targetIndex": 0,
@@ -375,9 +375,9 @@
                         "type": 4,
                         "typeId": "ConstantFloat4",
                         "values": [
-                            0.013392865657806396,
-                            0.009409384801983833,
-                            0.005620220676064491,
+                            0.1071428656578064,
+                            0.07478475570678711,
+                            0.044005103409290314,
                             1.0
                         ],
                         "varName": "",
@@ -493,7 +493,7 @@
                         "type": 2,
                         "typeId": "ConstantFloat",
                         "values": [
-                            0.7699999809265137,
+                            0.7900000214576721,
                             0.0,
                             0.0,
                             0.0

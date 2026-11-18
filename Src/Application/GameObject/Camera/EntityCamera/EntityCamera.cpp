@@ -8,7 +8,6 @@ EntityCamera::~EntityCamera()
 		GPUParticleSystem::Instance().StopEffect(m_effectID);
 		m_effectID = -1;
 	}
-	CameraManager::Instance().SetGameMouseLocked(false);
 }
 
 void EntityCamera::Init()
@@ -47,8 +46,6 @@ void EntityCamera::Init()
 	cam.SetTargetPullMaxDistance(t.pullMaxDistance);
 	cam.SetTargetPullHeightSafety(t.pullHeightSafety);
 
-	SetKeyAction();
-
 	//空間パーティクル
 	m_effectID =
 		GPUParticleSystem::Instance().SpawnEffect(t.dustEffect, cam.GetWorldPosition());
@@ -62,26 +59,4 @@ void EntityCamera::Update()
 	
 	auto& cam = m_cm.get<CameraComponent>(m_entity);
 	GPUParticleSystem::Instance().SetEffectPos(m_effectID, cam.GetWorldPosition());
-}
-
-// ダッシュの押し離しで画角を変える。
-// リスナーは入力システム側に残り続けるので、[this] ではなく MakeSafeCallback で渡す。
-// (カメラが消えた後にダッシュボタンを押しても何も起きないようにする)
-void EntityCamera::SetKeyAction()
-{
-	auto& input = KdInputActionSystem::Instance();
-
-	input.AddListener("Dash", KdInputEventType::Press,
-		MakeSafeCallback<EntityCamera>([](EntityCamera& self)
-			{
-				if (self.IsFocusing()) return;
-				self.SetTargetFovY(self.m_tuning.dashFov, self.m_tuning.dashFovLambda);
-			}));
-
-	input.AddListener("Dash", KdInputEventType::Release,
-		MakeSafeCallback<EntityCamera>([](EntityCamera& self)
-			{
-				if (self.IsFocusing()) return;
-				self.SetTargetFovY(self.m_tuning.normalFov, self.m_tuning.normalFovLambda);
-			}));
 }

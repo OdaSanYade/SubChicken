@@ -121,10 +121,9 @@
 // 自作Framework
 //
 //===============================================
+#include "json.hpp"
 #include "Framework/KdFramework.h"
 
-#include "json.hpp"
-#include "Application/GameSystem/Audio/AudioManager.h"
 #include "Application/Resource/ResourceManager.h"
 #include "Application/GameSystem/Time/TimeSystem.h"
 #include "Application/GameSystem/InputSystem/KdInputAction.h"

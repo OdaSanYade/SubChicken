@@ -119,8 +119,7 @@ public:
 	void SaveLastParams();   // 現在のパラメータ値を "__last__" として保存
 	void LoadLastParams();   // "__last__" を復元
 
-	// 既定値：LoadPipeline 成功時の値（起動時は "__last__" を当てた後の値）を覚えておき、
-	// RestoreDefaults で戻す。エディタからパイプラインが届くと、その値が新しい既定値になる
+	// 既定値：LoadPipeline 成功時の値（起動時は "__last__" を当てた後の値）
 	void CaptureDefaults();
 	void RestoreDefaults();
 
@@ -181,7 +180,7 @@ private:
 	int AcquireDepth(int w, int h);
 	void ResetDepthPool();
 
-	// プールの掃除：しばらく使っていない RT と、画面サイズが変わった時の古い RT を解放する
+	// プールの掃除
 	void TrimPools(int screenW, int screenH);
 	uint32_t m_poolFrame = 0;
 	int m_poolScreenW = 0, m_poolScreenH = 0;
@@ -223,7 +222,6 @@ private:
 	//定数バッファ群
 	ComPtr<ID3D11Buffer> m_cbTime;    // b0
 	ComPtr<ID3D11Buffer> m_cbWVP;	  // b1
-	ComPtr<ID3D11Buffer> m_cbParams;  // b2
 	ComPtr<ID3D11Buffer> m_cbLights;  // b3
 	ComPtr<ID3D11Buffer> m_cbMaterial;// b4
 	ComPtr<ID3D11Buffer> m_cbShadowLighting; // b5

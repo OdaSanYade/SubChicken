@@ -2,9 +2,19 @@
 
 // 共有フルスクリーンVS
 static const char* kVSCode = R"SH(
-struct VS_OUT{float4 pos:SV_Position;float2 uv:TEXCOORD0;};
-VS_OUT main(uint id:SV_VertexID){VS_OUT o;float2 uv=float2((id<<1)&2,id&2);
-o.uv=uv;o.pos=float4(uv*float2(2,-2)+float2(-1,1),0,1);return o;}
+struct VS_OUT
+{
+	float4 pos:SV_Position;
+	float2 uv:TEXCOORD0;
+};
+VS_OUT main(uint id:SV_VertexID)
+{
+	VS_OUT o;
+	float2 uv=float2((id<<1)&2,id&2);
+	o.uv=uv;
+	o.pos=float4(uv*float2(2,-2)+float2(-1,1),0,1);
+	return o;
+}
 )SH";
 
 static const char* kPSCode = R"SH(

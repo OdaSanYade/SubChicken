@@ -3,11 +3,6 @@
 
 class EnemyManager;
 
-//==========================================================
-// EntityCamera
-// ゲーム中のプレイヤー追従カメラ。
-// 値は CameraTuning.json の "EntityCamera" 区画から Init で読む。
-//==========================================================
 class EntityCamera : public CameraBase 
 {
 public:
@@ -25,8 +20,6 @@ public:
 
 
 private:
-
-	void SetKeyAction();
 
 	EntityCameraTuning m_tuning;
 	int m_effectID = -1;
